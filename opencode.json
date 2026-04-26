@@ -1,0 +1,47 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "AGENTS.md",
+    ".claude/docs/coding-standards.md",
+    ".claude/docs/context-management.md",
+    ".claude/docs/coordination-rules.md",
+    ".claude/docs/technical-preferences.md",
+    "docs/COLLABORATIVE-DESIGN-PRINCIPLE.md"
+  ],
+  "permission": {
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    },
+    "edit": "ask",
+    "bash": {
+      "*": "ask",
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "git branch*": "allow",
+      "git rev-parse*": "allow",
+      "ls *": "allow",
+      "dir *": "allow",
+      "python -m json.tool*": "allow",
+      "python -m pytest*": "allow",
+      "py -m pytest*": "allow",
+      "rm -rf *": "deny",
+      "git push --force*": "deny",
+      "git push -f *": "deny",
+      "git reset --hard*": "deny",
+      "git clean -f*": "deny",
+      "sudo *": "deny",
+      "chmod 777*": "deny"
+    },
+    "external_directory": "ask",
+    "doom_loop": "ask"
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 10000
+  }
+}
