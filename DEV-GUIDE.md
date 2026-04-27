@@ -41,14 +41,14 @@ cockpit.tscn                    ← 唯一主场景
 │   └── NarrativeEvents        ← 节点事件/对讲机/叙事触发
 │
 └── UI/
-    ├── MonitorFrameUI         ← 监视器边框（像素风）
-    ├── SystemPanelUI          ← 仪表盘（燃料/船体/氧气/警告）
-    ├── ActionButtons          ← 扫描/推进/减速按钮
-    ├── ScanProgressBar        ← 扫描进度条
-    ├── CRTOverlay             ← 扫描线/色差/噪点 Shader
-    ├── LensDistortionOverlay  ← 引力透镜扭曲 Shader
-    ├── DayTransitionUI        ← 节点过渡画面
-    └── EndingUI               ← 结局画面
+	├── MonitorFrameUI         ← 监视器边框（像素风）
+	├── SystemPanelUI          ← 仪表盘（燃料/船体/氧气/警告）
+	├── ActionButtons          ← 扫描/推进/减速按钮
+	├── ScanProgressBar        ← 扫描进度条
+	├── CRTOverlay             ← 扫描线/色差/噪点 Shader
+	├── LensDistortionOverlay  ← 引力透镜扭曲 Shader
+	├── DayTransitionUI        ← 节点过渡画面
+	└── EndingUI               ← 结局画面
 ```
 
 ---
@@ -269,27 +269,27 @@ cockpit.tscn                    ← 唯一主场景
 D1  S1: 驾驶舱场景 + SubViewport 监视器渲染 (3h)
 D2  S1: CRT 效果 + S2: 引力场图 Shader 原型 (3h)
 D3  S2: 引力场图完善（航道/障碍/标注）(2h)
-    S3: 导航节点系统框架 (1h)
+	S3: 导航节点系统框架 (1h)
 D4  S3: 节点选择 + 行进过渡 (3h)
 D5  S4: 扫描机制 (3h)
 D6  S5: 资源管理系统 + 系统面板 UI (3h)
 D7  【里程碑】节点 0-1 可完整游玩
-    验收：引力场图显示→扫描→选择航道→推进→到达下一节点
+	验收：引力场图显示→扫描→选择航道→推进→到达下一节点
 
 第 2 周 —— 内容完成
 ━━━━━━━━━━━━━━━━━━━━━━
 D8  S3: 7 个节点完整数据配置 + 逻辑 (2h)
-    S6: 引力透镜 Shader (1h)
+	S6: 引力透镜 Shader (1h)
 D9  S6: 引力透镜效果完善 + S7: 黑洞视觉 (3h)
 D10 S9: 节点 4 引力风暴（间歇黑屏 + 减速操作）(2h)
-    S8: 叙事文本系统框架 (1h)
+	S8: 叙事文本系统框架 (1h)
 D11 S8: 全部节点叙事内容 (2h)
-    S10: 节点 6 弹弓 QTE (1h)
+	S10: 节点 6 弹弓 QTE (1h)
 D12 S10: 弹弓 QTE 完善 + 结局触发 (2h)
-    S11: 音效素材整理 + 集成开始 (1h)
+	S11: 音效素材整理 + 集成开始 (1h)
 D13 S11: 音效集成完善 + AudioBus 配置 (3h)
 D14 【里程碑】节点 0-6 全流程可玩
-    验收：完整叙事弧、所有选择有后果、三种结局可触发
+	验收：完整叙事弧、所有选择有后果、三种结局可触发
 
 第 3 周 —— 打磨提交
 ━━━━━━━━━━━━━━━━━━━━━━

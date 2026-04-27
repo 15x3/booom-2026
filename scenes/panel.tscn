@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://cwohg4rc2xqvm"]
+
+[ext_resource type="Shader" uid="uid://v152wsjtt04d" path="res://assets/shaders/CRT.gdshader" id="1_8e8e8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ixbsq"]
+shader = ExtResource("1_8e8e8")
+shader_parameter/overlay = false
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/brightness = 1.4
+shader_parameter/scanlines_opacity = 0.4
+shader_parameter/scanlines_width = 0.25
+shader_parameter/grille_opacity = 0.3
+shader_parameter/roll = true
+shader_parameter/roll_speed = 8.0
+shader_parameter/roll_size = 15.0
+shader_parameter/roll_variation = 1.8
+shader_parameter/distort_intensity = 0.05
+shader_parameter/aberration = 0.03
+shader_parameter/noise_opacity = 0.4
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.06
+shader_parameter/pixelate = true
+shader_parameter/discolor = true
+shader_parameter/warp_amount = 1.0
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.5
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_wdgw4"]
+
+[node name="Panel" type="Control" unique_id=473104171]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=1858806772]
+layout_mode = 0
+offset_left = 86.0
+offset_top = 47.0
+offset_right = 436.0
+offset_bottom = 271.0
+text = "你好！世界！"
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1966111540]
+layout_mode = 0
+offset_left = 224.0
+offset_top = 18.0
+offset_right = 1134.0
+offset_bottom = 668.0
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1328824856]
+material = SubResource("ShaderMaterial_ixbsq")
+layout_mode = 0
+offset_left = 517.0
+offset_top = 140.0
+offset_right = 1083.0
+offset_bottom = 427.0
+texture = SubResource("CanvasTexture_wdgw4")

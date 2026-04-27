@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="BOOOM2026"
+run/main_scene="res://scenes/cockpit.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -22,6 +23,24 @@ MCPRuntime="*uid://dl1qncy8v23mf"
 
 enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg")
 
+[input]
+
+monitor_gravity={
+"deadzone": 0.5,
+"events": Array[InputEvent]([Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":49,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+])
+}
+monitor_forward={
+"deadzone": 0.5,
+"events": Array[InputEvent]([Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":50,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+])
+}
+monitor_scan={
+"deadzone": 0.5,
+"events": Array[InputEvent]([Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":51,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+])
+}
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
@@ -29,5 +48,3 @@ enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg")
 [rendering]
 
 rendering_device/driver.windows="d3d12"
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"
