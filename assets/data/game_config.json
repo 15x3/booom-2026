@@ -33,6 +33,16 @@
     "storm_blackout_duration": 3.0,
     "storm_window_duration": 1.5
   },
+  "gravity_map": {
+    "ring_color": [0.976, 0.447, 0.023],
+    "rotation_speed": -0.06,
+    "distortion_strength": 2.4,
+    "ring_intensity": 1.2,
+    "mask_sharpness": 1.6,
+    "turbulence_strength": 0.005,
+    "center_offset": [0.0, 0.0],
+    "blackhole_scale": 1.0
+  },
   "crt": {
     "brightness": 1.4,
     "scanlines_opacity": 0.4,

@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://bkmsu1e1bls6c"]
 
 [ext_resource type="Script" uid="uid://bwrg65lbpdoou" path="res://scripts/cockpit.gd" id="1_ga5w8"]
-[ext_resource type="PackedScene" uid="uid://cwohg4rc2xqvm" path="res://scenes/panel.tscn" id="2_mlplb"]
 [ext_resource type="PackedScene" path="res://scenes/panels/gravity-map-panel.tscn" id="3_gmap"]
+[ext_resource type="Script" uid="uid://dbv48kmjphrip" path="res://scripts/camera_controller.gd" id="4_cam"]
+[ext_resource type="Script" uid="uid://dd02nt4de7m1a" path="res://scripts/navigation_system.gd" id="5_nav"]
+[ext_resource type="Script" uid="uid://cakvrjfimn0sj" path="res://scripts/crosshair.gd" id="6_cross"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_black"]
 albedo_color = Color(0, 0, 0, 1)
@@ -26,11 +28,17 @@ resource_local_to_scene = true
 [sub_resource type="PlaneMesh" id="PlaneMesh_main"]
 size = Vector2(1.6, 1)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_main"]
+size = Vector3(1.6, 0.1, 1)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_left"]
 resource_local_to_scene = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_left"]
 size = Vector2(0.7, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_left"]
+size = Vector3(0.7, 0.1, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_right"]
 resource_local_to_scene = true
@@ -38,17 +46,11 @@ resource_local_to_scene = true
 [sub_resource type="PlaneMesh" id="PlaneMesh_right"]
 size = Vector2(0.7, 0.5)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_right"]
+size = Vector3(0.7, 0.1, 0.5)
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_system"]
 size = Vector2(1.2, 0.4)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_test"]
-resource_local_to_scene = true
-
-[sub_resource type="QuadMesh" id="QuadMesh_test"]
-material = SubResource("StandardMaterial3D_test")
-
-[sub_resource type="BoxMesh" id="BoxMesh_s8r4p"]
-size = Vector3(0.1, 0.1, 0.1)
 
 [node name="Cockpit" type="Node3D" unique_id=73246118]
 script = ExtResource("1_ga5w8")
@@ -78,15 +80,33 @@ transform = Transform3D(1, 0, 0, 0, 0.49999997, -0.86602545, 0, 0.86602545, 0.49
 material_override = SubResource("StandardMaterial3D_main")
 mesh = SubResource("PlaneMesh_main")
 
-[node name="LeftScreenSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=1751120462]
+[node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/MainScreenSlot" unique_id=2053614523]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/MainScreenSlot/ScreenBody" unique_id=1735915250]
+shape = SubResource("BoxShape3D_main")
+
+[node name="LeftScreenSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=175112462]
 transform = Transform3D(0.90482706, 0.3010714, 0.3010714, 0, 0.70710677, -0.70710677, -0.42577928, 0.6398093, 0.6398093, -0.8, 0.3, -1.5)
 material_override = SubResource("StandardMaterial3D_left")
 mesh = SubResource("PlaneMesh_left")
+
+[node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/LeftScreenSlot" unique_id=1862574080]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/LeftScreenSlot/ScreenBody" unique_id=61999168]
+shape = SubResource("BoxShape3D_left")
 
 [node name="RightScreenSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=571581133]
 transform = Transform3D(0.9338555, -0.12167471, -0.3363171, -0.1650708, 0.68756926, -0.70710677, 0.31727836, 0.7158516, 0.62200546, 0.8, 0.3, -1.5)
 material_override = SubResource("StandardMaterial3D_right")
 mesh = SubResource("PlaneMesh_right")
+
+[node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/RightScreenSlot" unique_id=367734591]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/RightScreenSlot/ScreenBody" unique_id=223957916]
+shape = SubResource("BoxShape3D_right")
 
 [node name="SystemPanelSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=393523722]
 transform = Transform3D(1, 0, 0, 0, 0.9393727, -0.3428978, 0, 0.3428978, 0.9393727, 0, -0.2, -1.5)
@@ -96,6 +116,10 @@ mesh = SubResource("PlaneMesh_system")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 current = true
 fov = 70.0
+script = ExtResource("4_cam")
+
+[node name="NavigationSystem" type="Node" parent="." unique_id=1130041933]
+script = ExtResource("5_nav")
 
 [node name="ForwardViewport" type="SubViewport" parent="." unique_id=806395697]
 size = Vector2i(320, 240)
@@ -125,7 +149,7 @@ transform = Transform3D(-1, 0, 2.5351817e-06, 0, 1, 0, -2.5351817e-06, 0, -1, 0,
 current = true
 fov = 70.0
 
-[node name="CRTOverlay" type="ColorRect" parent="RearViewport" unique_id=196553694]
+[node name="CRTOverlay" type="ColorRect" parent="RearViewport" unique_id=196592294]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -138,25 +162,16 @@ size = Vector2i(640, 480)
 
 [node name="GravityMapPanel" parent="MainMonitorViewport" unique_id=2119441031 instance=ExtResource("3_gmap")]
 
-[node name="TestViewport" type="SubViewport" parent="." unique_id=881657498]
-size = Vector2i(1024, 512)
-render_target_update_mode = 4
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1668858542]
 
-[node name="Panel" parent="TestViewport" unique_id=473104171 instance=ExtResource("2_mlplb")]
+[node name="Crosshair" type="Control" parent="HUD" unique_id=417234987]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("6_cross")
 
-[node name="TestViewportMesh" type="MeshInstance3D" parent="." unique_id=1630159094]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0591325, -2.4207554)
-mesh = SubResource("QuadMesh_test")
-
-[node name="HUD" type="CanvasLayer" parent="." unique_id=1399470086]
-
-[node name="MonitorSwitchLabel" type="Label" parent="HUD" unique_id=213136356]
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 420.0
-offset_bottom = 60.0
-text = "主监视器: 引力场图 [1]"
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=782616126]
-transform = Transform3D(0.89143795, 0.35362935, 0.2833459, -0.36874115, 0.92953223, 0, -0.2633791, -0.10448128, 0.9590178, 0, 0.46496594, 0.39124978)
-mesh = SubResource("BoxMesh_s8r4p")
+[connection signal="screen_clicked" from="PlayerCamera" to="." method="_on_screen_clicked"]

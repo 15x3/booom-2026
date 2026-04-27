@@ -1,7 +1,5 @@
 extends Node3D
 
-enum MonitorMode { GRAVITY_MAP, FORWARD_CAM, SCAN_RESULT }
-
 @onready var forward_viewport: SubViewport = $ForwardViewport
 @onready var rear_viewport: SubViewport = $RearViewport
 @onready var main_monitor_viewport: SubViewport = $MainMonitorViewport
@@ -14,12 +12,12 @@ enum MonitorMode { GRAVITY_MAP, FORWARD_CAM, SCAN_RESULT }
 @onready var rear_cam: Camera3D = $RearViewport/CamRig/RearCam
 @onready var player_cam: Camera3D = $PlayerCamera
 
-@onready var monitor_label: Label = $HUD/MonitorSwitchLabel
+@onready var nav_system: Node = $NavigationSystem
 
 var config: Dictionary = {}
-var current_mode: MonitorMode = MonitorMode.GRAVITY_MAP
 var _camera_fps_timer: Timer
 var _camera_vps: Array = []
+var _gravity_map: Control = null
 
 func _ready() -> void:
 	_load_config()
@@ -28,18 +26,9 @@ func _ready() -> void:
 	_setup_camera_fps()
 	_bind_viewport_textures()
 	_apply_crt_to_cameras()
-	_update_monitor_label()
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("monitor_gravity"):
-		current_mode = MonitorMode.GRAVITY_MAP
-		_update_monitor_label()
-	elif event.is_action_pressed("monitor_forward"):
-		current_mode = MonitorMode.FORWARD_CAM
-		_update_monitor_label()
-	elif event.is_action_pressed("monitor_scan"):
-		current_mode = MonitorMode.SCAN_RESULT
-		_update_monitor_label()
+	_connect_signals()
+	if nav_system and nav_system.has_method("start"):
+		nav_system.start()
 
 func _load_config() -> void:
 	var path := "res://assets/data/game_config.json"
@@ -53,6 +42,13 @@ func _load_config() -> void:
 		push_error("Config parse error: " + json.get_error_message())
 		return
 	config = json.data
+
+func _connect_signals() -> void:
+	_gravity_map = main_monitor_viewport.get_node("GravityMapPanel")
+	if _gravity_map:
+		_gravity_map.channel_clicked.connect(_on_channel_clicked)
+	if nav_system:
+		nav_system.node_changed.connect(_on_node_changed)
 
 func _setup_viewports() -> void:
 	var main_world := get_viewport().get_world_3d()
@@ -96,10 +92,6 @@ func _bind_viewport_textures() -> void:
 	_bind_screen(right_screen, rear_viewport)
 	_bind_screen(main_screen, main_monitor_viewport)
 
-	var test_mesh: MeshInstance3D = $TestViewportMesh
-	if test_mesh:
-		_bind_screen(test_mesh, $TestViewport)
-
 func _bind_screen(screen: MeshInstance3D, vp: SubViewport) -> void:
 	var mat := screen.material_override as StandardMaterial3D
 	if mat == null:
@@ -111,7 +103,6 @@ func _bind_screen(screen: MeshInstance3D, vp: SubViewport) -> void:
 	var tex := vp.get_texture()
 	mat.albedo_texture = tex
 	mat.emission_texture = tex
-	print("[cockpit] ", screen.name, " bound: tex_size=", tex.get_size())
 
 func _apply_crt_to_cameras() -> void:
 	var crt_shader_path := "res://assets/shaders/CRT.gdshader"
@@ -136,7 +127,6 @@ func _apply_crt_to_cameras() -> void:
 			elif value is bool:
 				mat.set_shader_parameter(key, value)
 		overlay.material = mat
-		print("[cockpit] CRT applied to ", vp.name)
 
 func _find_crt_overlay(vp: SubViewport) -> ColorRect:
 	for child: Node in vp.get_children():
@@ -144,13 +134,32 @@ func _find_crt_overlay(vp: SubViewport) -> ColorRect:
 			return child as ColorRect
 	return null
 
-func _update_monitor_label() -> void:
-	if monitor_label == null:
+func _on_screen_clicked(screen_name: String, uv: Vector2) -> void:
+	var vp: SubViewport = null
+	match screen_name:
+		"MainScreenSlot":
+			vp = main_monitor_viewport
+		"LeftScreenSlot":
+			vp = forward_viewport
+		"RightScreenSlot":
+			vp = rear_viewport
+	if vp == null:
 		return
-	match current_mode:
-		MonitorMode.GRAVITY_MAP:
-			monitor_label.text = "主监视器: 引力场图 [1]"
-		MonitorMode.FORWARD_CAM:
-			monitor_label.text = "主监视器: 前方实况 [2]"
-		MonitorMode.SCAN_RESULT:
-			monitor_label.text = "主监视器: 扫描结果 [3]"
+	var pixel_pos := Vector2(uv.x * float(vp.size.x), uv.y * float(vp.size.y))
+	var press := InputEventMouseButton.new()
+	press.position = pixel_pos
+	press.global_position = pixel_pos
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	vp.push_input(press)
+	var release := press.duplicate()
+	release.pressed = false
+	vp.push_input(release)
+
+func _on_channel_clicked(channel_id: String) -> void:
+	if nav_system:
+		nav_system.select_channel(channel_id)
+
+func _on_node_changed(node_data: Dictionary) -> void:
+	if _gravity_map and _gravity_map.has_method("update_display"):
+		_gravity_map.update_display(node_data)
