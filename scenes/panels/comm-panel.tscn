@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://b8bq2is074vev"]
+
+[ext_resource type="Script" uid="uid://c78hlkcv85vg" path="res://scripts/comm_panel.gd" id="1_ebbgr"]
+
+[node name="CommPanel" type="Control" unique_id=1092392556]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 640.0
+offset_bottom = 100.0
+script = ExtResource("1_ebbgr")
+
+[node name="Background" type="ColorRect" parent="." unique_id=2069329976]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.02, 0.05, 0.1, 0.9)
+
+[node name="Border" type="ColorRect" parent="." unique_id=615689747]
+z_index = -1
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 640.0
+offset_bottom = 100.0
+color = Color(0, 0.4, 0.6, 0.3)
+
+[node name="Prefix" type="Label" parent="." unique_id=419594754]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 108.0
+offset_bottom = 27.0
+text = "[SYS]"
+
+[node name="MessageLabel" type="RichTextLabel" parent="." unique_id=1036974014]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 22.0
+offset_right = -16.0
+offset_bottom = -8.0
+bbcode_enabled = true
+
+[node name="CursorLabel" type="Label" parent="." unique_id=1583286058]
+visible = false
+layout_mode = 0
+offset_left = 620.0
+offset_top = 80.0
+offset_right = 640.0
+offset_bottom = 103.0
+text = "_"

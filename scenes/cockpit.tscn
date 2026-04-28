@@ -4,15 +4,28 @@
 [ext_resource type="PackedScene" path="res://scenes/panels/gravity-map-panel.tscn" id="3_gmap"]
 [ext_resource type="Script" uid="uid://dbv48kmjphrip" path="res://scripts/camera_controller.gd" id="4_cam"]
 [ext_resource type="Script" uid="uid://dd02nt4de7m1a" path="res://scripts/navigation_system.gd" id="5_nav"]
+[ext_resource type="Script" uid="uid://b582e1ecplr6c" path="res://scripts/transition_player.gd" id="6_c1ege"]
 [ext_resource type="Script" uid="uid://cakvrjfimn0sj" path="res://scripts/crosshair.gd" id="6_cross"]
+[ext_resource type="PackedScene" uid="uid://bg3ey6qf5yqt7" path="res://scenes/panels/system-panel.tscn" id="7_shtuo"]
+[ext_resource type="Script" uid="uid://br2lnryilmh5w" path="res://scripts/ship_resources.gd" id="8_bjct7"]
+[ext_resource type="PackedScene" path="res://scenes/panels/comm-panel.tscn" id="9_comm"]
+[ext_resource type="Script" path="res://scripts/narrative_manager.gd" id="10_narr"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_black"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjct7"]
 albedo_color = Color(0, 0, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_blackhole"]
 radius = 2.0
 radial_segments = 32
 rings = 16
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iw1fk"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bjct7"]
+top_radius = 4.0
+bottom_radius = 4.0
+height = 0.08
+rings = 1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_star"]
 emission_enabled = true
@@ -52,6 +65,15 @@ size = Vector3(0.7, 0.1, 0.5)
 [sub_resource type="PlaneMesh" id="PlaneMesh_system"]
 size = Vector2(1.2, 0.4)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_shtuo"]
+size = Vector3(1.2, 0.4, 0.05)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_comm"]
+size = Vector2(1.6, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_comm"]
+size = Vector3(1.6, 0.1, 0.35)
+
 [node name="Cockpit" type="Node3D" unique_id=73246118]
 script = ExtResource("1_ga5w8")
 
@@ -61,8 +83,13 @@ script = ExtResource("1_ga5w8")
 
 [node name="BlackHolePlaceholder" type="MeshInstance3D" parent="SpaceEnvironment" unique_id=310802805]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -50)
-material_override = SubResource("StandardMaterial3D_black")
+material_override = SubResource("StandardMaterial3D_bjct7")
 mesh = SubResource("SphereMesh_blackhole")
+
+[node name="AccretionDisk" type="MeshInstance3D" parent="SpaceEnvironment/BlackHolePlaceholder" unique_id=1726763577]
+transform = Transform3D(1, 0, 0, 0, 0.93969256, -0.34202027, 0, 0.34202027, 0.93969256, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_iw1fk")
+mesh = SubResource("CylinderMesh_bjct7")
 
 [node name="StarfieldPlaceholder" type="MeshInstance3D" parent="SpaceEnvironment" unique_id=2083302550]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 3, -20)
@@ -112,6 +139,22 @@ shape = SubResource("BoxShape3D_right")
 transform = Transform3D(1, 0, 0, 0, 0.9393727, -0.3428978, 0, 0.3428978, 0.9393727, 0, -0.2, -1.5)
 mesh = SubResource("PlaneMesh_system")
 
+[node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/SystemPanelSlot" unique_id=1354935545]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/SystemPanelSlot/ScreenBody" unique_id=2071682623]
+shape = SubResource("BoxShape3D_shtuo")
+
+[node name="CommScreenSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=1815251236]
+transform = Transform3D(1, 0, 0, 0, 0.4535961, -0.8912074, 0, 0.8912074, 0.4535961, 0, 0.75, -1.9)
+mesh = SubResource("PlaneMesh_comm")
+
+[node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/CommScreenSlot" unique_id=125478379]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/CommScreenSlot/ScreenBody" unique_id=1290437352]
+shape = SubResource("BoxShape3D_comm")
+
 [node name="PlayerCamera" type="Camera3D" parent="." unique_id=2126927117]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 current = true
@@ -131,6 +174,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 current = true
 fov = 70.0
 
+[node name="LensDistortionOverlay" type="ColorRect" parent="ForwardViewport" unique_id=944344644]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
 [node name="CRTOverlay" type="ColorRect" parent="ForwardViewport" unique_id=2085208664]
 anchors_preset = 15
 anchor_right = 1.0
@@ -148,6 +199,14 @@ size = Vector2i(320, 240)
 transform = Transform3D(-1, 0, 2.5351817e-06, 0, 1, 0, -2.5351817e-06, 0, -1, 0, 0.5, 0)
 current = true
 fov = 70.0
+
+[node name="LensDistortionOverlay" type="ColorRect" parent="RearViewport" unique_id=399523954]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
 
 [node name="CRTOverlay" type="ColorRect" parent="RearViewport" unique_id=196592294]
 anchors_preset = 15
@@ -173,5 +232,40 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("6_cross")
+
+[node name="TransitionPlayer" type="Control" parent="HUD" unique_id=536370128]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("6_c1ege")
+
+[node name="SystemPanelViewport" type="SubViewport" parent="." unique_id=598996555]
+size = Vector2i(480, 160)
+render_target_update_mode = 1
+
+[node name="SystemPanelRoot" type="Control" parent="SystemPanelViewport" unique_id=1671210715]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 480.0
+offset_bottom = 160.0
+
+[node name="SystemPanel" parent="SystemPanelViewport" unique_id=904506453 instance=ExtResource("7_shtuo")]
+
+[node name="ShipResources" type="Node" parent="." unique_id=317708707]
+script = ExtResource("8_bjct7")
+
+[node name="CommViewport" type="SubViewport" parent="." unique_id=900000001]
+size = Vector2i(640, 100)
+render_target_update_mode = 1
+
+[node name="CommPanelRoot" type="Control" parent="CommViewport" unique_id=900000002]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 640.0
+offset_bottom = 100.0
+
+[node name="CommPanel" parent="CommViewport" unique_id=900000003 instance=ExtResource("9_comm")]
+
+[node name="NarrativeManager" type="Node" parent="." unique_id=900000004]
+script = ExtResource("10_narr")
 
 [connection signal="screen_clicked" from="PlayerCamera" to="." method="_on_screen_clicked"]

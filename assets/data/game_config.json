@@ -43,6 +43,16 @@
     "center_offset": [0.0, 0.0],
     "blackhole_scale": 1.0
   },
+  "transition": {
+    "crt_flicker_duration": 0.5,
+    "fade_in_duration": 0.5,
+    "zone_display_duration": 1.5,
+    "fade_out_duration": 0.5
+  },
+  "narrative": {
+    "char_speed": 0.04,
+    "message_pause": 1.0
+  },
   "crt": {
     "brightness": 1.4,
     "scanlines_opacity": 0.4,

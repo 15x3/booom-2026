@@ -1,0 +1,167 @@
+[gd_scene format=3 uid="uid://bg3ey6qf5yqt7"]
+
+[ext_resource type="Script" uid="uid://bobo2ulje6g7p" path="res://scripts/system_panel.gd" id="1_qtsff"]
+
+[node name="SystemPanel" type="Control" unique_id=904506453]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 480.0
+offset_bottom = 160.0
+script = ExtResource("1_qtsff")
+
+[node name="Background" type="ColorRect" parent="." unique_id=979404223]
+layout_mode = 0
+color = Color(0.05, 0.08, 0.12, 1)
+
+[node name="FuelLabel" type="Label" parent="." unique_id=600862364]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = 48.0
+offset_bottom = 24.0
+text = "FUE"
+uppercase = true
+
+[node name="FuelBarBg" type="ColorRect" parent="." unique_id=1613096836]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 12.0
+offset_right = 200.0
+offset_bottom = 22.0
+color = Color(0.15, 0.18, 0.22, 1)
+
+[node name="FuelBarFill" type="ColorRect" parent="." unique_id=826055109]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 12.0
+offset_right = 200.0
+offset_bottom = 22.0
+color = Color(0.2, 0.8, 1, 1)
+
+[node name="FuelValue" type="Label" parent="." unique_id=763224259]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 10.0
+offset_right = 248.0
+offset_bottom = 24.0
+text = "100%"
+
+[node name="HullLabel" type="Label" parent="." unique_id=438959937]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 32.0
+offset_right = 48.0
+offset_bottom = 46.0
+text = "HUL"
+uppercase = true
+
+[node name="HullBarBg" type="ColorRect" parent="." unique_id=857074021]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 34.0
+offset_right = 200.0
+offset_bottom = 44.0
+color = Color(0.15, 0.18, 0.22, 1)
+
+[node name="HullBarFill" type="ColorRect" parent="." unique_id=1596818274]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 34.0
+offset_right = 200.0
+offset_bottom = 44.0
+color = Color(0.3, 0.9, 0.4, 1)
+
+[node name="HullValue" type="Label" parent="." unique_id=1151363496]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 32.0
+offset_right = 248.0
+offset_bottom = 46.0
+text = "100%"
+
+[node name="O2Label" type="Label" parent="." unique_id=1633534655]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 10.0
+offset_right = 290.0
+offset_bottom = 24.0
+text = "O2"
+uppercase = true
+
+[node name="O2BarBg" type="ColorRect" parent="." unique_id=1916799407]
+layout_mode = 0
+offset_left = 284.0
+offset_top = 12.0
+offset_right = 436.0
+offset_bottom = 22.0
+color = Color(0.15, 0.18, 0.22, 1)
+
+[node name="O2BarFill" type="ColorRect" parent="." unique_id=134655717]
+layout_mode = 0
+offset_left = 284.0
+offset_top = 12.0
+offset_right = 436.0
+offset_bottom = 22.0
+color = Color(0.4, 0.7, 1, 1)
+
+[node name="O2Value" type="Label" parent="." unique_id=1307671315]
+layout_mode = 0
+offset_left = 444.0
+offset_top = 10.0
+offset_right = 480.0
+offset_bottom = 24.0
+text = "100%"
+
+[node name="StatusText" type="Label" parent="." unique_id=734646604]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 32.0
+offset_right = 470.0
+offset_bottom = 46.0
+text = "NOMINAL"
+uppercase = true
+
+[node name="Divider" type="ColorRect" parent="." unique_id=1664382061]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 56.0
+offset_right = 468.0
+offset_bottom = 58.0
+color = Color(0.2, 0.25, 0.3, 1)
+
+[node name="ScanButton" type="Button" parent="." unique_id=2020538350]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 68.0
+offset_right = 150.0
+offset_bottom = 98.0
+disabled = true
+text = "[ SCAN ]"
+
+[node name="ThrustButton" type="Button" parent="." unique_id=1608066777]
+layout_mode = 0
+offset_left = 170.0
+offset_top = 68.0
+offset_right = 300.0
+offset_bottom = 98.0
+disabled = true
+text = "[ THRUST ]"
+
+[node name="WarningLabel" type="Label" parent="." unique_id=1484599374]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 68.0
+offset_right = 468.0
+offset_bottom = 98.0
+
+[node name="InfoLabel" type="Label" parent="." unique_id=1116417402]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 110.0
+offset_right = 468.0
+offset_bottom = 140.0
+text = "S: Scan  T: Thrust  W: Wreck Scan  Click: Select"
+uppercase = true
+
+[connection signal="pressed" from="ScanButton" to="." method="_on_scan_button_pressed"]
+[connection signal="pressed" from="ThrustButton" to="." method="_on_thrust_button_pressed"]
