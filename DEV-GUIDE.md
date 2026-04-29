@@ -1,323 +1,225 @@
 # 事件视界 — 程序开发任务清单
 
-**项目：** 事件视界 (Event Horizon) — "视界限" Jam  
-**周期：** 3 周 / 每天 2 小时 / 共约 42 小时  
-**引擎：** Godot 4.6 / GDScript / GL Compatibility / Jolt Physics  
-**配置文件：** `.claude/docs/technical-preferences.md`  
+**项目：** 事件视界 (Event Horizon) — "视界限" Jam
+**周期：** 3 周 / 每天 2 小时 / 共约 42 小时
+**引擎：** Godot 4.6 / GDScript / GL Compatibility / Jolt Physics
 **设计文档：** `design/gdd/event-horizon.md`
+**核心方向：** 驾驶舱物理操作 + 小地图实时驾驶 + 资源管理生存
 
 ---
 
 ## 技术架构总览
 
 ```
-cockpit.tscn                    ← 唯一主场景
-├── CockpitInterior/           ← Blockbench 驾驶舱模型
-│   ├── Seat
-│   ├── MainScreenSlot         ← 主监视器显示区
-│   ├── LeftScreenSlot         ← 前方摄像头显示区
-│   ├── RightScreenSlot        ← 后方摄像头显示区
-│   └── SystemPanelSlot        ← 系统面板显示区
+cockpit.tscn                            ← 唯一主场景
+├── CockpitInterior/
+│   ├── Body (CSGBox3D)
+│   ├── ConsolePanel/                   ← 控制台（程序化3D）
+│   │   ├── IgnitionBtn [button_control]  ← 点火按钮
+│   │   ├── NavKnob [knob_control]        ← 导航旋钮 (NAV/LOCK/SLING)
+│   │   ├── FuelValve [knob_control]      ← 燃料阀门 (OFF/LOW/MID/HIGH)
+│   │   ├── ThrustLever [lever_control]   ← 推力推杆 (弹弓用)
+│   │   ├── LeftPanel [side_panel]        ← 左侧面板
+│   │   │   ├── ScanFreqKnob [knob_control]
+│   │   │   ├── ScanSwitch [switch_control]
+│   │   │   ├── Breaker1-4 [switch_control]
+│   │   ├── RightPanel [side_panel]       ← 右侧面板
+│   │   │   ├── O2Valve [switch_control]
+│   │   │   ├── CoolingKnob [knob_control]
+│   ├── MainScreenSlot                  ← 主监视器（小地图）
+│   ├── LeftScreenSlot                  ← 前方摄像头
+│   ├── RightScreenSlot                 ← 后方摄像头
+│   ├── SystemPanelSlot                 ← 系统面板
+│   └── CommScreenSlot                  ← 通讯面板
 │
 ├── SpaceEnvironment/
-│   ├── BlackHole              ← MeshInstance3D + Shader
-│   ├── DebrisField/           ← 碎片实例
-│   ├── Starfield              ← GPUParticles3D 或 Shader
+│   ├── BlackHolePlaceholder + AccretionDisk
+│   ├── StarfieldPlaceholder
 │   └── WorldEnvironment
 │
-├── Cameras/
-│   ├── ForwardCam             ← Camera3D → SubViewport (320×240 @ 15fps)
-│   └── RearCam               ← Camera3D → SubViewport (320×240 @ 15fps)
+├── PlayerCamera [camera_controller]
+│   └── Flashlight (SpotLight3D)        ← 手电筒
 │
-├── NavigationSystem/
-│   ├── GravityMapDisplay      ← Control, 2D Shader 绘制引力场
-│   ├── ChannelNodes           ← 节点逻辑（分叉/选择/后果）
-│   └── Scanner               ← 扫描逻辑
+├── NavigationSystem [navigation_system]
+├── ShipResources [ship_resources]      ← 扩展：温度+O2补给+断路器
+├── NarrativeManager [narrative_manager]
+├── OperationManager [operation_manager]  ← 新增：操作流程管理
+├── MaintenanceManager [maintenance_manager] ← 新增：日常维持
 │
-├── ResourceManager/
-│   └── ShipResources          ← 燃料/船体/氧气 数值管理
+├── ForwardViewport (320×240 @ 15fps)
+├── RearViewport (320×240 @ 15fps)
+├── MainMonitorViewport (640×480)       ← 小地图驾驶场
+│   └── MiniMapPanel [mini_map]         ← 新增（替换 gravity_map）
+├── CommViewport (640×100)
+├── SystemPanelViewport (480×160)
 │
-├── EventSystem/
-│   └── NarrativeEvents        ← 节点事件/对讲机/叙事触发
-│
-└── UI/
-	├── MonitorFrameUI         ← 监视器边框（像素风）
-	├── SystemPanelUI          ← 仪表盘（燃料/船体/氧气/警告）
-	├── ActionButtons          ← 扫描/推进/减速按钮
-	├── ScanProgressBar        ← 扫描进度条
-	├── CRTOverlay             ← 扫描线/色差/噪点 Shader
-	├── LensDistortionOverlay  ← 引力透镜扭曲 Shader
-	├── DayTransitionUI        ← 节点过渡画面
-	└── EndingUI               ← 结局画面
+└── HUD (CanvasLayer)
+	├── Crosshair [crosshair]
+	├── TransitionPlayer [transition_player]
+	└── SlingshotHUD [slingshot_hud]    ← 新增：弹弓进度条
 ```
+
+---
+
+## 复用说明
+
+### 完全复用（不改）
+
+| 文件 | 说明 |
+|------|------|
+| `scripts/transition_player.gd` | 过渡动画库 |
+| `scripts/comm_panel.gd` | 通讯面板 |
+| `scripts/narrative_manager.gd` | 叙事管理 |
+| `scripts/crosshair.gd` | 准星 |
+| `assets/shaders/CRT.gdshader` | CRT 效果 |
+| `assets/shaders/lens_distortion.gdshader` | 透镜扭曲 |
+| `assets/shaders/BlackHole.gdshader` | 黑洞可视化 |
+| `assets/shaders/accretion_disk.gdshader` | 吸积盘 |
+| `scripts/gravity_map.gd` | 保留旧文件做参考，不再使用 |
+
+### 保留并扩展
+
+| 文件 | 改动 |
+|------|------|
+| `scripts/navigation_system.gd` | 适配小地图到达判定 |
+| `scripts/ship_resources.gd` | 新增引擎温度+O2补给+断路器查询 |
+| `scripts/system_panel.gd` | 新增温度/断路器/冷却状态 UI |
+| `scripts/camera_controller.gd` | 手电筒+射线交互扩展到控件 |
+
+### 大改
+
+| 文件 | 改动 |
+|------|------|
+| `scripts/cockpit.gd` | 移除键盘S/T/W，接入 OperationManager + MaintenanceManager |
+| `scenes/cockpit.tscn` | 新增 ConsolePanel + 侧面板 + 手电筒 + MiniMap |
+
+### 新建
+
+| 文件 | 说明 |
+|------|------|
+| `scripts/controls/base_control.gd` | 控件基类 |
+| `scripts/controls/knob_control.gd` | 旋钮（拖拽旋转+吸附） |
+| `scripts/controls/button_control.gd` | 按钮（点击动画） |
+| `scripts/controls/switch_control.gd` | 开关（拨动切换） |
+| `scripts/controls/lever_control.gd` | 拉杆（拖拽上下） |
+| `scripts/controls/side_panel.gd` | 侧面板（开合动画） |
+| `scripts/mini_map.gd` | 小地图驾驶系统 |
+| `scripts/ship_physics.gd` | 飞船2D物理（潜艇式） |
+| `scripts/operation_manager.gd` | 操作流程管理 |
+| `scripts/maintenance_manager.gd` | 日常维持管理 |
+| `scripts/slingshot_hud.gd` | 弹弓进度条 HUD |
+| `scenes/console-panel.tscn` | 控制台场景 |
 
 ---
 
 ## 系统开发清单
 
-### S1. 驾驶舱场景 + 监视器渲染
+### Phase 1: 控件基础 (预估 6-8h)
 
-**优先级：最高 | 预估 6h**
+**目标：** 所有物理控件可用，可鼠标交互，有动画反馈
 
-- [ ] 创建 `cockpit.tscn`，第一人称固定摄像机
-- [ ] 加载 Blockbench 驾驶舱模型
-- [ ] 创建 SubViewport ×2（前方/后方摄像头），分辨率 320×240 @ 15fps
-- [ ] 将 SubViewport 纹理映射到驾驶舱屏幕凹槽
-- [ ] 实现 CRT 叠加效果（扫描线 + 色差 + 噪点 Shader）
-- [ ] 实现鼠标点击切换主监视器显示模式（引力场图/前方实况/扫描结果）
+- [ ] P1.1 `scripts/controls/base_control.gd` — 基类：碰撞体 + 高亮 + 动画 + 脚本接口
+- [ ] P1.2 `scripts/controls/knob_control.gd` — 旋钮：拖拽旋转 + 档位吸附 + value_changed 信号
+- [ ] P1.3 `scripts/controls/button_control.gd` — 按钮：点击 + 按下/弹起 Tween
+- [ ] P1.4 `scripts/controls/switch_control.gd` — 开关：点击切换 + 拨动动画 + toggled 信号
+- [ ] P1.5 `scripts/controls/lever_control.gd` — 拉杆：上下拖拽 + 连续值 + 动画
+- [ ] P1.6 `scripts/controls/side_panel.gd` — 侧面板：开合旋转动画 + 碰撞体 + 脚本接口
+- [ ] P1.7 `scenes/console-panel.tscn` — 程序化搭建所有 3D 控件 + 侧面板（左/右各一个）
+- [ ] P1.8 `camera_controller.gd` 射线交互扩展 — 控件碰撞体 + 手电筒 SpotLight3D
 
-**验收：** 驾驶舱内可见两路摄像头画面，叠加 CRT 效果。点击可切换主屏内容。
-
-**技术要点：**
-- SubViewport 使用 `render_target_update_mode = UPDATE_WHEN_VISIBLE`
-- CRT 效果用一个全屏 CanvasItem Shader 实现，叠加在所有监视器画面之上
-- 摄像头 Camera3D 的 `cull_mask` 设置，避免渲染驾驶舱内部几何
+**验收：** 驾驶舱内可见所有控件，鼠标可交互（旋钮拖拽旋转、按钮点击、开关切换、拉杆拖拽、面板开合），有动画反馈。
 
 ---
 
-### S2. 引力场图渲染
+### Phase 2: 小地图驾驶 (预估 8-10h)
 
-**优先级：最高 | 预估 5h**
+**目标：** 主监视器上可驾驶飞船在小地图中移动
 
-- [ ] 创建 GravityMapDisplay (Control 节点)
-- [ ] 实现 2D Shader 绘制引力场流线（参考美工提供的色板）
-- [ ] 绘制航道线条（可选航道用亮色，危险区域用红色）
-- [ ] 绘制飞船位置标记（白色亮点）
-- [ ] 绘制黑洞方向（黑色区域 + 扭曲网格）
-- [ ] 绘制逃逸点方向标记（黄色脉冲）
-- [ ] 实现引力透镜扭曲效果（靠近黑洞方向画面扭曲）
+- [ ] P2.1 `scripts/ship_physics.gd` — 潜艇式2D物理（转向+油门+惯性+引力拉力+阻力）
+- [ ] P2.2 `scripts/mini_map.gd` — 小地图渲染：引力场渐变背景 + 碎片标记 + 目的地标记 + 飞船图标 + 信号强度条
+- [ ] P2.3 地图数据驱动 — `nodes.json` 每节点新增 `map_data` 段（尺寸/起始位置/碎片/目的地/引力参数/扫描频率）
+- [ ] P2.4 飞船驾驶操控 — NavKnob→转向，FuelValve→油门，实时映射
+- [ ] P2.5 碰撞检测 — 飞船与碎片碰撞 + hull 伤害
+- [ ] P2.6 引力场效果 — 减速 + 方向拉力（越靠近"黑洞边"越强）
+- [ ] P2.7 到达目的地判定 — 飞入目的地半径 → 触发节点切换
+- [ ] P2.8 地图数据刷新机制 — 扫描后更新碎片位置 + 显示隐藏目的地 + 数据过期漂移
 
-**验收：** 主监视器显示一张以飞船为中心的引力场图，可见航道流线、黑洞方向、障碍标注。
-
-**技术要点：**
-- 引力场图是 2D 的，用 Shader 绘制（SDF 或噪声函数生成流场）
-- 航道数据从配置文件读取（航道起点/终点/属性）
-- 引力透镜效果：对靠近黑洞中心的 UV 做径向扭曲
+**验收：** 主监视器显示小地图，飞船可通过物理控件驾驶。有引力场颜色渐变、碎片碰撞伤害、目的地飞入触发。地图数据不自动更新，扫描后刷新。
 
 ---
 
-### S3. 导航节点系统
+### Phase 3: 操作流程 (预估 6-8h)
 
-**优先级：高 | 预估 5h**
+**目标：** 完整的操作流程管理，替换键盘输入
 
-- [ ] 定义节点数据结构（JSON/Resource）：
-  ```gdscript
-  # 每个节点包含：
-  # - 可选航道列表（每条航道：方向、属性、后果类型）
-  # - 叙事事件（对讲机文本、系统消息）
-  # - 环境参数（引力强度、碎片密度、透镜扭曲系数）
-  # - 过渡动画参数
-  ```
-- [ ] 实现节点状态机：`SCANNING → CHOOSING → TRAVELLING → ARRIVING`
-- [ ] 实现"选择航道"交互（点击引力场图上的航道或按钮选择）
-- [ ] 实现行进过渡（飞船沿航道移动的画面变化）
-- [ ] 实现 7 个节点的完整数据配置
+- [ ] P3.1 `scripts/operation_manager.gd` — 核心框架：步骤验证 + 错误后果 + 操作状态
+- [ ] P3.2 扫描/地图刷新流程 — 打开左面板 → 调频 → 扫描开关 → 刷新地图
+- [ ] P3.3 残骸扫描 — 节点2特殊频率 + 叙事文本
+- [ ] P3.4 `cockpit.gd` 改造 — 移除键盘 S/T/W 操作，接入 OperationManager
+- [ ] P3.5 节点0教学 — 自由探索式 comm_panel 文字引导
+- [ ] P3.6 `game_config.json` 更新 — 新增驾驶物理/控件/扫描/弹弓配置段
+- [ ] P3.7 `nodes.json` 更新 — 每节点完整 map_data 数据
 
-**验收：** 玩家可以在每个分叉节点查看航道、选择航道、看到行进过渡、到达下一节点。
+**验收：** 键盘不再控制扫描/推进。所有操作通过物理控件完成。教学引导玩家找到并操作各控件。扫描流程正确刷新地图数据。
 
 ---
 
-### S4. 扫描机制
+### Phase 4: 日常维持 (预估 4-6h)
 
-**优先级：高 | 预估 3h**
+**目标：** 驾驶期间持续有系统故障需要处理
 
-- [ ] 实现扫描按钮逻辑（选择一条航道 → 消耗燃料 → 5 秒进度条）
-- [ ] 扫描进度条 UI（青色填充）
-- [ ] 扫描完成后在引力场图上标注该航道属性（颜色/数值）
-- [ ] 扫描揭示程度规则：
-  - 稳定性：精确显示
-  - 碎片密度：近似值（±30%）
-  - 引力强度：精确显示
-  - 逃逸概率：仅方向箭头
+- [ ] P4.1 `scripts/maintenance_manager.gd` — 断路器跳闸 + O2补给 + 引擎冷却逻辑
+- [ ] P4.2 断路器系统 — 随机跳闸 → 对应 SubViewport 冻结 → 面板复位恢复
+- [ ] P4.3 O2 补给 — 氧气低时触发 → 右面板操作 → 恢复 10-15%
+- [ ] P4.4 引擎冷却 + 温度 — HIGH档积累 → 过热惩罚 → 冷却旋钮降温
+- [ ] P4.5 `ship_resources.gd` 扩展 — 新增 engine_temp + o2_supply + breaker 状态方法
+- [ ] P4.6 `system_panel.gd` UI 扩展 — 温度条 + 断路器指示灯(×4) + O2待命灯 + 冷却指示
 
-**验收：** 点击扫描按钮 → 选择航道 → 进度条走 5 秒 → 引力场图更新显示该航道信息。
+**验收：** 驾驶过程中断路器随机跳闸，对应屏幕冻结。可打开面板复位。O2低时触发补给。引擎温度随操作变化，可冷却。系统面板显示所有新状态。
 
 ---
 
-### S5. 资源管理系统
+### Phase 5: 特殊节点 (预估 4-6h)
 
-**优先级：高 | 预估 3h**
+**目标：** 风暴和弹弓节点完整改造
 
-- [ ] 创建 `ShipResources` 资源管理器（燃料/船体/氧气）
-- [ ] 氧气持续消耗（每秒 -0.05%）
-- [ ] 操作消耗（扫描 -8% 燃料，推进 -5% 燃料 -3% 氧气，减速 -3% 燃料）
-- [ ] 资源归零处理（燃料=无法操作，船体=GAME OVER，氧气=GAME OVER）
-- [ ] 系统面板 UI 实时更新（像素风进度条/数字显示）
+- [ ] P5.1 风暴节点改造 — 环境光关闭 + 手电筒 + 断路器全跳 + 音效碎片提示 + Space减速
+- [ ] P5.2 弹弓5步流程 — HIGH阀 → SLING旋钮 → 推力推杆 → 点火 → 时机点火
+- [ ] P5.3 `scripts/slingshot_hud.gd` — 弹弓进度条 HUD（_draw 实时绘制）
+- [ ] P5.4 弹弓综合判定 — 推力值 + 时机 → ESCAPE / DRIFT / CONSUMED
+- [ ] P5.5 结局画面适配 — 三种结局文本 + 过渡动画
 
-**验收：** 仪表盘实时显示三项资源变化，资源归零触发对应结局。
-
-**技术要点：**
-- 所有数值存储在 `assets/data/game_config.json`，运行时读取
-- 资源变化通过 Signal 通知 UI 更新
+**验收：** 风暴期间环境光关闭，只有手电筒可见。弹弓5步操作完整可用，进度条显示，综合判定三种结局。
 
 ---
 
-### S6. 引力透镜效果
+### Phase 6: 收尾 (预估 4-6h)
 
-**优先级：高 | 预估 3h**
+**目标：** 音效、标题画面、构建
 
-- [ ] 实现画面边缘扭曲 Shader（根据与黑洞距离动态变化）
-- [ ] 节点越深 → 扭曲越强
-- [ ] 节点 4（引力风暴）→ 扭曲剧烈 + 间歇黑屏
-- [ ] 节点 5-6（最近距离）→ 前方摄像头画面几乎完全扭曲
+- [ ] P6.1 基础音效集成
+  - 控件操作音（按钮点击、旋钮旋转、开关拨动）
+  - 引擎声（随油门变化）
+  - 碎片碰撞声
+  - 断路器跳闸电弧声
+  - 风暴碎片接近音效
+  - O2/温度报警蜂鸣声
+- [ ] P6.2 标题画面 + 操作说明
+- [ ] P6.3 全流程测试 + 数值调优
+- [ ] P6.4 构建为 Windows 可执行文件
 
-**验收：** 摄像头画面边缘随节点推进逐渐扭曲，节点 4 出现间歇黑屏。
-
-**技术要点：**
-- 叠加在 SubViewport 输出之上的 Screen Shader
-- 扭曲强度由当前节点的 `lens_distortion` 参数控制
-- 引力风暴效果：用定时器控制黑屏/恢复的脚本化序列
-
----
-
-### S7. 黑洞视觉
-
-**优先级：中 | 预估 2h**
-
-- [ ] 创建黑洞 MeshInstance3D（球体 + 自定义 Shader）
-- [ ] Shader 实现：纯黑球体 + 吸积盘发光环
-- [ ] 吸积盘颜色渐变（内圈白/黄 → 外圈橙/红）
-- [ ] 背景星光被引力弯曲的视觉效果
-- [ ] 不同节点下黑洞的缩放（远→近→极大）
-
-**验收：** 摄像头画面中可见黑洞，吸积盘发光，背景星光弯曲。
+**验收：** 游戏有音效、有标题画面、可完整从头玩到尾、可构建。
 
 ---
 
-### S8. 叙事/事件系统
+## 时间估算
 
-**优先级：中 | 预估 4h**
-
-- [ ] 实现对讲机文本显示系统（逐字打印效果 + 通讯滤波音效）
-- [ ] 实现节点 0 的教学提示（系统广播文本）
-- [ ] 实现节点 2 的残骸扫描叙事（扫描选择 + 结果文本）
-- [ ] 实现节点 5 的残骸信号重播
-- [ ] 实现节点过渡画面（"ZONE X" 淡入淡出）
-- [ ] 实现三种结局的触发逻辑和画面显示
-
-**验收：** 每个节点的叙事内容按时序触发，对讲机文本逐字显示，结局正确触发。
-
----
-
-### S9. 节点 4 引力风暴
-
-**优先级：中 | 预估 2h**
-
-- [ ] 实现脚本化的监视器黑屏/恢复序列
-  - 黑屏 3 秒 → 恢复 1.5 秒（可视窗口）→ 重复 3 次
-  - 窗口内出现碎片，玩家需点击减速
-- [ ] 未减速 → 船体 -8%；已减速 → 船体 -3%
-- [ ] 每次窗口时间递减（紧张感递增）
-
-**验收：** 监视器出现间歇性黑屏，在可视窗口内操作减速可减少损伤。
-
----
-
-### S10. 节点 6 弹弓 QTE
-
-**优先级：中 | 预估 2h**
-
-- [ ] 实现进度条 UI（从左到右移动，8 秒走完）
-- [ ] 标注最佳点火区域（40%-60% 位置）
-- [ ] 玩家点击"点火"按钮 → 判定时机
-  - 在最佳区域内 → 逃逸结局
-  - 之前 → 被吞噬结局
-  - 之后 → 漂流结局
-  - 未操作 → 被吞噬结局
-- [ ] 驾驶舱震动效果（节点 5-6 持续，强度递增）
-
-**验收：** 进度条移动，点击点火后根据时机显示对应结局。
-
----
-
-### S11. 音效集成
-
-**优先级：中 | 预估 3h**
-
-- [ ] 从 Freesound.org 下载/整理音效素材：
-  - 引擎持续低鸣（背景音）
-  - 黑洞低频震动（随距离变化音量）
-  - 碎片撞击金属声
-  - 系统警报电子蜂鸣
-  - 对讲机通讯滤波效果
-  - CRT 嗡鸣/静电声
-  - 点火引擎爆发声
-- [ ] 通过 Godot AudioBus 做统一后处理（低通滤波模拟监控音质）
-- [ ] 音效按节点/事件时序触发
-
-**验收：** 游戏全程有音效覆盖，关键操作有反馈音。
-
----
-
-### S12. 标题画面 + 操作说明 + 构建
-
-**优先级：低 | 预估 2h**
-
-- [ ] 创建标题场景（加载美工提供的标题画面）
-- [ ] "开始游戏"按钮
-- [ ] 操作说明页面（简短：鼠标点击+键盘1-3）
-- [ ] Windows x64 构建配置
-- [ ] 测试独立可执行文件
-
----
-
-## 开发时间线
-
-```
-第 1 周 —— 可玩骨架
-━━━━━━━━━━━━━━━━━━━━━━
-D1  S1: 驾驶舱场景 + SubViewport 监视器渲染 (3h)
-D2  S1: CRT 效果 + S2: 引力场图 Shader 原型 (3h)
-D3  S2: 引力场图完善（航道/障碍/标注）(2h)
-	S3: 导航节点系统框架 (1h)
-D4  S3: 节点选择 + 行进过渡 (3h)
-D5  S4: 扫描机制 (3h)
-D6  S5: 资源管理系统 + 系统面板 UI (3h)
-D7  【里程碑】节点 0-1 可完整游玩
-	验收：引力场图显示→扫描→选择航道→推进→到达下一节点
-
-第 2 周 —— 内容完成
-━━━━━━━━━━━━━━━━━━━━━━
-D8  S3: 7 个节点完整数据配置 + 逻辑 (2h)
-	S6: 引力透镜 Shader (1h)
-D9  S6: 引力透镜效果完善 + S7: 黑洞视觉 (3h)
-D10 S9: 节点 4 引力风暴（间歇黑屏 + 减速操作）(2h)
-	S8: 叙事文本系统框架 (1h)
-D11 S8: 全部节点叙事内容 (2h)
-	S10: 节点 6 弹弓 QTE (1h)
-D12 S10: 弹弓 QTE 完善 + 结局触发 (2h)
-	S11: 音效素材整理 + 集成开始 (1h)
-D13 S11: 音效集成完善 + AudioBus 配置 (3h)
-D14 【里程碑】节点 0-6 全流程可玩
-	验收：完整叙事弧、所有选择有后果、三种结局可触发
-
-第 3 周 —— 打磨提交
-━━━━━━━━━━━━━━━━━━━━━━
-D15 引力场图视觉打磨（流线清晰度、颜色校正）
-D16 节点 4 引力风暴节奏精调 + 驾驶舱震动
-D17 音效时序精调 + 叙事节奏微调
-D18 节点 6 弹弓 QTE 打磨 + 视觉反馈
-D19 全员测试 + Bug 修复
-D20 S12: 标题画面 + 操作说明 + 最终打磨
-D21 构建发布包 + 提交
-```
-
-**总预估：~34 小时严格产出 + ~8 小时缓冲**
-
----
-
-## 关键文件路径约定
-
-| 文件 | 路径 | 说明 |
-|------|------|------|
-| 主场景 | `scenes/cockpit.tscn` | 驾驶舱主场景 |
-| 引力场图脚本 | `scripts/gravity_map.gd` | 引力场图渲染逻辑 |
-| 导航系统 | `scripts/navigation_system.gd` | 节点/航道管理 |
-| 资源管理 | `scripts/ship_resources.gd` | 燃料/船体/氧气 |
-| 事件系统 | `scripts/event_system.gd` | 叙事事件触发 |
-| 节点数据 | `assets/data/nodes/` | 每个节点一个 JSON |
-| 配置 | `assets/data/game_config.json` | 全局可调参数 |
-| CRT Shader | `assets/shaders/crt_effect.gdshader` | 监视器 CRT 效果 |
-| 透镜 Shader | `assets/shaders/lens_distortion.gdshader` | 引力透镜效果 |
-| 引力场 Shader | `assets/shaders/gravity_map.gdshader` | 引力场图渲染 |
-| 黑洞 Shader | `assets/shaders/black_hole.gdshader` | 黑洞视觉 |
+| Phase | 预估时间 | 天数 (2h/天) |
+|-------|---------|-------------|
+| Phase 1: 控件基础 | 6-8h | 3-4 天 |
+| Phase 2: 小地图驾驶 | 8-10h | 4-5 天 |
+| Phase 3: 操作流程 | 6-8h | 3-4 天 |
+| Phase 4: 日常维持 | 4-6h | 2-3 天 |
+| Phase 5: 特殊节点 | 4-6h | 2-3 天 |
+| Phase 6: 收尾 | 4-6h | 2-3 天 |
+| **总计** | **32-44h** | **16-22 天** |

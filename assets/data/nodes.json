@@ -8,6 +8,21 @@
       "ship_position": [0.5, 0.75],
       "escape_direction": [0.5, 0.05],
       "narrative_intro": "警告：引力异常捕获。引擎已离线。导航系统启动中...",
+      "map_data": {
+        "start_position": [0.5, 0.75],
+        "debris": [
+          {"pos": [0.3, 0.5], "r": 0.025},
+          {"pos": [0.7, 0.4], "r": 0.02},
+          {"pos": [0.45, 0.3], "r": 0.018},
+          {"pos": [0.55, 0.55], "r": 0.022}
+        ],
+        "destinations": [
+          {"pos": [0.38, 0.15], "r": 0.06, "channel_id": "alpha", "visible": true}
+        ],
+        "gravity_base_strength": 0.0,
+        "gravity_curve_exponent": 1.5,
+        "scan_frequency": 0.5
+      },
       "channels": [
         {
           "id": "alpha",
@@ -33,6 +48,25 @@
       "ship_position": [0.5, 0.70],
       "escape_direction": [0.5, 0.05],
       "narrative_intro": "航道数据已更新。引力场强度增加。前方检测到两条可行航道。",
+      "map_data": {
+        "start_position": [0.5, 0.70],
+        "debris": [
+          {"pos": [0.50, 0.45], "r": 0.04},
+          {"pos": [0.55, 0.35], "r": 0.03},
+          {"pos": [0.45, 0.55], "r": 0.025},
+          {"pos": [0.48, 0.30], "r": 0.02},
+          {"pos": [0.52, 0.50], "r": 0.03},
+          {"pos": [0.40, 0.40], "r": 0.022},
+          {"pos": [0.60, 0.42], "r": 0.028}
+        ],
+        "destinations": [
+          {"pos": [0.22, 0.18], "r": 0.055, "channel_id": "gamma", "visible": true},
+          {"pos": [0.78, 0.18], "r": 0.055, "channel_id": "delta", "visible": true}
+        ],
+        "gravity_base_strength": 0.1,
+        "gravity_curve_exponent": 1.5,
+        "scan_frequency": 0.4
+      },
       "channels": [
         {
           "id": "gamma",
@@ -82,6 +116,29 @@
         "reveal_text": "……航道 3，选择了外围方向……引力太强，拉回来了……\n……航道 5，有两条路，远离黑洞的那条是死路……所有往外的都被拉回来……",
         "node_hint": 3
       },
+      "map_data": {
+        "start_position": [0.5, 0.70],
+        "debris": [
+          {"pos": [0.35, 0.55], "r": 0.03},
+          {"pos": [0.45, 0.50], "r": 0.035},
+          {"pos": [0.55, 0.52], "r": 0.028},
+          {"pos": [0.40, 0.42], "r": 0.03},
+          {"pos": [0.50, 0.45], "r": 0.04},
+          {"pos": [0.60, 0.40], "r": 0.025},
+          {"pos": [0.35, 0.35], "r": 0.032},
+          {"pos": [0.48, 0.38], "r": 0.022},
+          {"pos": [0.42, 0.28], "r": 0.028},
+          {"pos": [0.55, 0.30], "r": 0.03},
+          {"pos": [0.38, 0.22], "r": 0.025},
+          {"pos": [0.50, 0.25], "r": 0.02}
+        ],
+        "destinations": [
+          {"pos": [0.40, 0.12], "r": 0.06, "channel_id": "epsilon", "visible": true}
+        ],
+        "gravity_base_strength": 0.2,
+        "gravity_curve_exponent": 1.5,
+        "scan_frequency": 0.6
+      },
       "channels": [
         {
           "id": "epsilon",
@@ -107,6 +164,27 @@
       "ship_position": [0.5, 0.70],
       "escape_direction": [0.5, 0.05],
       "narrative_intro": "引力场剧烈波动。三条航道出现，但数据严重不足。",
+      "map_data": {
+        "start_position": [0.5, 0.70],
+        "debris": [
+          {"pos": [0.35, 0.45], "r": 0.03},
+          {"pos": [0.55, 0.48], "r": 0.025},
+          {"pos": [0.45, 0.35], "r": 0.03},
+          {"pos": [0.65, 0.40], "r": 0.028},
+          {"pos": [0.30, 0.30], "r": 0.035},
+          {"pos": [0.50, 0.25], "r": 0.02},
+          {"pos": [0.75, 0.32], "r": 0.03},
+          {"pos": [0.58, 0.55], "r": 0.022}
+        ],
+        "destinations": [
+          {"pos": [0.14, 0.18], "r": 0.055, "channel_id": "zeta", "visible": true},
+          {"pos": [0.45, 0.12], "r": 0.055, "channel_id": "eta", "visible": true},
+          {"pos": [0.88, 0.18], "r": 0.055, "channel_id": "theta", "visible": true}
+        ],
+        "gravity_base_strength": 0.3,
+        "gravity_curve_exponent": 1.5,
+        "scan_frequency": 0.35
+      },
       "channels": [
         {
           "id": "zeta",
@@ -168,6 +246,14 @@
       "narrative_intro": "警告：引力风暴！所有传感器数据不稳定！",
       "event_type": "storm",
       "auto_advance_to": 5,
+      "map_data": {
+        "start_position": [0.5, 0.70],
+        "debris": [],
+        "destinations": [],
+        "gravity_base_strength": 0.4,
+        "gravity_curve_exponent": 1.5,
+        "scan_frequency": 0.5
+      },
       "channels": []
     },
     {
@@ -178,6 +264,25 @@
       "ship_position": [0.5, 0.70],
       "escape_direction": [0.5, 0.05],
       "narrative_intro": "引力场趋近临界。只剩最后的选择。",
+      "map_data": {
+        "start_position": [0.5, 0.70],
+        "debris": [
+          {"pos": [0.65, 0.40], "r": 0.035},
+          {"pos": [0.72, 0.35], "r": 0.03},
+          {"pos": [0.68, 0.25], "r": 0.028},
+          {"pos": [0.75, 0.20], "r": 0.025},
+          {"pos": [0.60, 0.50], "r": 0.02},
+          {"pos": [0.55, 0.55], "r": 0.03},
+          {"pos": [0.45, 0.45], "r": 0.025}
+        ],
+        "destinations": [
+          {"pos": [0.30, 0.10], "r": 0.06, "channel_id": "iota", "visible": true},
+          {"pos": [0.70, 0.10], "r": 0.06, "channel_id": "kappa", "visible": true}
+        ],
+        "gravity_base_strength": 0.5,
+        "gravity_curve_exponent": 1.5,
+        "scan_frequency": 0.3
+      },
       "channels": [
         {
           "id": "iota",
@@ -219,6 +324,14 @@
       "escape_direction": [0.5, 0.05],
       "narrative_intro": "事件视界——最终弹弓窗口。",
       "event_type": "slingshot",
+      "map_data": {
+        "start_position": [0.5, 0.70],
+        "debris": [],
+        "destinations": [],
+        "gravity_base_strength": 0.6,
+        "gravity_curve_exponent": 1.5,
+        "scan_frequency": 0.5
+      },
       "channels": []
     }
   ]

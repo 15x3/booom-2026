@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://bkmsu1e1bls6c"]
 
 [ext_resource type="Script" uid="uid://bwrg65lbpdoou" path="res://scripts/cockpit.gd" id="1_ga5w8"]
-[ext_resource type="PackedScene" path="res://scenes/panels/gravity-map-panel.tscn" id="3_gmap"]
 [ext_resource type="Script" uid="uid://dbv48kmjphrip" path="res://scripts/camera_controller.gd" id="4_cam"]
+[ext_resource type="PackedScene" path="res://scenes/panels/mini-map-panel.tscn" id="4_edtdw"]
 [ext_resource type="Script" uid="uid://dd02nt4de7m1a" path="res://scripts/navigation_system.gd" id="5_nav"]
 [ext_resource type="Script" uid="uid://b582e1ecplr6c" path="res://scripts/transition_player.gd" id="6_c1ege"]
 [ext_resource type="Script" uid="uid://cakvrjfimn0sj" path="res://scripts/crosshair.gd" id="6_cross"]
 [ext_resource type="PackedScene" uid="uid://bg3ey6qf5yqt7" path="res://scenes/panels/system-panel.tscn" id="7_shtuo"]
 [ext_resource type="Script" uid="uid://br2lnryilmh5w" path="res://scripts/ship_resources.gd" id="8_bjct7"]
-[ext_resource type="PackedScene" path="res://scenes/panels/comm-panel.tscn" id="9_comm"]
-[ext_resource type="Script" path="res://scripts/narrative_manager.gd" id="10_narr"]
+[ext_resource type="PackedScene" uid="uid://b8bq2is074vev" path="res://scenes/panels/comm-panel.tscn" id="9_comm"]
+[ext_resource type="Script" uid="uid://bstor4aw4p0k1" path="res://scripts/narrative_manager.gd" id="10_narr"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjct7"]
 albedo_color = Color(0, 0, 0, 1)
@@ -108,7 +108,7 @@ material_override = SubResource("StandardMaterial3D_main")
 mesh = SubResource("PlaneMesh_main")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/MainScreenSlot" unique_id=2053614523]
-collision_layer = 2
+collision_layer = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/MainScreenSlot/ScreenBody" unique_id=1735915250]
 shape = SubResource("BoxShape3D_main")
@@ -119,7 +119,7 @@ material_override = SubResource("StandardMaterial3D_left")
 mesh = SubResource("PlaneMesh_left")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/LeftScreenSlot" unique_id=1862574080]
-collision_layer = 2
+collision_layer = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/LeftScreenSlot/ScreenBody" unique_id=61999168]
 shape = SubResource("BoxShape3D_left")
@@ -130,7 +130,7 @@ material_override = SubResource("StandardMaterial3D_right")
 mesh = SubResource("PlaneMesh_right")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/RightScreenSlot" unique_id=367734591]
-collision_layer = 2
+collision_layer = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/RightScreenSlot/ScreenBody" unique_id=223957916]
 shape = SubResource("BoxShape3D_right")
@@ -140,7 +140,7 @@ transform = Transform3D(1, 0, 0, 0, 0.9393727, -0.3428978, 0, 0.3428978, 0.93937
 mesh = SubResource("PlaneMesh_system")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/SystemPanelSlot" unique_id=1354935545]
-collision_layer = 2
+collision_layer = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/SystemPanelSlot/ScreenBody" unique_id=2071682623]
 shape = SubResource("BoxShape3D_shtuo")
@@ -150,7 +150,7 @@ transform = Transform3D(1, 0, 0, 0, 0.4535961, -0.8912074, 0, 0.8912074, 0.45359
 mesh = SubResource("PlaneMesh_comm")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/CommScreenSlot" unique_id=125478379]
-collision_layer = 2
+collision_layer = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/CommScreenSlot/ScreenBody" unique_id=1290437352]
 shape = SubResource("BoxShape3D_comm")
@@ -219,7 +219,7 @@ color = Color(0, 0, 0, 0)
 [node name="MainMonitorViewport" type="SubViewport" parent="." unique_id=43981647]
 size = Vector2i(640, 480)
 
-[node name="GravityMapPanel" parent="MainMonitorViewport" unique_id=2119441031 instance=ExtResource("3_gmap")]
+[node name="MiniMapPanel" parent="MainMonitorViewport" unique_id=762739215 instance=ExtResource("4_edtdw")]
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1668858542]
 
@@ -268,4 +268,5 @@ offset_bottom = 100.0
 [node name="NarrativeManager" type="Node" parent="." unique_id=900000004]
 script = ExtResource("10_narr")
 
+[connection signal="object_clicked" from="PlayerCamera" to="." method="_on_object_clicked"]
 [connection signal="screen_clicked" from="PlayerCamera" to="." method="_on_screen_clicked"]

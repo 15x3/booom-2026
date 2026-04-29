@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://cximb8dtc8whm"]
+
+[ext_resource type="Script" uid="uid://4l3ffu6te8uq" path="res://scripts/console_panel.gd" id="1_console"]
+
+[node name="ConsolePanel" type="Node3D" unique_id=1790919408]
+script = ExtResource("1_console")
+
+[node name="CenterControls" type="Node3D" parent="." unique_id=274208905]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, -0.2, -1.7)
+
+[node name="Controls" type="Node3D" parent="CenterControls" unique_id=906833014]
+
+[node name="IgnitionBtn" type="Node3D" parent="CenterControls/Controls" unique_id=374828602]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0, 0)
+
+[node name="NavKnob" type="Node3D" parent="CenterControls/Controls" unique_id=1824049533]
+
+[node name="FuelValve" type="Node3D" parent="CenterControls/Controls" unique_id=608350428]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22, 0, 0)
+
+[node name="ThrustLever" type="Node3D" parent="CenterControls/Controls" unique_id=1802842378]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 0, 0)
+
+[node name="ConsoleBase" type="Node3D" parent="CenterControls/Controls" unique_id=79599310]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, -0.02, 0)
+
+[node name="LeftPanel" type="Node3D" parent="." unique_id=284530343]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -0.9, -0.25, -1.5)
+
+[node name="Interior" type="Node3D" parent="LeftPanel" unique_id=559934410]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.225, -0.005)
+
+[node name="ScanFreqKnob" type="Node3D" parent="LeftPanel/Interior" unique_id=1358350430]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 0.06, 0.02)
+
+[node name="ScanSwitch" type="Node3D" parent="LeftPanel/Interior" unique_id=1484295709]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0.06, 0.02)
+
+[node name="Breaker1" type="Node3D" parent="LeftPanel/Interior" unique_id=538880396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, -0.06, 0.02)
+
+[node name="Breaker2" type="Node3D" parent="LeftPanel/Interior" unique_id=458570641]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, -0.06, 0.02)
+
+[node name="Breaker3" type="Node3D" parent="LeftPanel/Interior" unique_id=779122626]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, -0.14, 0.02)
+
+[node name="Breaker4" type="Node3D" parent="LeftPanel/Interior" unique_id=1554373144]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, -0.14, 0.02)
+
+[node name="Cover" type="Node3D" parent="LeftPanel" unique_id=101844532]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.225, 0.02)
+
+[node name="RightPanel" type="Node3D" parent="." unique_id=351273061]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 0.9, -0.25, -1.5)
+
+[node name="Interior" type="Node3D" parent="RightPanel" unique_id=847618277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.005)
+
+[node name="O2Valve" type="Node3D" parent="RightPanel/Interior" unique_id=1428563662]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0, 0.02)
+
+[node name="CoolingKnob" type="Node3D" parent="RightPanel/Interior" unique_id=1210971273]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0, 0.02)
+
+[node name="Cover" type="Node3D" parent="RightPanel" unique_id=712228919]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0.02)

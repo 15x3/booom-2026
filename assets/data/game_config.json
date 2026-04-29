@@ -3,6 +3,7 @@
     "initial_fuel": 100.0,
     "initial_hull": 100.0,
     "initial_oxygen": 100.0,
+    "initial_engine_temp": 20.0,
     "oxygen_drain_rate": 0.05
   },
   "actions": {
@@ -11,19 +12,69 @@
     "thrust_fuel_cost": 5.0,
     "thrust_oxygen_cost": 3.0,
     "brake_fuel_cost": 3.0,
-    "brake_hull_savings": 7.0
+    "brake_hull_savings": 7.0,
+    "o2_supply_amount": 12.0,
+    "o2_supply_duration": 3.0
   },
   "damage": {
-    "fragment_base_damage": 15.0,
+    "base_collision_damage": 2.0,
+    "high_speed_threshold": 0.7,
+    "high_speed_damage_mult": 2.5,
     "storm_hit_damage": 8.0,
     "storm_min_wear": 3.0,
     "wrong_turn_damage_heavy": 25.0,
     "wrong_turn_fuel_penalty": 20.0
   },
+  "ship_physics": {
+    "max_turn_rate": 45.0,
+    "turn_damping": 0.85,
+    "acceleration": 80.0,
+    "max_speed_off": 0.0,
+    "max_speed_low": 60.0,
+    "max_speed_mid": 120.0,
+    "max_speed_high": 200.0,
+    "drag": 0.02,
+    "fuel_drain_off": 0.0,
+    "fuel_drain_low": 0.05,
+    "fuel_drain_mid": 0.12,
+    "fuel_drain_high": 0.25
+  },
+  "gravity": {
+    "gravity_direction": [0, -1],
+    "gravity_base_strength": 0.3,
+    "speed_penalty_max": 0.5,
+    "gravity_curve_exponent": 1.5
+  },
+  "scan": {
+    "scan_time_fast": 3.0,
+    "scan_time_slow": 5.0,
+    "data_freshness": 15.0,
+    "debris_drift_speed": 5.0,
+    "destination_reveal_radius": 200.0,
+    "signal_strong_threshold": 0.7,
+    "signal_weak_threshold": 0.3
+  },
+  "maintenance": {
+    "breaker_base_rate_early": 0.02,
+    "breaker_base_rate_late": 0.04,
+    "breaker_heat_factor_warm": 2.0,
+    "breaker_heat_factor_hot": 4.0,
+    "breaker_heat_threshold": 70.0,
+    "breaker_overheat_threshold": 90.0,
+    "natural_cooling_rate": 1.0,
+    "cooling_rate_low": 2.0,
+    "cooling_rate_high": 5.0,
+    "high_throttle_heat": 15.0,
+    "cascade_heat": 5.0,
+    "overheat_fuel_mult": 1.5,
+    "o2_trigger_threshold": 40.0
+  },
   "slingshot": {
     "duration": 8.0,
     "optimal_zone_start": 0.4,
-    "optimal_zone_end": 0.6
+    "optimal_zone_end": 0.6,
+    "optimal_thrust_min": 0.5,
+    "optimal_thrust_max": 0.8
   },
   "monitor": {
     "camera_resolution": [320, 240],
@@ -31,7 +82,8 @@
     "max_lens_distortion": 0.8,
     "storm_flicker_count": 3,
     "storm_blackout_duration": 3.0,
-    "storm_window_duration": 1.5
+    "storm_window_duration": 1.5,
+    "storm_window_shrink": 0.4
   },
   "gravity_map": {
     "ring_color": [0.976, 0.447, 0.023],

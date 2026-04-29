@@ -160,7 +160,7 @@ offset_left = 12.0
 offset_top = 110.0
 offset_right = 468.0
 offset_bottom = 140.0
-text = "S: Scan  T: Thrust  W: Wreck Scan  Click: Select"
+text = "S: Scan  T: Thrust  W: Wreck  SPACE: Brake"
 uppercase = true
 
 [connection signal="pressed" from="ScanButton" to="." method="_on_scan_button_pressed"]

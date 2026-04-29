@@ -32,8 +32,72 @@ var _hull_color_normal := Color(0.3, 0.9, 0.4)
 var _o2_color_normal := Color(0.4, 0.7, 1.0)
 var _warning_color := Color(1.0, 0.3, 0.2)
 
+var _temp_label: Label
+var _temp_bar_bg: ColorRect
+var _temp_bar_fill: ColorRect
+var _temp_value: Label
+var _breaker_lights: Array = []
+var _cooling_label: Label
+var _o2_supply_label: Label
+
 func _ready() -> void:
+	_build_maintenance_ui()
 	_update_buttons()
+	var info: Label = get_node_or_null("InfoLabel")
+	if info:
+		info.visible = false
+
+func _build_maintenance_ui() -> void:
+	_temp_label = Label.new()
+	_temp_label.text = "TMP"
+	_temp_label.position = Vector2(12, 105)
+	_temp_label.add_theme_font_size_override("font_size", 10)
+	add_child(_temp_label)
+
+	_temp_bar_bg = ColorRect.new()
+	_temp_bar_bg.position = Vector2(48, 107)
+	_temp_bar_bg.size = Vector2(100, 8)
+	_temp_bar_bg.color = Color(0.15, 0.15, 0.2)
+	add_child(_temp_bar_bg)
+
+	_temp_bar_fill = ColorRect.new()
+	_temp_bar_fill.position = Vector2(48, 107)
+	_temp_bar_fill.size = Vector2(100, 8)
+	_temp_bar_fill.color = Color(0.2, 0.6, 1.0)
+	add_child(_temp_bar_fill)
+
+	_temp_value = Label.new()
+	_temp_value.text = "20C"
+	_temp_value.position = Vector2(152, 105)
+	_temp_value.add_theme_font_size_override("font_size", 10)
+	add_child(_temp_value)
+
+	for i in range(4):
+		var light := ColorRect.new()
+		light.position = Vector2(210 + i * 20, 105)
+		light.size = Vector2(14, 14)
+		light.color = Color(0.1, 0.4, 0.1)
+		add_child(light)
+		_breaker_lights.append(light)
+
+		var bl := Label.new()
+		bl.text = "B%d" % (i + 1)
+		bl.position = Vector2(210 + i * 20, 120)
+		bl.add_theme_font_size_override("font_size", 8)
+		add_child(bl)
+
+	_cooling_label = Label.new()
+	_cooling_label.text = "COOL:OFF"
+	_cooling_label.position = Vector2(310, 105)
+	_cooling_label.add_theme_font_size_override("font_size", 10)
+	add_child(_cooling_label)
+
+	_o2_supply_label = Label.new()
+	_o2_supply_label.text = ""
+	_o2_supply_label.position = Vector2(390, 105)
+	_o2_supply_label.add_theme_font_size_override("font_size", 10)
+	_o2_supply_label.modulate = Color(0.4, 0.7, 1.0)
+	add_child(_o2_supply_label)
 
 func _process(delta: float) -> void:
 	if _warning_active:
@@ -100,6 +164,53 @@ func update_resources(fuel: float, hull: float, oxygen: float) -> void:
 		_warning_active = true
 		_warning_visible = true
 		warning_label.visible = true
+
+func update_engine_temp(temp: float) -> void:
+	if _temp_bar_fill == null:
+		return
+	var pct := clampf(temp / 120.0, 0.0, 1.0)
+	_temp_bar_fill.size = Vector2(100.0 * pct, 8)
+	_temp_value.text = "%dC" % int(temp)
+	if temp >= 90.0:
+		_temp_bar_fill.color = Color(1.0, 0.2, 0.1)
+		_temp_value.modulate = _warning_color
+	elif temp >= 70.0:
+		_temp_bar_fill.color = Color(1.0, 0.7, 0.1)
+		_temp_value.modulate = Color(1.0, 0.8, 0.2)
+	else:
+		_temp_bar_fill.color = Color(0.2, 0.6, 1.0)
+		_temp_value.modulate = Color.WHITE
+
+func set_breaker_state(index: int, tripped: bool) -> void:
+	if index < 0 or index >= _breaker_lights.size():
+		return
+	var light: ColorRect = _breaker_lights[index]
+	if tripped:
+		light.color = Color(1.0, 0.2, 0.1)
+	else:
+		light.color = Color(0.1, 0.4, 0.1)
+
+func set_cooling_level(level: int) -> void:
+	if _cooling_label == null:
+		return
+	var labels := ["OFF", "LOW", "HIGH"]
+	if level >= 0 and level < labels.size():
+		_cooling_label.text = "COOL:" + labels[level]
+		if level == 2:
+			_cooling_label.modulate = Color(0.3, 0.8, 1.0)
+		elif level == 1:
+			_cooling_label.modulate = Color(0.5, 0.7, 0.8)
+		else:
+			_cooling_label.modulate = Color.WHITE
+
+func set_o2_supplying(active: bool) -> void:
+	if _o2_supply_label == null:
+		return
+	if active:
+		_o2_supply_label.text = "O2+"
+		_o2_supply_label.modulate = Color(0.3, 0.9, 0.5)
+	else:
+		_o2_supply_label.text = ""
 
 func _set_bar(fill: ColorRect, val_label: Label, value: float, bg: ColorRect, label_node: Label, normal_color: Color) -> void:
 	var pct := clampf(value / 100.0, 0.0, 1.0)
