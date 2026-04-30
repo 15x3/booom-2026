@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cd011gerwi5mk"]
+
+[ext_resource type="Script" uid="uid://dq31aillvgelq" path="res://scripts/title_screen.gd" id="1_20w21"]
+
+[node name="Node" type="Control" unique_id=1378463891]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_20w21")

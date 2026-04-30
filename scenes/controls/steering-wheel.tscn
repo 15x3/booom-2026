@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://byy7phdpr5cht"]
+
+[ext_resource type="PackedScene" uid="uid://bighr1aqqpjs1" path="res://assets/models/f1_steering_wheel_w11.glb" id="1_ycdsi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_usqec"]
+albedo_color = Color(0.15, 0.15, 0.18, 1)
+metallic = 0.6
+roughness = 0.4
+emission_enabled = true
+emission = Color(0.1, 0.1, 0.15, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_usqec"]
+inner_radius = 0.03
+outer_radius = 0.045
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ugl7v"]
+albedo_color = Color(0.5, 0.5, 0.55, 1)
+metallic = 0.8
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.12, 0.12, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_usqec"]
+size = Vector3(0.06, 0.006, 0.0075)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21k3a"]
+albedo_color = Color(0.5, 0.5, 0.55, 1)
+metallic = 0.8
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.12, 0.12, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ycdsi"]
+size = Vector3(0.006, 0.05, 0.0075)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_usqec"]
+height = 0.115
+radius = 0.155
+
+[node name="SteeringWheel" type="Node3D" unique_id=1611659523]
+
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=2017070302]
+transform = Transform3D(1, 0, 0, 0, -1.7484555e-07, 1, 0, -1, -1.7484555e-07, 0, 0.015, 0)
+material_override = SubResource("StandardMaterial3D_usqec")
+mesh = SubResource("TorusMesh_usqec")
+
+[node name="SpokeH" type="MeshInstance3D" parent="Mesh" unique_id=754222935]
+material_override = SubResource("StandardMaterial3D_ugl7v")
+mesh = SubResource("BoxMesh_usqec")
+
+[node name="SpokeV" type="MeshInstance3D" parent="Mesh" unique_id=1892981903]
+material_override = SubResource("StandardMaterial3D_21k3a")
+mesh = SubResource("BoxMesh_ycdsi")
+
+[node name="Body" type="StaticBody3D" parent="." unique_id=1831293905]
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape3D" parent="Body" unique_id=264516133]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015, 0)
+shape = SubResource("CylinderShape3D_usqec")
+
+[node name="Sketchfab_Scene" parent="." unique_id=1635150083 instance=ExtResource("1_ycdsi")]
+transform = Transform3D(10, 0, 0, 0, -4.371139e-07, -10, 0, 10, -4.371139e-07, -0.00070276484, 0.01773405, -0.00014957786)

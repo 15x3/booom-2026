@@ -63,7 +63,7 @@ func start_drag() -> void:
 	_drag_start_value = _value
 
 func handle_drag(delta_mouse: Vector2) -> void:
-	if not enabled:
+	if not _enabled:
 		return
 	if _drag_start_mouse_y == 0.0:
 		_drag_start_mouse_y = delta_mouse.y

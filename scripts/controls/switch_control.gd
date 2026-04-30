@@ -46,7 +46,7 @@ func _create_visual() -> void:
 	_collision_shape.position.y = switch_height * 0.5
 
 func activate() -> void:
-	if not enabled:
+	if not _enabled:
 		return
 	_toggle()
 	super.activate()

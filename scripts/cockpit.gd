@@ -63,6 +63,20 @@ var _cooling_stop: int = 0
 
 var _view_arrows: Dictionary = {}
 
+var _audio_manager: Node = null
+var _pause_menu: Control = null
+
+var _sling_state: String = ""
+var _sling_hud: Control = null
+var _sling_progress: float = 0.0
+var _sling_timer: float = 0.0
+var _sling_duration: float = 8.0
+var _sling_optimal_start: float = 0.4
+var _sling_optimal_end: float = 0.6
+var _sling_thrust_min: float = 0.5
+var _sling_thrust_max: float = 0.8
+var _sling_base_lens: float = 0.0
+
 func _ready() -> void:
 	_load_config()
 	_setup_viewports()
@@ -77,6 +91,8 @@ func _ready() -> void:
 	_setup_narrative()
 	_setup_ship_physics()
 	_setup_maintenance()
+	_setup_audio()
+	_setup_pause_menu()
 	_connect_signals()
 	_setup_view_arrows()
 	if nav_system and nav_system.has_method("start"):
@@ -149,6 +165,27 @@ func _setup_maintenance() -> void:
 	_maintenance_manager.breaker_reset.connect(_on_breaker_reset)
 	_maintenance_manager.o2_supply_started.connect(_on_o2_supply_started)
 	_maintenance_manager.o2_supply_completed.connect(_on_o2_supply_completed)
+
+func _setup_audio() -> void:
+	var script := load("res://scripts/audio_manager.gd")
+	if script == null:
+		return
+	_audio_manager = Node.new()
+	_audio_manager.name = "AudioManager"
+	_audio_manager.set_script(script)
+	add_child(_audio_manager)
+
+func _setup_pause_menu() -> void:
+	var hud: CanvasLayer = get_node_or_null("HUD")
+	if hud == null:
+		return
+	var script := load("res://scripts/pause_menu.gd")
+	if script == null:
+		return
+	_pause_menu = Control.new()
+	_pause_menu.name = "PauseMenu"
+	_pause_menu.set_script(script)
+	hud.add_child(_pause_menu)
 
 func _setup_console_panel() -> void:
 	var scene := load("res://scenes/console-panel.tscn") as PackedScene
@@ -373,8 +410,10 @@ func _process(delta: float) -> void:
 		if drain > 0.0 and ship_resources and ship_resources.has_method("consume_fuel"):
 			ship_resources.consume_fuel(drain)
 
+	_update_slingshot(delta)
+
 func _update_ship_controls() -> void:
-	if _ship_physics == null or not _ship_physics.has_method("set_turn_input"):
+	if _ship_physics == null:
 		return
 
 	var nav_control: Node = _get_control("nav_knob")
@@ -519,6 +558,7 @@ func _on_destination_reached(channel_id: String) -> void:
 func _on_debris_collision(damage: float) -> void:
 	if ship_resources and ship_resources.has_method("damage_hull"):
 		ship_resources.damage_hull(damage)
+	_audio_play("play_collision")
 
 func _on_screen_clicked(screen_name: String, uv: Vector2) -> void:
 	if _input_locked or _game_over:
@@ -552,7 +592,16 @@ func _push_viewport_click(vp: SubViewport, uv: Vector2) -> void:
 	vp.push_input(release)
 
 func _input(event: InputEvent) -> void:
-	if _game_over:
+	if event is InputEventKey and event.pressed:
+		var key: int = event.keycode if event.keycode != 0 else event.physical_keycode
+		if key == KEY_ESCAPE:
+			if _pause_menu and not _pause_menu.visible:
+				_pause_menu.show_menu()
+				get_viewport().set_input_as_handled()
+				return
+			elif _pause_menu and _pause_menu.visible:
+				return
+	if _game_over and _sling_state == "":
 		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 		if _active_drag:
@@ -758,6 +807,10 @@ func _on_resources_changed(fuel: float, hull: float, oxygen: float, engine_temp:
 		_system_panel.update_resources(fuel, hull, oxygen)
 	if _system_panel and _system_panel.has_method("update_engine_temp"):
 		_system_panel.update_engine_temp(engine_temp)
+	if oxygen < 40.0 and oxygen > 0.0:
+		_audio_alarm("o2")
+	if engine_temp > 70.0:
+		_audio_alarm("temp")
 
 func _on_resource_depleted(resource_type: String) -> void:
 	if _game_over:
@@ -847,6 +900,7 @@ func _storm_begin() -> void:
 func _storm_start_window() -> void:
 	_storm_braked = false
 	_storm_accepting_brake = true
+	_audio_alarm("storm")
 
 func _storm_end_window() -> void:
 	_storm_accepting_brake = false
@@ -886,14 +940,148 @@ func _handle_slingshot_placeholder(node_data: Dictionary) -> void:
 	_game_over = true
 	if _ship_physics:
 		_ship_physics.set_active(false)
+	if _maintenance_manager and _maintenance_manager.has_method("set_active"):
+		_maintenance_manager.set_active(false)
 	if _system_panel:
 		_system_panel.lock_buttons()
+
+	var sling_cfg: Dictionary = config.get("slingshot", {})
+	_sling_duration = sling_cfg.get("duration", 8.0)
+	_sling_optimal_start = sling_cfg.get("optimal_zone_start", 0.4)
+	_sling_optimal_end = sling_cfg.get("optimal_zone_end", 0.6)
+	_sling_thrust_min = sling_cfg.get("optimal_thrust_min", 0.5)
+	_sling_thrust_max = sling_cfg.get("optimal_thrust_max", 0.8)
+	_sling_base_lens = _lens_strength
+
 	if narrative_manager and narrative_manager.has_method("show_text"):
 		narrative_manager.show_text("", node_data.get("narrative_intro", ""))
 	transition_player.play_zone_transition("EVENT HORIZON", "弹弓窗口", func():
-		if narrative_manager and narrative_manager.has_method("show_ending"):
-			narrative_manager.show_ending("escape")
+		_sling_state = "SETUP"
+		_sling_check_readiness()
 	)
+
+func _sling_check_readiness() -> void:
+	var hints: Array = []
+	if _fuel_valve_stop != 3:
+		hints.append("燃料阀门 → HIGH")
+	if _nav_knob_stop != 2:
+		hints.append("导航旋钮 → SLING")
+	var thrust_lever: Node = _get_control("thrust_lever")
+	var thrust_val: float = thrust_lever.get_meta("value") if thrust_lever else 0.0
+	if thrust_val < _sling_thrust_min or thrust_val > _sling_thrust_max:
+		hints.append("推力拉杆 → %.1f-%.1f" % [_sling_thrust_min, _sling_thrust_max])
+	if not hints.is_empty():
+		if narrative_manager and narrative_manager.has_method("show_text"):
+			narrative_manager.show_text("[SYS] ", "弹弓准备：" + " | ".join(hints))
+		_sling_state = "SETUP"
+		return
+	_sling_enter_armed()
+
+func _sling_enter_armed() -> void:
+	_sling_state = "ARMED"
+	if narrative_manager and narrative_manager.has_method("show_text"):
+		narrative_manager.show_text("[SYS] ", "弹弓参数就绪。按点火启动。")
+
+func _sling_start_timing() -> void:
+	_sling_state = "TIMING"
+	_sling_progress = 0.0
+	_sling_timer = 0.0
+	var hud: CanvasLayer = get_node_or_null("HUD")
+	if hud:
+		var sling_hud_script := load("res://scripts/slingshot_hud.gd")
+		if sling_hud_script:
+			var new_hud := Control.new()
+			new_hud.set_script(sling_hud_script)
+			hud.add_child(new_hud)
+			_sling_hud = new_hud
+			_sling_hud.start(_sling_duration, _sling_optimal_start, _sling_optimal_end)
+	if player_cam and player_cam.has_method("shake"):
+		player_cam.shake(0.02, _sling_duration + 1.0)
+	if narrative_manager and narrative_manager.has_method("show_text"):
+		narrative_manager.show_text("[SYS] ", "弹弓倒计时——在绿色区间按点火！")
+	_audio_play("play_sling_beep")
+
+func _update_slingshot(delta: float) -> void:
+	if _sling_state == "SETUP":
+		var thrust_lever: Node = _get_control("thrust_lever")
+		var thrust_val: float = thrust_lever.get_meta("value") if thrust_lever else 0.0
+		if _fuel_valve_stop == 3 and _nav_knob_stop == 2 and thrust_val >= _sling_thrust_min and thrust_val <= _sling_thrust_max:
+			_sling_enter_armed()
+		return
+
+	if _sling_state != "TIMING":
+		return
+
+	_sling_timer += delta
+	_sling_progress = clampf(_sling_timer / _sling_duration, 0.0, 1.0)
+
+	if _sling_hud and _sling_hud.has_method("set_progress"):
+		_sling_hud.set_progress(_sling_progress)
+
+	var intensity: float = _sling_progress
+	var target_lens: float = _sling_base_lens + intensity * 0.5
+	for mat: ShaderMaterial in _lens_materials:
+		mat.set_shader_parameter("strength", target_lens)
+	for mat: ShaderMaterial in _crt_materials:
+		mat.set_shader_parameter("noise_opacity", lerpf(0.3, 0.9, intensity))
+		mat.set_shader_parameter("static_noise_intensity", lerpf(0.1, 0.5, intensity))
+
+	if player_cam and player_cam.has_method("set_shake_intensity"):
+		player_cam.set_shake_intensity(intensity * 0.08)
+
+	if _sling_progress >= 1.0:
+		_sling_judge()
+
+func _sling_fire() -> void:
+	if _sling_state == "ARMED":
+		_sling_start_timing()
+		return
+	if _sling_state == "TIMING":
+		_sling_judge()
+
+func _sling_judge() -> void:
+	_sling_state = "JUDGMENT"
+
+	if _sling_hud and _sling_hud.has_method("stop"):
+		_sling_hud.stop()
+	if player_cam and player_cam.has_method("stop_shake"):
+		player_cam.stop_shake()
+
+	var thrust_lever: Node = _get_control("thrust_lever")
+	var thrust_val: float = thrust_lever.get_meta("value") if thrust_lever else 0.0
+	var timing: float = _sling_progress
+
+	var ending: String = ""
+	if thrust_val >= _sling_thrust_min and thrust_val <= _sling_thrust_max and timing >= _sling_optimal_start and timing <= _sling_optimal_end:
+		ending = "escape"
+	elif thrust_val < 0.3 or timing < 0.35:
+		ending = "consumed"
+	else:
+		ending = "drift"
+
+	for mat: ShaderMaterial in _lens_materials:
+		mat.set_shader_parameter("strength", _sling_base_lens)
+	for mat: ShaderMaterial in _crt_materials:
+		mat.set_shader_parameter("noise_opacity", 0.3)
+		mat.set_shader_parameter("static_noise_intensity", 0.1)
+
+	transition_player.begin_sequence()
+	transition_player.seq_fade_to_black(0.5)
+	match ending:
+		"escape":
+			transition_player.seq_show_text("弹弓机动", "成功脱出")
+		"drift":
+			transition_player.seq_show_text("弹弓机动", "偏差——漂流")
+		"consumed":
+			transition_player.seq_show_text("弹弓机动", "失败——坠入")
+	transition_player.seq_wait(2.0)
+	transition_player.seq_hide_text()
+	transition_player.seq_callback(func():
+		if narrative_manager and narrative_manager.has_method("show_ending"):
+			narrative_manager.show_ending(ending)
+	)
+	transition_player.seq_fade_from_black(0.5)
+	transition_player.end_sequence()
 
 func _on_bad_ending(ending_type: String) -> void:
 	_input_locked = true
@@ -929,6 +1117,7 @@ func _on_breaker_tripped(breaker_index: int) -> void:
 		_system_panel.set_breaker_state(breaker_index, true)
 	if narrative_manager and narrative_manager.has_method("show_text"):
 		narrative_manager.show_text("[SYS] ", "断路器 %d 跳闸！" % (breaker_index + 1))
+	_audio_play("play_breaker_trip")
 
 func _on_breaker_reset(breaker_index: int) -> void:
 	if breaker_index < 0 or breaker_index >= _breaker_viewports.size():
@@ -974,9 +1163,11 @@ func _handle_control_click(control: Node) -> void:
 	elif ctrl_type == "switch":
 		if _console_panel and _console_panel.has_method("toggle_switch_by_node"):
 			_console_panel.toggle_switch_by_node(control)
+			_audio_play("play_switch_toggle")
 	elif ctrl_type == "button":
 		if _console_panel and _console_panel.has_method("press_button_by_node"):
 			_console_panel.press_button_by_node(control)
+			_audio_play("play_click")
 	elif ctrl_type == "side_panel":
 		var ctrl_name: String = control.name
 		var reg_name: String = ""
@@ -987,6 +1178,7 @@ func _handle_control_click(control: Node) -> void:
 				reg_name = "right_panel"
 		if reg_name != "" and _console_panel and _console_panel.has_method("toggle_panel"):
 			_console_panel.toggle_panel(reg_name)
+			_audio_play("play_panel_toggle")
 
 func _handle_control_drag(control: Node, delta: Vector2) -> void:
 	var ctrl_type: String = control.get_meta("type", "")
@@ -995,6 +1187,8 @@ func _handle_control_drag(control: Node, delta: Vector2) -> void:
 		if mesh_inst:
 			mesh_inst.rotation_degrees.z += delta.x * 0.5
 			mesh_inst.rotation_degrees.z = clampf(mesh_inst.rotation_degrees.z, -150.0, 150.0)
+			if absf(delta.x) > 2.0:
+				_audio_play("play_knob_turn")
 	elif ctrl_type == "lever":
 		var handle: MeshInstance3D = control.get_meta("handle_mesh")
 		var rod_h: float = control.get_meta("rod_height", 0.15)
@@ -1009,6 +1203,8 @@ func _on_control_interacted(control_name: String) -> void:
 	if control_name == "ignition":
 		if _storm_accepting_brake:
 			_storm_braked = true
+		elif _sling_state == "ARMED" or _sling_state == "TIMING":
+			_sling_fire()
 		else:
 			_on_thrust_requested()
 
@@ -1036,6 +1232,9 @@ func _on_control_stop_changed(stop_index: int, control_name: String) -> void:
 			_maintenance_manager.set_cooling_stop(stop_index)
 		if _system_panel and _system_panel.has_method("set_cooling_level"):
 			_system_panel.set_cooling_level(stop_index)
+	elif control_name == "fuel_valve":
+		if _audio_manager and _audio_manager.has_method("engine_set_throttle"):
+			_audio_manager.engine_set_throttle(stop_index)
 	if _tutorial_active:
 		_check_tutorial_progress()
 
@@ -1076,3 +1275,11 @@ func _check_tutorial_progress() -> void:
 				_show_tutorial_step()
 		3:
 			pass
+
+func _audio_play(method: String) -> void:
+	if _audio_manager and _audio_manager.has_method(method):
+		_audio_manager.call(method)
+
+func _audio_alarm(type: String) -> void:
+	if _audio_manager and _audio_manager.has_method("play_alarm"):
+		_audio_manager.call("play_alarm", type)

@@ -22,7 +22,7 @@ func _create_visual() -> void:
 		_mesh_instance.position.y = button_height * 0.5
 
 func activate() -> void:
-	if not enabled:
+	if not _enabled:
 		return
 	_play_press_animation()
 	super.activate()

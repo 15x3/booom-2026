@@ -1,105 +1,101 @@
-# OpenCode Game Studio - Agent Guide
+# BOOOM2026 — Event Horizon (事件视界)
 
-This is a Godot 4.6 project using the OpenCode agent system with 49 specialized agents and 72 skills.
+Godot 4.6 jam game. Cockpit-based space survival with physical panel controls and mini-map driving.
 
-## Quick Facts
+## Project Facts
 
-- **Engine**: Godot 4.6 with GL Compatibility renderer
-- **Physics**: Jolt Physics
-- **Primary Language**: GDScript (not yet configured - run `/setup-engine` to finalize)
-- **MCP Plugin**: `godot_mcp` is enabled, providing runtime tools (screenshots, input simulation, live node inspection)
-- **Project State**: Early setup - `src/` is empty, infrastructure is in place
-
-## Critical Protocols
-
-### Collaborative Design (Required)
-This project follows **user-driven collaboration**, not autonomous generation:
-- Agents must ask clarifying questions before proposing solutions
-- Present 2-4 options with pros/cons, let user decide
-- Draft proposals, get explicit approval ("May I write this?") before using Write/Edit tools
-- See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full pattern
-
-### Verification-Driven Development
-- Write tests first when adding gameplay systems
-- For UI changes, verify with screenshots (use `godot_take_screenshot`)
-- Compare expected output to actual output before marking work complete
-- Every implementation should have a way to prove it works
-
-## Godot MCP Tools (Runtime Integration)
-
-The project has the godot_mcp plugin enabled, which provides these runtime tools:
-- `godot_run_scene` - Launch a scene and wait for game to start
-- `godot_take_screenshot` - Capture viewport as PNG (requires running game)
-- `godot_send_input` - Simulate keyboard/mouse/action events during tests
-- `godot_query_runtime_node` - Inspect live node properties in running game
-- `godot_get_runtime_log` - Fetch recent runtime logs
-- `godot_stop_scene` - Stop the running scene
-
-**Important**: Runtime tools only work when game is playing. Use pattern:
-```bash
-godot_run_scene(scene="res://path/to/scene.tscn", wait_for_runtime=true)
-# ... send input, take screenshots, query nodes ...
-godot_stop_scene()
-```
-
-## Code Conventions
-
-- **Data-driven**: All gameplay values must be external config, never hardcoded
-- **Doc comments**: All public APIs require doc comments
-- **Dependency injection**: Prefer over singletons for testability
-- **Commit references**: Must reference relevant story ID or design document
-
-## Design System Structure
-
-- **GDDs** (`design/gdd/`): Must include 8 required sections (Overview, Player Fantasy, Detailed Rules, Formulas, Edge Cases, Dependencies, Tuning Knobs, Acceptance Criteria)
-- **ADR Registry** (`docs/architecture/`): Architecture Decision Records with stable IDs
-- **TR Registry** (`docs/architecture/tr-registry.yaml`): Technical Requirement ID registry - never renumber, never delete IDs
-- **Entity Registry** (`design/registry/entities.yaml`): Cross-system entity/item/formula registry
+- **Engine**: Godot 4.6, GL Compatibility renderer, Jolt Physics
+- **Language**: GDScript only
+- **Main Scene**: `scenes/cockpit.tscn` (single scene, everything runs from here)
+- **Game Config**: `assets/data/game_config.json` — **all gameplay values live here**
+- **Node Data**: `assets/data/nodes.json` — navigation graph with per-node map_data
+- **MCP Plugin**: `addons/godot_mcp/` provides runtime testing tools (screenshots, input, live inspection)
 
 ## Directory Layout
 
-- `src/` - Game source code (currently empty)
-- `design/` - GDDs, UX specs, entity registry
-- `docs/architecture/` - ADRs, TR registry
-- `tests/` - Unit/integration tests (not yet set up)
-- `production/` - Sprint plans, milestones, session state (`production/session-state/active.md` is checkpoint)
-- `prototypes/` - Throwaway prototypes (isolated from `src/`)
-- `addons/godot_mcp/` - MCP integration plugin
+```
+scripts/              All game code (NOT src/ — src/ is unused template leftover)
+  controls/           Physical panel controls (base, knob, button, switch, lever, side_panel)
+scenes/               .tscn files
+  controls/           Control prefabs (button, knob, lever, switch)
+  panels/             SubViewport panels (comm, mini-map, system, gravity-map)
+assets/
+  data/               game_config.json, nodes.json
+  shaders/            CRT, lens_distortion, BlackHole, accretion_disk
+design/gdd/           Game design doc (event-horizon.md)
+production/           Sprint state, session checkpoints
+docs/                 Architecture, collaboration principle
+src/                  UNUSED (template leftover, has only .gitkeep)
+```
 
-## Testing Setup
+## Key Architecture
 
-No test framework is configured yet. When adding first tests:
-- Run `/test-setup` to scaffold test framework for Godot
-- Tests should be in `tests/` (not in `src/`)
-- Godot test command: `godot --headless --script tests/gdunit4_runner.gd` (after framework setup)
+**`scripts/cockpit.gd` is the orchestrator** (~1100 lines). It wires everything:
+SubViewports, camera feeds, console panel, ship physics, maintenance, resources,
+narrative, and navigation.
 
-## Engine Configuration
+Critical patterns an agent would miss:
+- `ship_physics` and `maintenance_manager` are loaded at runtime via `load()` +
+  `set_script()` onto new `Node` instances — they are NOT scene tree nodes in
+  cockpit.tscn. See `_setup_ship_physics()` and `_setup_maintenance()`.
+- The console panel (`scenes/console-panel.tscn`) is instantiated at runtime in
+  `_setup_console_panel()`. Controls discovered via `get_all_controls()`.
+- Controls use `get_meta("type")` for identification (values: `"knob"`, `"lever"`,
+  `"switch"`, `"button"`, `"side_panel"`), not class checks.
+- Controls emit signals (`interacted`, `value_changed`, `toggled`, `stop_changed`)
+  that cockpit.gd binds with the control name.
+- SubViewport camera feeds run at 15 FPS (timer-driven `UPDATE_ONCE`);
+  main monitor runs `UPDATE_ALWAYS`. SubViewports render into MeshInstance3D screen
+  slots via material texture assignment with CRT/lens distortion shaders.
 
-Technical preferences are **not configured**. Run `/setup-engine` to set:
-- Target platforms
-- Input methods (keyboard/mouse, gamepad, touch)
-- Naming conventions
-- Performance budgets
-- Engine specialist routing (godot-specialist, godot-gdscript-specialist, etc.)
+## Data Flow
 
-## Context Management
+```
+game_config.json → cockpit._load_config() → config dict
+config dict passed to: ship_physics.load_config(), mini_map.load_config(),
+  ship_resources.load_config(), maintenance_manager.load_config(), etc.
+```
 
-Session state is maintained in `production/session-state/active.md`. After compaction or crash:
-- Read `active.md` first to recover state
-- Completed sections of multi-section documents are in files, not conversation history
+All game systems receive their config as a `Dictionary` parameter. They do not load
+config themselves — cockpit.gd is the single loader. **Never hardcode gameplay numbers.**
 
-## Instructions Reference
+## Conventions
 
-OpenCode loads these instruction files (from `opencode.json`):
-- `AGENTS.md` - This file
-- `.claude/docs/coding-standards.md`
-- `.claude/docs/context-management.md`
-- `.claude/docs/coordination-rules.md`
-- `.claude/docs/technical-preferences.md`
-- `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md`
+- **Scripts**: snake_case (`ship_physics.gd`)
+- **Scenes**: kebab-case (`console-panel.tscn`)
+- **Signals**: past_tense_snake_case (`destination_reached`, `breaker_tripped`)
+- **Constants**: ALL_CAPS_SNAKE
+- **No `print()`** — use `push_warning()`/`push_error()` or `MCPRuntime.push_runtime_log()`
+- **No autoloads** except MCPRuntime/MCPScreenshot/MCPInputService/MCPGameInspector (MCP plugin)
 
-## Getting Started
+## Runtime Testing (MCP)
 
-- Run `/start` for guided onboarding (detects project state, routes to right workflow)
-- Run `/setup-engine godot 4.6` to finalize engine configuration
-- Run `/brainstorm [theme]` if exploring game concepts
+Runtime tools only work when the game is playing:
+```
+godot_run_scene(wait_for_runtime=true)
+  → godot_take_screenshot / godot_send_input / godot_query_runtime_node
+godot_stop_scene()
+```
+
+## Development Guide
+
+Full phased task list in `DEV-GUIDE.md` (Chinese). Key phases:
+1. Physical controls (knob/button/switch/lever/side_panel)
+2. Mini-map driving (ship_physics + mini_map + gravity)
+3. Operation flow (console operations replace keyboard shortcuts)
+4. Maintenance (breaker trips, O2 supply, engine cooling)
+5. Special nodes (storm, slingshot)
+6. Audio, title screen, build
+
+## Session Recovery
+
+`production/session-state/active.md` is the checkpoint. Read it first after compaction or crash.
+
+## Instructions Loaded by OpenCode
+
+From `opencode.json` — all loaded automatically:
+- `.claude/docs/coding-standards.md` — doc comments, testing gates, CI rules
+- `.claude/docs/context-management.md` — session recovery, file-backed state strategy
+- `.claude/docs/coordination-rules.md` — agent delegation tiers, model assignments
+- `.claude/docs/technical-preferences.md` — engine config, naming, performance budgets
+- `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` — ask-before-propose protocol, approval gates

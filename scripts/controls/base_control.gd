@@ -9,6 +9,7 @@ var _enabled: bool = true
 var _value: float = 0.0
 var _mesh_instance: MeshInstance3D
 var _static_body: StaticBody3D
+var _collision_shape: CollisionShape3D
 
 func _ready() -> void:
 	_create_visual()
@@ -44,6 +45,6 @@ func _create_mesh_with_collision(mesh: Mesh, shape: Shape3D) -> void:
 	_static_body.collision_layer = 2
 	_static_body.collision_mask = 0
 	add_child(_static_body)
-	var cs := CollisionShape3D.new()
-	cs.shape = shape
-	_static_body.add_child(cs)
+	_collision_shape = CollisionShape3D.new()
+	_collision_shape.shape = shape
+	_static_body.add_child(_collision_shape)

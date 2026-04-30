@@ -8,12 +8,14 @@ var _knob_scene: PackedScene
 var _button_scene: PackedScene
 var _switch_scene: PackedScene
 var _lever_scene: PackedScene
+var _steering_wheel_scene: PackedScene
 
 func _ready() -> void:
 	_knob_scene = load("res://scenes/controls/knob.tscn")
 	_button_scene = load("res://scenes/controls/button.tscn")
 	_switch_scene = load("res://scenes/controls/switch.tscn")
 	_lever_scene = load("res://scenes/controls/lever.tscn")
+	_steering_wheel_scene = load("res://scenes/controls/steering-wheel.tscn")
 	_build_on_scene_nodes()
 
 func _build_on_scene_nodes() -> void:
@@ -51,12 +53,12 @@ func _build_center() -> void:
 
 	var nav_pos: Node3D = center.get_node_or_null("NavKnob")
 	if nav_pos:
-		var nav_knob := _instance_knob("NavKnob")
-		nav_knob.set_meta("stops", 3)
-		nav_pos.add_child(nav_knob)
-		nav_knob.position = Vector3.ZERO
-		_register("nav_knob", nav_knob)
-		_add_label(center, "导航", nav_pos.position + Vector3(0, 0.05, 0))
+		var nav_wheel := _instance_steering_wheel("NavKnob")
+		nav_wheel.set_meta("stops", 3)
+		nav_pos.add_child(nav_wheel)
+		nav_wheel.position = Vector3.ZERO
+		_register("nav_knob", nav_wheel)
+		_add_label(center, "导航", nav_pos.position + Vector3(0, 0.06, 0))
 
 	var fuel_pos: Node3D = center.get_node_or_null("FuelValve")
 	if fuel_pos:
@@ -184,8 +186,35 @@ func _instance_knob(ctrl_name: String) -> Node3D:
 		inst.set_meta("knob_mesh", mesh_inst)
 	var body: StaticBody3D = inst.get_node_or_null("Body")
 	if body and mat:
+		var shape: CollisionShape3D = body.get_node_or_null("Shape")
+		if shape:
+			shape.position.y = 0.015
 		body.mouse_entered.connect(func(): _apply_hover(mat, true))
 		body.mouse_exited.connect(func(): _apply_hover(mat, false))
+	return inst
+
+func _instance_steering_wheel(ctrl_name: String) -> Node3D:
+	var inst: Node3D = _steering_wheel_scene.instantiate()
+	inst.name = ctrl_name
+	inst.set_meta("type", "knob")
+	inst.set_meta("value", 0.0)
+	inst.set_meta("stops", 0)
+	var mesh_inst: MeshInstance3D = inst.get_node_or_null("Mesh")
+	if mesh_inst:
+		var mat: StandardMaterial3D = mesh_inst.material_override as StandardMaterial3D
+		if mat == null:
+			mat = StandardMaterial3D.new()
+			mat.albedo_color = Color(0.15, 0.15, 0.18, 1)
+			mat.roughness = 0.4
+			mat.metallic = 0.6
+			mat.emission_enabled = true
+			mat.emission = Color(0.1, 0.1, 0.15, 1)
+			mesh_inst.material_override = mat
+		inst.set_meta("knob_mesh", mesh_inst)
+		var body: StaticBody3D = inst.get_node_or_null("Body")
+		if body:
+			body.mouse_entered.connect(func(): _apply_hover(mat, true))
+			body.mouse_exited.connect(func(): _apply_hover(mat, false))
 	return inst
 
 func _instance_button(ctrl_name: String) -> Node3D:
@@ -204,6 +233,9 @@ func _instance_button(ctrl_name: String) -> Node3D:
 		mesh_inst.position.y = 0.015
 	var body: StaticBody3D = inst.get_node_or_null("Body")
 	if body and mat:
+		var shape: CollisionShape3D = body.get_node_or_null("Shape")
+		if shape:
+			shape.position.y = 0.015
 		body.mouse_entered.connect(func(): _apply_hover(mat, true))
 		body.mouse_exited.connect(func(): _apply_hover(mat, false))
 	return inst
@@ -233,6 +265,9 @@ func _instance_switch(ctrl_name: String) -> Node3D:
 		base_m.position.y = 0.005
 	var body: StaticBody3D = inst.get_node_or_null("Body")
 	if body and mat:
+		var shape: CollisionShape3D = body.get_node_or_null("Shape")
+		if shape:
+			shape.position.y = 0.03
 		body.mouse_entered.connect(func(): _apply_hover(mat, true))
 		body.mouse_exited.connect(func(): _apply_hover(mat, false))
 	return inst
@@ -263,6 +298,9 @@ func _instance_lever(ctrl_name: String) -> Node3D:
 		inst.set_meta("handle_mesh", handle)
 	var body: StaticBody3D = inst.get_node_or_null("Body")
 	if body and mat:
+		var shape: CollisionShape3D = body.get_node_or_null("Shape")
+		if shape:
+			shape.position.y = 0.12
 		body.mouse_entered.connect(func(): _apply_hover(mat, true))
 		body.mouse_exited.connect(func(): _apply_hover(mat, false))
 	return inst

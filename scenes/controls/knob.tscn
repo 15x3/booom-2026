@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://dlhts0s45rhrs"]
 
+[ext_resource type="PackedScene" uid="uid://b1dkmil4n4bc5" path="res://assets/models/knob__scp-914.glb" id="1_va2jl"]
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_6oube"]
 top_radius = 0.06
 bottom_radius = 0.06
@@ -22,3 +24,6 @@ collision_mask = 0
 
 [node name="Shape" type="CollisionShape3D" parent="Body" unique_id=287280851]
 shape = SubResource("CylinderShape3D_6oube")
+
+[node name="Sketchfab_Scene" parent="." unique_id=629735880 instance=ExtResource("1_va2jl")]
+transform = Transform3D(0.006, 0, 0, 0, 0.006, 0, 0, 0, 0.006, 0, 0, 0)

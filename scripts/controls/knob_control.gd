@@ -62,7 +62,7 @@ func start_drag() -> void:
 	_drag_start_angle = _current_angle
 
 func handle_drag(delta_mouse: Vector2) -> void:
-	if not enabled:
+	if not _enabled:
 		return
 	if _drag_start_mouse_x == 0.0:
 		_drag_start_mouse_x = delta_mouse.x

@@ -11,7 +11,8 @@ config_version=5
 [application]
 
 config/name="BOOOM2026"
-run/main_scene="res://scenes/cockpit.tscn"
+config/version="1.0.0"
+run/main_scene="res://scenes/title-screen.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -51,3 +52,4 @@ monitor_scan={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"

@@ -20,6 +20,11 @@ var _flashlight_on: bool = false
 var _ctrl_mask: int = 0b0000_0000_0000_0000_0010
 var _screen_mask: int = 0b0000_0000_0000_0000_0001
 
+var _shake_tween: Tween = null
+var _shake_intensity: float = 0.0
+var _base_h_offset: float = 0.0
+var _base_v_offset: float = 0.0
+
 func _ready() -> void:
 	_base_fov = fov
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -82,6 +87,30 @@ func is_flashlight_on() -> bool:
 
 func get_flashlight() -> SpotLight3D:
 	return _flashlight
+
+func shake(intensity: float, duration: float) -> void:
+	if _shake_tween:
+		_shake_tween.kill()
+	_shake_intensity = intensity
+	_shake_tween = create_tween()
+	_shake_tween.set_loops()
+	_shake_tween.tween_callback(func():
+		h_offset = _base_h_offset + randf_range(-_shake_intensity, _shake_intensity)
+		v_offset = _base_v_offset + randf_range(-_shake_intensity, _shake_intensity)
+	)
+	_shake_tween.tween_interval(0.033)
+	get_tree().create_timer(duration).timeout.connect(stop_shake)
+
+func stop_shake() -> void:
+	if _shake_tween:
+		_shake_tween.kill()
+		_shake_tween = null
+	h_offset = _base_h_offset
+	v_offset = _base_v_offset
+	_shake_intensity = 0.0
+
+func set_shake_intensity(intensity: float) -> void:
+	_shake_intensity = intensity
 
 func _raycast_click() -> void:
 	var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state

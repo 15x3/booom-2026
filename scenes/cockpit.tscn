@@ -108,39 +108,35 @@ material_override = SubResource("StandardMaterial3D_main")
 mesh = SubResource("PlaneMesh_main")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/MainScreenSlot" unique_id=2053614523]
-collision_layer = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/MainScreenSlot/ScreenBody" unique_id=1735915250]
 shape = SubResource("BoxShape3D_main")
 
 [node name="LeftScreenSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=175112462]
-transform = Transform3D(0.90482706, 0.3010714, 0.3010714, 0, 0.70710677, -0.70710677, -0.42577928, 0.6398093, 0.6398093, -0.8, 0.3, -1.5)
+transform = Transform3D(0.90482706, 0.30107138, 0.30107138, 0.35447186, -0.14092898, -0.92438555, -0.23587643, 0.9431304, -0.23423776, -1.0905414, 0.65271807, -1.5)
 material_override = SubResource("StandardMaterial3D_left")
 mesh = SubResource("PlaneMesh_left")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/LeftScreenSlot" unique_id=1862574080]
-collision_layer = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/LeftScreenSlot/ScreenBody" unique_id=61999168]
 shape = SubResource("BoxShape3D_left")
 
 [node name="RightScreenSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=571581133]
-transform = Transform3D(0.9338555, -0.12167471, -0.3363171, -0.1650708, 0.68756926, -0.70710677, 0.31727836, 0.7158516, 0.62200546, 0.8, 0.3, -1.5)
+transform = Transform3D(0.9338556, -0.12167471, -0.3363171, -0.3394618, -0.005482763, -0.94060385, 0.1126038, 0.9925548, -0.04642403, 1.0987556, 0.7167116, -1.5)
 material_override = SubResource("StandardMaterial3D_right")
 mesh = SubResource("PlaneMesh_right")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/RightScreenSlot" unique_id=367734591]
-collision_layer = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/RightScreenSlot/ScreenBody" unique_id=223957916]
 shape = SubResource("BoxShape3D_right")
 
 [node name="SystemPanelSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=393523722]
-transform = Transform3D(1, 0, 0, 0, 0.9393727, -0.3428978, 0, 0.3428978, 0.9393727, 0, -0.2, -1.5)
+transform = Transform3D(1, 0, 0, 0, 0.9393727, -0.3428978, 0, 0.3428978, 0.9393727, 0, -0.38957143, -1.5)
 mesh = SubResource("PlaneMesh_system")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/SystemPanelSlot" unique_id=1354935545]
-collision_layer = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/SystemPanelSlot/ScreenBody" unique_id=2071682623]
 shape = SubResource("BoxShape3D_shtuo")
@@ -150,7 +146,6 @@ transform = Transform3D(1, 0, 0, 0, 0.4535961, -0.8912074, 0, 0.8912074, 0.45359
 mesh = SubResource("PlaneMesh_comm")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/CommScreenSlot" unique_id=125478379]
-collision_layer = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/CommScreenSlot/ScreenBody" unique_id=1290437352]
 shape = SubResource("BoxShape3D_comm")
