@@ -86,6 +86,7 @@ func _ready() -> void:
 	_apply_crt_to_cameras()
 	_apply_lens_distortion()
 	_setup_blackhole()
+	_setup_environment()
 	_setup_transition()
 	_setup_resources()
 	_setup_narrative()
@@ -192,6 +193,8 @@ func _setup_console_panel() -> void:
 	if scene == null:
 		return
 	_console_panel = scene.instantiate()
+	if _console_panel.has_method("set_external_root"):
+		_console_panel.set_external_root(self)
 	add_child(_console_panel)
 	await get_tree().process_frame
 	if _console_panel == null:
@@ -385,6 +388,19 @@ func _setup_blackhole() -> void:
 	_accretion_material.set_shader_parameter("intensity", 4.0)
 	disk.material_override = _accretion_material
 
+func _setup_environment() -> void:
+	var we: WorldEnvironment = get_node_or_null("SpaceEnvironment/WorldEnvironment")
+	if we == null:
+		return
+	var env := Environment.new()
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color(0.01, 0.01, 0.02)
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.25, 0.25, 0.35)
+	env.ambient_light_energy = 1.2
+	env.reflected_light_source = Environment.REFLECTION_SOURCE_DISABLED
+	we.environment = env
+
 func _process(delta: float) -> void:
 	if not _lens_materials.is_empty():
 		var t: float = Time.get_ticks_msec() / 1000.0
@@ -418,10 +434,9 @@ func _update_ship_controls() -> void:
 
 	var nav_control: Node = _get_control("nav_knob")
 	if nav_control:
-		var mesh_inst: MeshInstance3D = nav_control.get_meta("knob_mesh") if nav_control.has_meta("knob_mesh") else null
-		if mesh_inst and _nav_knob_stop == 0:
-			var angle: float = mesh_inst.rotation_degrees.z
-			var turn_val: float = clampf(angle / 90.0, -1.0, 1.0)
+		if _nav_knob_stop == 0:
+			var val: float = nav_control.get_meta("drag_value", 0.5)
+			var turn_val: float = clampf((val - 0.5) * 2.0, -1.0, 1.0)
 			if absf(turn_val) < 0.05:
 				turn_val = 0.0
 			_ship_physics.set("turn_input", turn_val)
@@ -435,6 +450,13 @@ func _get_control(ctrl_name: String) -> Node:
 	if _console_panel and _console_panel.has_method("get_control"):
 		return _console_panel.get_control(ctrl_name)
 	return null
+
+func _scrub_anim(control: Node, value: float) -> void:
+	control.set_meta("drag_value", value)
+	var anim: AnimationPlayer = control.get_meta("anim_player") if control.has_meta("anim_player") else null
+	if anim:
+		var length: float = anim.get_animation("drag").length
+		anim.seek(value * length, true)
 
 func _update_signal_display() -> void:
 	if _mini_map == null or not _mini_map.has_method("set_signal_display"):
@@ -529,11 +551,7 @@ func _get_scan_knob_value() -> float:
 	var scan_freq_control: Node = _get_control("scan_freq")
 	if scan_freq_control == null:
 		return 0.0
-	var mesh_inst: MeshInstance3D = scan_freq_control.get_meta("knob_mesh") if scan_freq_control.has_meta("knob_mesh") else null
-	if mesh_inst == null:
-		return 0.0
-	var rot: float = mesh_inst.rotation_degrees.z
-	return clampf((rot + 150.0) / 300.0, 0.0, 1.0)
+	return scan_freq_control.get_meta("drag_value", 0.5)
 
 func _find_crt_overlay(vp: SubViewport) -> ColorRect:
 	for child: Node in vp.get_children():
@@ -623,40 +641,41 @@ func _snap_drag_end(control: Node) -> void:
 	if ctrl_type != "knob":
 		return
 
-	var mesh_inst: MeshInstance3D = control.get_meta("knob_mesh") if control.has_meta("knob_mesh") else null
-	if mesh_inst == null:
-		return
-
 	var ctrl_name: String = control.name
 	var stops: int = control.get_meta("stops", 0)
 	if stops == 0:
 		return
 
-	var stop_angles: Array = []
+	var stop_values: Array = []
 	match ctrl_name:
 		"NavKnob":
-			stop_angles = _nav_stop_angles
+			stop_values = [0.0, 0.5, 1.0]
 		"FuelValve":
-			stop_angles = _fuel_stop_angles
+			stop_values = [0.0, 0.333, 0.667, 1.0]
 		"CoolingKnob":
-			stop_angles = [-60.0, 0.0, 60.0]
+			stop_values = [0.0, 0.5, 1.0]
 		_:
 			return
 
-	var current_angle: float = mesh_inst.rotation_degrees.z
+	var current_val: float = control.get_meta("drag_value", 0.5)
 	var best_idx: int = 0
 	var best_dist: float = 999.0
-	for i in range(stop_angles.size()):
-		var d: float = absf(current_angle - stop_angles[i])
+	for i in range(stop_values.size()):
+		var d: float = absf(current_val - stop_values[i])
 		if d < best_dist:
 			best_dist = d
 			best_idx = i
 
-	var target_angle: float = stop_angles[best_idx]
-	var tween := create_tween()
-	tween.set_ease(Tween.EASE_OUT)
-	tween.set_trans(Tween.TRANS_BACK)
-	tween.tween_property(mesh_inst, "rotation_degrees:z", target_angle, 0.15)
+	var target_val: float = stop_values[best_idx]
+	var anim: AnimationPlayer = control.get_meta("anim_player") if control.has_meta("anim_player") else null
+	if anim:
+		var length: float = anim.get_animation("drag").length
+		var tween := create_tween()
+		tween.set_ease(Tween.EASE_OUT)
+		tween.set_trans(Tween.TRANS_BACK)
+		tween.tween_method(func(v: float): _scrub_anim(control, v), current_val, target_val, 0.15)
+	else:
+		_scrub_anim(control, target_val)
 
 	control.set_meta("current_stop", best_idx)
 
@@ -1183,21 +1202,18 @@ func _handle_control_click(control: Node) -> void:
 func _handle_control_drag(control: Node, delta: Vector2) -> void:
 	var ctrl_type: String = control.get_meta("type", "")
 	if ctrl_type == "knob":
-		var mesh_inst: MeshInstance3D = control.get_meta("knob_mesh")
-		if mesh_inst:
-			mesh_inst.rotation_degrees.z += delta.x * 0.5
-			mesh_inst.rotation_degrees.z = clampf(mesh_inst.rotation_degrees.z, -150.0, 150.0)
-			if absf(delta.x) > 2.0:
-				_audio_play("play_knob_turn")
+		var val: float = control.get_meta("drag_value", 0.5)
+		val += delta.x * 0.003
+		val = clampf(val, 0.0, 1.0)
+		_scrub_anim(control, val)
+		if absf(delta.x) > 2.0:
+			_audio_play("play_knob_turn")
 	elif ctrl_type == "lever":
-		var handle: MeshInstance3D = control.get_meta("handle_mesh")
-		var rod_h: float = control.get_meta("rod_height", 0.15)
-		var handle_r: float = control.get_meta("handle_radius", 0.03)
-		if handle:
-			var current_y: float = handle.position.y
-			handle.position.y = clampf(current_y + delta.y * 0.005, rod_h + handle_r, rod_h + handle_r + 0.2)
-			var val: float = (handle.position.y - rod_h - handle_r) / 0.2
-			control.set_meta("value", val)
+		var val: float = control.get_meta("drag_value", 0.0)
+		val -= delta.y * 0.003
+		val = clampf(val, 0.0, 1.0)
+		_scrub_anim(control, val)
+		control.set_meta("value", val)
 
 func _on_control_interacted(control_name: String) -> void:
 	if control_name == "ignition":
@@ -1265,8 +1281,8 @@ func _check_tutorial_progress() -> void:
 		1:
 			var nav_control: Node = _get_control("nav_knob")
 			if nav_control and absf(_nav_knob_stop - 0) < 0.01:
-				var mesh_inst: MeshInstance3D = nav_control.get_meta("knob_mesh") if nav_control.has_meta("knob_mesh") else null
-				if mesh_inst and absf(mesh_inst.rotation_degrees.z) > 10.0:
+				var val: float = nav_control.get_meta("drag_value", 0.5)
+				if absf(val - 0.5) > 0.1:
 					_tutorial_step = 2
 					_show_tutorial_step()
 		2:

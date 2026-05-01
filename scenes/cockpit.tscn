@@ -10,6 +10,13 @@
 [ext_resource type="Script" uid="uid://br2lnryilmh5w" path="res://scripts/ship_resources.gd" id="8_bjct7"]
 [ext_resource type="PackedScene" uid="uid://b8bq2is074vev" path="res://scenes/panels/comm-panel.tscn" id="9_comm"]
 [ext_resource type="Script" uid="uid://bstor4aw4p0k1" path="res://scripts/narrative_manager.gd" id="10_narr"]
+[ext_resource type="PackedScene" uid="uid://veor5gmedy22" path="res://scenes/controls/button.tscn" id="11_7nj66"]
+[ext_resource type="PackedScene" uid="uid://byy7phdpr5cht" path="res://scenes/controls/steering-wheel.tscn" id="12_6tcqw"]
+[ext_resource type="PackedScene" uid="uid://dlhts0s45rhrs" path="res://scenes/controls/knob.tscn" id="13_0g4l1"]
+[ext_resource type="PackedScene" uid="uid://b5affdm7setsf" path="res://scenes/controls/lever.tscn" id="14_ifc1d"]
+[ext_resource type="PackedScene" uid="uid://6nwo5hk721gn" path="res://scenes/controls/switch.tscn" id="15_iuvpg"]
+
+[sub_resource type="Environment" id="Environment_7nj66"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjct7"]
 albedo_color = Color(0, 0, 0, 1)
@@ -80,6 +87,7 @@ script = ExtResource("1_ga5w8")
 [node name="SpaceEnvironment" type="Node3D" parent="." unique_id=433352029 groups=["space_env"]]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="SpaceEnvironment" unique_id=1947741830]
+environment = SubResource("Environment_7nj66")
 
 [node name="BlackHolePlaceholder" type="MeshInstance3D" parent="SpaceEnvironment" unique_id=310802805]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -50)
@@ -262,6 +270,44 @@ offset_bottom = 100.0
 
 [node name="NarrativeManager" type="Node" parent="." unique_id=900000004]
 script = ExtResource("10_narr")
+
+[node name="Controls" type="Node" parent="." unique_id=327639524]
+
+[node name="IgnitionBtn" parent="Controls" unique_id=1154403963 instance=ExtResource("11_7nj66")]
+transform = Transform3D(1, 0, 0, 0, 0.6698566, -0.7424905, 0, 0.7424905, 0.6698566, -0.5511693, 0, -1.2351574)
+
+[node name="NavKnob" parent="Controls" unique_id=1611659523 instance=ExtResource("12_6tcqw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.011743806, -0.1527529, -1.2613078)
+
+[node name="FuelValve" parent="Controls" unique_id=1764950245 instance=ExtResource("13_0g4l1")]
+transform = Transform3D(0.99609923, -0.053128064, 0.07045295, 0.066298924, -0.076268196, -0.9948806, 0.058229476, 0.99567086, -0.07244835, -0.9407952, 0, -1.4073942)
+
+[node name="ThrustLever" parent="Controls" unique_id=1600943988 instance=ExtResource("14_ifc1d")]
+transform = Transform3D(1, 0, 0, 0, 0.25881907, -0.9659258, 0, 0.9659258, 0.25881907, 0.92962027, 0, -1.5682917)
+
+[node name="ScanFreqKnob" parent="Controls" unique_id=1496291300 instance=ExtResource("13_0g4l1")]
+transform = Transform3D(-4.371139e-08, 1, -4.371139e-08, 0, -4.371139e-08, -1, -1, -4.371139e-08, 1.9106855e-15, -1.4588447, 0, -0.53176594)
+
+[node name="ScanSwitch" parent="Controls" unique_id=860258777 instance=ExtResource("15_iuvpg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.305979, 0.08569169, -0.25116646)
+
+[node name="Breaker1" parent="Controls" unique_id=222080630 instance=ExtResource("15_iuvpg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0648222, 0, -0.26839313)
+
+[node name="Breaker2" parent="Controls" unique_id=1056178852 instance=ExtResource("15_iuvpg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0736005, 0, -0.0034677088)
+
+[node name="Breaker3" parent="Controls" unique_id=480135613 instance=ExtResource("15_iuvpg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.98982215, 0.31905267, -0.2456545)
+
+[node name="Breaker4" parent="Controls" unique_id=37150311 instance=ExtResource("15_iuvpg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9986005, 0.31656492, 0.0143776685)
+
+[node name="O2Valve" parent="Controls" unique_id=1582672473 instance=ExtResource("15_iuvpg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.30155855, 0, 0.92101353)
+
+[node name="CoolingKnob" parent="Controls" unique_id=276541975 instance=ExtResource("13_0g4l1")]
+transform = Transform3D(1, 0, 0, 0, -0.012112246, 0.9999266, 0, -0.9999266, -0.012112246, -0.10815745, 0, 0.97336704)
 
 [connection signal="object_clicked" from="PlayerCamera" to="." method="_on_object_clicked"]
 [connection signal="screen_clicked" from="PlayerCamera" to="." method="_on_screen_clicked"]
