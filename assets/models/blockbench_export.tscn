@@ -1,0 +1,741 @@
+[gd_scene format=3 uid="uid://j1c8abl4qlk2"]
+
+[ext_resource type="PackedScene" uid="uid://dkfqojysutnvh" path="res://assets/models/jiashicang.gltf" id="1_bwust"]
+[ext_resource type="Material" uid="uid://ds74ykajot61r" path="res://assets/shaders/3d2gameboy_shader_material.tres" id="2_fdu08"]
+
+[node name="blockbench_export" unique_id=603848736 instance=ExtResource("1_bwust")]
+
+[node name="Base" parent="ROOT/Base8" parent_id_path=PackedInt32Array(1280700652) index="0" unique_id=813926094]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Base2" parent="ROOT/Base8" parent_id_path=PackedInt32Array(1280700652) index="1" unique_id=2093329788]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Base3" parent="ROOT/Base8" parent_id_path=PackedInt32Array(1280700652) index="2" unique_id=1949761903]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Base4" parent="ROOT/Base8" parent_id_path=PackedInt32Array(1280700652) index="3" unique_id=538638797]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Base5" parent="ROOT/Base8" parent_id_path=PackedInt32Array(1280700652) index="4" unique_id=533472192]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Base6" parent="ROOT/Base8" parent_id_path=PackedInt32Array(1280700652) index="5" unique_id=851910991]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Base7" parent="ROOT/Base8" parent_id_path=PackedInt32Array(1280700652) index="6" unique_id=1021759006]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="0" unique_id=1567529937]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead2" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="1" unique_id=1828100340]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead3" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="2" unique_id=760927375]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead4" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="3" unique_id=890541442]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead5" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="4" unique_id=1741985541]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead6" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="5" unique_id=455904324]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead7" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="6" unique_id=378681527]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead8" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="7" unique_id=1135183027]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead9" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="8" unique_id=771392538]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead10" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="9" unique_id=162979543]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead11" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="10" unique_id=763213393]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead12" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="11" unique_id=772999899]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead13" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="12" unique_id=648214125]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Overhead14" parent="ROOT/Overhead15" parent_id_path=PackedInt32Array(313908657) index="13" unique_id=937563853]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="0" unique_id=2018202361]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead2" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="1" unique_id=765491495]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead3" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="2" unique_id=137775238]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead4" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="3" unique_id=1805332947]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead5" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="4" unique_id=81844424]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead6" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="5" unique_id=353355280]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead7" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="6" unique_id=494204701]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead8" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="7" unique_id=241327783]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead9" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="8" unique_id=1302254275]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead10" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="9" unique_id=169978775]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead11" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="10" unique_id=1023976988]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead12" parent="ROOT/Bulkhead25/BulkheadOne" parent_id_path=PackedInt32Array(1008468878) index="11" unique_id=1800061778]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead13" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="0" unique_id=408140865]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead14" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="1" unique_id=863899282]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead15" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="2" unique_id=1295135980]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead16" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="3" unique_id=1772966361]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead17" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="4" unique_id=1150506941]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead18" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="5" unique_id=1545388183]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead19" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="6" unique_id=633831001]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead20" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="7" unique_id=2130245977]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead21" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="8" unique_id=1116417382]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead22" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="9" unique_id=79686140]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead23" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="10" unique_id=1158639746]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Bulkhead24" parent="ROOT/Bulkhead25/BulkheadTwo" parent_id_path=PackedInt32Array(1512707211) index="11" unique_id=1738781820]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Aft Bulkhead" parent="ROOT/Aft Bulkhead7" parent_id_path=PackedInt32Array(601884488) index="0" unique_id=578722409]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Aft Bulkhead2" parent="ROOT/Aft Bulkhead7" parent_id_path=PackedInt32Array(601884488) index="1" unique_id=888055504]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Aft Bulkhead3" parent="ROOT/Aft Bulkhead7" parent_id_path=PackedInt32Array(601884488) index="2" unique_id=72333744]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Aft Bulkhead4" parent="ROOT/Aft Bulkhead7" parent_id_path=PackedInt32Array(601884488) index="3" unique_id=116788221]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Aft Bulkhead5" parent="ROOT/Aft Bulkhead7" parent_id_path=PackedInt32Array(601884488) index="4" unique_id=1852216913]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Aft Bulkhead6" parent="ROOT/Aft Bulkhead7" parent_id_path=PackedInt32Array(601884488) index="5" unique_id=1815599260]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="0" unique_id=1774196883]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine2" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="1" unique_id=1084681729]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine3" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="2" unique_id=1491563920]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine4" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="3" unique_id=1417435405]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine5" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="4" unique_id=460422207]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine6" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="5" unique_id=81928078]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine7" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="6" unique_id=358479161]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine8" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="7" unique_id=1549201553]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine9" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="8" unique_id=216254127]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine10" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="9" unique_id=1943463777]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine11" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="10" unique_id=1702419383]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine12" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="11" unique_id=1896378736]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine13" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="12" unique_id=1242001062]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine14" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="13" unique_id=700837731]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine15" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="14" unique_id=806400529]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine16" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="15" unique_id=519169302]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine17" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="16" unique_id=1698453046]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine18" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="17" unique_id=1063867019]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine19" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="18" unique_id=233214723]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine20" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="19" unique_id=351262069]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine21" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="20" unique_id=1725378314]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine22" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="21" unique_id=1353965654]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine23" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="22" unique_id=1785976798]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine24" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="23" unique_id=1220681646]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine25" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="24" unique_id=1439708741]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine26" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="25" unique_id=342846033]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine27" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="26" unique_id=892107101]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine28" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="27" unique_id=1738851294]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine29" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="28" unique_id=959041547]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine30" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="29" unique_id=217430324]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine31" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="30" unique_id=1673965387]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine32" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="31" unique_id=1808372727]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine33" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="32" unique_id=867705698]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine34" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="33" unique_id=566164927]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine35" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="34" unique_id=1743269863]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine36" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="35" unique_id=630738952]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine37" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="36" unique_id=1413228400]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine38" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="37" unique_id=530345265]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine39" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="38" unique_id=418603563]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine40" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="39" unique_id=1797426843]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="RightIronLine41" parent="ROOT/Deck51/DeckIronLine/RightIronLine42" parent_id_path=PackedInt32Array(404598218) index="40" unique_id=1093242611]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="0" unique_id=1417061669]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine2" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="1" unique_id=1244834002]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine3" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="2" unique_id=1936927281]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine4" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="3" unique_id=1227850810]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine5" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="4" unique_id=1595311932]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine6" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="5" unique_id=103685093]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine7" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="6" unique_id=1253323335]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine8" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="7" unique_id=229819997]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine9" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="8" unique_id=1890264668]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine10" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="9" unique_id=18194833]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine11" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="10" unique_id=902189654]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine12" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="11" unique_id=1272630983]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine13" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="12" unique_id=1767083870]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine14" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="13" unique_id=506495827]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine15" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="14" unique_id=637713916]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine16" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="15" unique_id=1445464006]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine17" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="16" unique_id=145905800]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine18" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="17" unique_id=55939384]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine19" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="18" unique_id=1575774627]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine20" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="19" unique_id=397867695]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine21" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="20" unique_id=722251897]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine22" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="21" unique_id=846111791]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine23" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="22" unique_id=488623413]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine24" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="23" unique_id=995919227]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine25" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="24" unique_id=587973107]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine26" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="25" unique_id=458731847]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine27" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="26" unique_id=1658068052]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine28" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="27" unique_id=751434089]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine29" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="28" unique_id=151298206]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine30" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="29" unique_id=385189413]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine31" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="30" unique_id=1896183871]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine32" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="31" unique_id=1164841149]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine33" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="32" unique_id=675697488]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine34" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="33" unique_id=242325146]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine35" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="34" unique_id=1420274653]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine36" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="35" unique_id=500847903]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine37" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="36" unique_id=694496082]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine38" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="37" unique_id=1187692784]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine39" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="38" unique_id=1477625094]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine40" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="39" unique_id=315725941]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="LeftIronLine41" parent="ROOT/Deck51/DeckIronLine/LeftIronLine42" parent_id_path=PackedInt32Array(1486420067) index="40" unique_id=148899398]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="1" unique_id=1495724755]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck2" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="2" unique_id=914493126]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck3" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="3" unique_id=1199522244]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck4" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="4" unique_id=484084590]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck5" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="5" unique_id=961571142]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck6" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="6" unique_id=967804467]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck7" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="7" unique_id=587031042]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck8" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="8" unique_id=1396831711]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck9" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="9" unique_id=641420780]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck10" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="10" unique_id=1104834330]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck11" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="11" unique_id=2040301290]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck12" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="12" unique_id=1842391345]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck13" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="13" unique_id=1986372600]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck14" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="14" unique_id=460031571]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck15" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="15" unique_id=1407800340]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck16" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="16" unique_id=113490626]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck17" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="17" unique_id=384978653]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck18" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="18" unique_id=2024056958]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck19" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="19" unique_id=1430835736]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck20" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="20" unique_id=1197565930]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck21" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="21" unique_id=1206474352]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck22" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="22" unique_id=1058434960]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck23" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="23" unique_id=412418431]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck24" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="24" unique_id=1913965996]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck25" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="25" unique_id=1010231193]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck26" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="26" unique_id=2065496269]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck27" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="27" unique_id=827735003]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck28" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="28" unique_id=1536228901]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck29" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="29" unique_id=193902349]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck30" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="30" unique_id=766626456]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck31" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="31" unique_id=563985273]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck32" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="32" unique_id=295048557]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck33" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="33" unique_id=1473280498]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck34" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="34" unique_id=2140117015]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck35" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="35" unique_id=314513672]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck36" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="36" unique_id=19442945]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck37" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="37" unique_id=1847616278]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck38" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="38" unique_id=1546512907]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck39" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="39" unique_id=151752809]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck40" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="40" unique_id=1587436575]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck41" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="41" unique_id=326633159]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck42" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="42" unique_id=531718778]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck43" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="43" unique_id=398848473]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck44" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="44" unique_id=1772660044]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck45" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="45" unique_id=1190951390]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck46" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="46" unique_id=546326758]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck47" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="47" unique_id=1492190653]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck48" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="48" unique_id=955519137]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck49" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="49" unique_id=916900555]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Deck50" parent="ROOT/Deck51" parent_id_path=PackedInt32Array(732645302) index="50" unique_id=1277748414]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="0" unique_id=232419462]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest2" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="1" unique_id=1612473404]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest3" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="2" unique_id=1836057777]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest4" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="3" unique_id=781903290]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest5" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="4" unique_id=1623056223]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest6" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="5" unique_id=877039515]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest7" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="6" unique_id=1686321544]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest8" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="7" unique_id=305199771]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest9" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="8" unique_id=1724728956]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest10" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="9" unique_id=1072043816]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest11" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="10" unique_id=887304682]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest12" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="11" unique_id=636234866]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest13" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="12" unique_id=1503091166]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest14" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="13" unique_id=1419626055]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest15" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="14" unique_id=1553502114]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest16" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="15" unique_id=1681587909]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest17" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="16" unique_id=1800177104]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest18" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="17" unique_id=844736993]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest19" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="18" unique_id=2006060436]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest20" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="19" unique_id=768040940]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest21" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="20" unique_id=444973749]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest22" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="21" unique_id=659846780]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest23" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="22" unique_id=1159296377]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest24" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="23" unique_id=1819726819]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest25" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="24" unique_id=1689727297]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest26" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="25" unique_id=756144390]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest27" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="26" unique_id=1356314268]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest28" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="27" unique_id=1381928415]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest29" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="28" unique_id=1224934521]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatArmrest30" parent="ROOT/Seat5/SeatArmrest31" parent_id_path=PackedInt32Array(1334946890) index="29" unique_id=1754070249]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatCovers" parent="ROOT/Seat5/SeatCovers5" parent_id_path=PackedInt32Array(1560620806) index="0" unique_id=124053170]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatCovers2" parent="ROOT/Seat5/SeatCovers5" parent_id_path=PackedInt32Array(1560620806) index="1" unique_id=1623664982]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatCovers3" parent="ROOT/Seat5/SeatCovers5" parent_id_path=PackedInt32Array(1560620806) index="2" unique_id=1120703806]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatCovers4" parent="ROOT/Seat5/SeatCovers5" parent_id_path=PackedInt32Array(1560620806) index="3" unique_id=591303549]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrestCovers" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10/SeatHeadrestCovers8" parent_id_path=PackedInt32Array(880469719) index="0" unique_id=287114997]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrestCovers2" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10/SeatHeadrestCovers8" parent_id_path=PackedInt32Array(880469719) index="1" unique_id=1994581870]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrestCovers3" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10/SeatHeadrestCovers8" parent_id_path=PackedInt32Array(880469719) index="2" unique_id=1140033686]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrestCovers4" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10/SeatHeadrestCovers8" parent_id_path=PackedInt32Array(880469719) index="3" unique_id=1029301803]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrestCovers5" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10/SeatHeadrestCovers8" parent_id_path=PackedInt32Array(880469719) index="4" unique_id=1764612310]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrestCovers6" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10/SeatHeadrestCovers8" parent_id_path=PackedInt32Array(880469719) index="5" unique_id=1369257910]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrestCovers7" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10/SeatHeadrestCovers8" parent_id_path=PackedInt32Array(880469719) index="6" unique_id=73129693]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrest" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10" parent_id_path=PackedInt32Array(177265742) index="1" unique_id=1759688608]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrest2" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10" parent_id_path=PackedInt32Array(177265742) index="2" unique_id=1955485227]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrest3" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10" parent_id_path=PackedInt32Array(177265742) index="3" unique_id=176189536]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrest4" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10" parent_id_path=PackedInt32Array(177265742) index="4" unique_id=256222233]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrest5" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10" parent_id_path=PackedInt32Array(177265742) index="5" unique_id=1714118699]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrest6" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10" parent_id_path=PackedInt32Array(177265742) index="6" unique_id=1483390553]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrest7" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10" parent_id_path=PackedInt32Array(177265742) index="7" unique_id=2073483510]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrest8" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10" parent_id_path=PackedInt32Array(177265742) index="8" unique_id=1874419734]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatHeadrest9" parent="ROOT/Seat5/SeatBack5/SeatHeadrest10" parent_id_path=PackedInt32Array(177265742) index="9" unique_id=344955241]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatBackCovers" parent="ROOT/Seat5/SeatBack5/SeatBackCovers5" parent_id_path=PackedInt32Array(558136179) index="0" unique_id=1789018463]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatBackCovers2" parent="ROOT/Seat5/SeatBack5/SeatBackCovers5" parent_id_path=PackedInt32Array(558136179) index="1" unique_id=1136289465]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatBackCovers3" parent="ROOT/Seat5/SeatBack5/SeatBackCovers5" parent_id_path=PackedInt32Array(558136179) index="2" unique_id=1722961825]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatBackCovers4" parent="ROOT/Seat5/SeatBack5/SeatBackCovers5" parent_id_path=PackedInt32Array(558136179) index="3" unique_id=368122195]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatBack" parent="ROOT/Seat5/SeatBack5" parent_id_path=PackedInt32Array(1718737974) index="2" unique_id=1743004659]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatBack2" parent="ROOT/Seat5/SeatBack5" parent_id_path=PackedInt32Array(1718737974) index="3" unique_id=229397201]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatBack3" parent="ROOT/Seat5/SeatBack5" parent_id_path=PackedInt32Array(1718737974) index="4" unique_id=1229236376]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="SeatBack4" parent="ROOT/Seat5/SeatBack5" parent_id_path=PackedInt32Array(1718737974) index="5" unique_id=261378059]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Seat" parent="ROOT/Seat5" parent_id_path=PackedInt32Array(1422252326) index="3" unique_id=369710148]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Seat2" parent="ROOT/Seat5" parent_id_path=PackedInt32Array(1422252326) index="4" unique_id=266826587]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Seat3" parent="ROOT/Seat5" parent_id_path=PackedInt32Array(1422252326) index="5" unique_id=324680404]
+surface_material_override/0 = ExtResource("2_fdu08")
+
+[node name="Seat4" parent="ROOT/Seat5" parent_id_path=PackedInt32Array(1422252326) index="6" unique_id=1996265821]
+surface_material_override/0 = ExtResource("2_fdu08")

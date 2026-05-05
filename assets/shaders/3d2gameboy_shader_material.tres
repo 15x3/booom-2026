@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://ds74ykajot61r"]
+
+[ext_resource type="Shader" uid="uid://ch7tsrqs0n67o" path="res://assets/shaders/3d-2-gameboy.gdshader" id="1_74kwj"]
+[ext_resource type="Texture2D" uid="uid://41t7jruyhq2p" path="res://assets/palette/horehound-4-8x.png" id="2_ek7dw"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_74kwj")
+shader_parameter/viewport_texture = null
+shader_parameter/palette = ExtResource("2_ek7dw")

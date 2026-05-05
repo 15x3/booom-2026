@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://0wj2hcj1tcjr"]
+
+[ext_resource type="Script" path="res://scripts/levels/level_1_spacewar.gd" id="1_ovjff"]
+
+[node name="Level1Spacewar" type="Node3D" unique_id=1432780083]
+script = ExtResource("1_ovjff")

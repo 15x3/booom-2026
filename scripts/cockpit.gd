@@ -7,6 +7,8 @@ extends Node3D
 @onready var main_screen: MeshInstance3D = $CockpitInterior/MainScreenSlot
 @onready var left_screen: MeshInstance3D = $CockpitInterior/LeftScreenSlot
 @onready var right_screen: MeshInstance3D = $CockpitInterior/RightScreenSlot
+@onready var left_screen_viewport: SubViewport = $LeftScreenViewport
+@onready var right_screen_viewport: SubViewport = $RightScreenViewport
 
 @onready var forward_cam: Camera3D = $ForwardViewport/CamRig/ForwardCam
 @onready var rear_cam: Camera3D = $RearViewport/CamRig/RearCam
@@ -43,10 +45,7 @@ var _active_drag: Node = null
 var _last_mouse_pos: Vector2 = Vector2.ZERO
 
 var _ship_physics: Node = null
-var _nav_knob_stop: int = 0
 var _fuel_valve_stop: int = 0
-var _nav_stop_angles := [-60.0, 0.0, 60.0]
-var _fuel_stop_angles := [-90.0, -30.0, 30.0, 90.0]
 
 var _scanning: bool = false
 var _scan_timer: float = 0.0
@@ -60,8 +59,6 @@ var _maintenance_manager: Node = null
 var _breaker_viewports: Array = []
 
 var _cooling_stop: int = 0
-
-var _view_arrows: Dictionary = {}
 
 var _audio_manager: Node = null
 var _pause_menu: Control = null
@@ -77,8 +74,35 @@ var _sling_thrust_min: float = 0.5
 var _sling_thrust_max: float = 0.8
 var _sling_base_lens: float = 0.0
 
+var level_mode: String = ""
+var _level2_game: Node3D = null
+var _level2_terminal: Control = null
+var _level2_minimap: Control = null
+var _level2_system_panel: Control = null
+var _level2_game_vp: SubViewport = null
+var _level2_comm_vp: SubViewport = null
+var _level2_map_vp: SubViewport = null
+var _level2_system_vp: SubViewport = null
+var _level2_fps_timer: Timer = null
+
+var _level3_game: Node3D = null
+var _level3_comms: Control = null
+var _level3_radar: Control = null
+var _level3_game_vp: SubViewport = null
+var _level3_comm_vp: SubViewport = null
+var _level3_map_vp: SubViewport = null
+var _level3_update_timer: Timer = null
+
 func _ready() -> void:
 	_load_config()
+	if has_meta("level_mode"):
+		level_mode = get_meta("level_mode")
+	if level_mode == "spasim":
+		_setup_level2()
+		return
+	if level_mode == "elite":
+		_setup_level3()
+		return
 	_setup_viewports()
 	_setup_cameras()
 	_setup_camera_fps()
@@ -119,11 +143,6 @@ func _connect_signals() -> void:
 		_mini_map.destination_reached.connect(_on_destination_reached)
 		_mini_map.debris_collision.connect(_on_debris_collision)
 	_system_panel = system_panel_viewport.get_node("SystemPanel")
-	if _system_panel:
-		if _system_panel.scan_requested.is_connected(_on_scan_requested):
-			_system_panel.scan_requested.disconnect(_on_scan_requested)
-		if _system_panel.thrust_requested.is_connected(_on_thrust_requested):
-			_system_panel.thrust_requested.disconnect(_on_thrust_requested)
 	if nav_system:
 		nav_system.node_changed.connect(_on_node_changed)
 		nav_system.travel_started.connect(_on_travel_started)
@@ -168,13 +187,15 @@ func _setup_maintenance() -> void:
 	_maintenance_manager.o2_supply_completed.connect(_on_o2_supply_completed)
 
 func _setup_audio() -> void:
-	var script := load("res://scripts/audio_manager.gd")
-	if script == null:
-		return
-	_audio_manager = Node.new()
-	_audio_manager.name = "AudioManager"
-	_audio_manager.set_script(script)
-	add_child(_audio_manager)
+	_audio_manager = get_node_or_null("AudioManager")
+	if _audio_manager == null:
+		var script := load("res://scripts/audio_manager.gd")
+		if script == null:
+			return
+		_audio_manager = Node.new()
+		_audio_manager.name = "AudioManager"
+		_audio_manager.set_script(script)
+		add_child(_audio_manager)
 
 func _setup_pause_menu() -> void:
 	var hud: CanvasLayer = get_node_or_null("HUD")
@@ -306,16 +327,33 @@ func _bind_viewport_textures() -> void:
 	_bind_screen(comm_screen_slot, comm_viewport)
 
 func _bind_screen(screen: MeshInstance3D, vp: SubViewport) -> void:
-	var mat := screen.material_override as StandardMaterial3D
+	var tex := vp.get_texture()
+	var existing := screen.material_override
+	if existing is ShaderMaterial:
+		existing.set_shader_parameter("viewport_texture", tex)
+		return
+	var mat := existing as StandardMaterial3D
 	if mat == null:
 		mat = StandardMaterial3D.new()
 		screen.material_override = mat
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.emission_enabled = true
 	mat.emission = Color(1, 1, 1, 1)
-	var tex := vp.get_texture()
 	mat.albedo_texture = tex
 	mat.emission_texture = tex
+
+func apply_screen_shader(screen: MeshInstance3D, shader: Shader) -> void:
+	var current_mat := screen.material_override
+	var tex: Texture2D = null
+	if current_mat is StandardMaterial3D:
+		tex = current_mat.albedo_texture
+	elif current_mat is ShaderMaterial:
+		tex = current_mat.get_shader_parameter("viewport_texture")
+	var mat := ShaderMaterial.new()
+	mat.shader = shader
+	if tex:
+		mat.set_shader_parameter("viewport_texture", tex)
+	screen.material_override = mat
 
 func _apply_crt_to_cameras() -> void:
 	var crt_shader_path := "res://assets/shaders/CRT.gdshader"
@@ -434,13 +472,12 @@ func _update_ship_controls() -> void:
 
 	var nav_control: Node = _get_control("nav_knob")
 	if nav_control:
-		if _nav_knob_stop == 0:
-			var val: float = nav_control.get_meta("drag_value", 0.5)
-			var turn_val: float = clampf((val - 0.5) * 2.0, -1.0, 1.0)
-			if absf(turn_val) < 0.05:
-				turn_val = 0.0
-			_ship_physics.set("turn_input", turn_val)
-			_ship_physics.set("heading_locked", _nav_knob_stop != 0)
+		var val: float = nav_control.get_meta("drag_value", 0.5)
+		var turn_val: float = clampf((val - 0.5) * 2.0, -1.0, 1.0)
+		if absf(turn_val) < 0.05:
+			turn_val = 0.0
+		_ship_physics.set("turn_input", turn_val)
+		_ship_physics.set("heading_locked", false)
 
 	var fuel_control: Node = _get_control("fuel_valve")
 	if fuel_control:
@@ -610,6 +647,30 @@ func _push_viewport_click(vp: SubViewport, uv: Vector2) -> void:
 	vp.push_input(release)
 
 func _input(event: InputEvent) -> void:
+	if level_mode == "spasim":
+		if event is InputEventKey:
+			if _level2_terminal and _level2_terminal.has_method("handle_key_input"):
+				_level2_terminal.handle_key_input(event)
+			get_viewport().set_input_as_handled()
+		return
+	if level_mode == "elite":
+		if event is InputEventKey:
+			var kc: int = event.keycode if event.keycode != 0 else event.physical_keycode
+			if kc == KEY_ENTER and _level3_comms and _level3_comms.has_method("handle_key_input"):
+				_level3_comms.handle_key_input(event)
+			elif kc == KEY_UP or kc == KEY_DOWN or kc == KEY_BACKSPACE:
+				if _level3_comms and _level3_comms.has_method("handle_key_input"):
+					_level3_comms.handle_key_input(event)
+			else:
+				if _level3_game and _level3_game.has_method("handle_input"):
+					_level3_game.handle_input(event)
+				var ch: String = ""
+				if event.unicode >= 32 and event.unicode <= 126:
+					ch = char(event.unicode)
+				if not ch.is_empty() and _level3_comms and _level3_comms.has_method("handle_key_input"):
+					_level3_comms.handle_key_input(event)
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed:
 		var key: int = event.keycode if event.keycode != 0 else event.physical_keycode
 		if key == KEY_ESCAPE:
@@ -648,8 +709,6 @@ func _snap_drag_end(control: Node) -> void:
 
 	var stop_values: Array = []
 	match ctrl_name:
-		"NavKnob":
-			stop_values = [0.0, 0.5, 1.0]
 		"FuelValve":
 			stop_values = [0.0, 0.333, 0.667, 1.0]
 		"CoolingKnob":
@@ -669,7 +728,7 @@ func _snap_drag_end(control: Node) -> void:
 	var target_val: float = stop_values[best_idx]
 	var anim: AnimationPlayer = control.get_meta("anim_player") if control.has_meta("anim_player") else null
 	if anim:
-		var length: float = anim.get_animation("drag").length
+		var _length: float = anim.get_animation("drag").length
 		var tween := create_tween()
 		tween.set_ease(Tween.EASE_OUT)
 		tween.set_trans(Tween.TRANS_BACK)
@@ -680,10 +739,6 @@ func _snap_drag_end(control: Node) -> void:
 	control.set_meta("current_stop", best_idx)
 
 	match ctrl_name:
-		"NavKnob":
-			if best_idx != _nav_knob_stop:
-				_nav_knob_stop = best_idx
-				_on_control_stop_changed(best_idx, "nav_knob")
 		"FuelValve":
 			if best_idx != _fuel_valve_stop:
 				_fuel_valve_stop = best_idx
@@ -695,16 +750,11 @@ func _on_channel_selected(channel_id: String) -> void:
 	if _input_locked or _game_over:
 		return
 	_selected_channel_id = channel_id
-	var can_scan: bool = nav_system.can_scan() if nav_system else false
+	var _can_scan: bool = nav_system.can_scan() if nav_system else false
 	var scan_cost: float = config.get("actions", {}).get("scan_fuel_cost", 8.0)
 	if ship_resources and ship_resources.has_method("can_consume_fuel"):
 		if not ship_resources.can_consume_fuel(scan_cost):
-			can_scan = false
-	if _system_panel:
-		_system_panel.set_selected_channel(channel_id, can_scan)
-
-func _on_scan_requested() -> void:
-	_start_scan()
+			_can_scan = false
 
 func _get_scan_signal_strength() -> float:
 	var knob_value: float = _get_scan_knob_value()
@@ -723,21 +773,6 @@ func _on_scan_completed(channel_id: String, _data: Dictionary) -> void:
 	if _system_panel:
 		_system_panel.set_scan_complete()
 
-func _on_thrust_requested() -> void:
-	if _input_locked or _game_over or _selected_channel_id == "":
-		return
-	var thrust_fuel: float = config.get("actions", {}).get("thrust_fuel_cost", 5.0)
-	var thrust_o2: float = config.get("actions", {}).get("thrust_oxygen_cost", 3.0)
-	if ship_resources and ship_resources.has_method("can_consume"):
-		if not ship_resources.can_consume({"fuel": thrust_fuel, "oxygen": thrust_o2}):
-			return
-		ship_resources.consume_fuel(thrust_fuel)
-		ship_resources.consume_oxygen(thrust_o2)
-	if _system_panel:
-		_system_panel.lock_buttons()
-	if nav_system:
-		nav_system.select_channel(_selected_channel_id)
-
 func _on_node_changed(node_data: Dictionary) -> void:
 	var map_data: Dictionary = node_data.get("map_data", {})
 	if _mini_map and _mini_map.has_method("setup_node") and not map_data.is_empty():
@@ -745,9 +780,6 @@ func _on_node_changed(node_data: Dictionary) -> void:
 	if _ship_physics and _ship_physics.has_method("setup_for_node") and not map_data.is_empty():
 		_ship_physics.setup_for_node(map_data)
 	_selected_channel_id = ""
-	if _system_panel:
-		_system_panel.set_selected_channel("", false)
-		_system_panel.unlock_buttons()
 	var bh_scale: float = node_data.get("blackhole_scale", 1.0)
 	var distortion := clampf((bh_scale - 1.0) / 3.0, 0.0, 1.0)
 	_lens_strength = distortion
@@ -783,8 +815,6 @@ func _on_travel_started(_from_id: int, to_id: int) -> void:
 		_ship_physics.set_active(false)
 	if _maintenance_manager and _maintenance_manager.has_method("set_active"):
 		_maintenance_manager.set_active(false)
-	if _system_panel:
-		_system_panel.lock_buttons()
 	_apply_channel_consequences()
 	var flicker_dur: float = config.get("transition", {}).get("crt_flicker_duration", 0.5)
 	_play_crt_flicker(flicker_dur)
@@ -803,8 +833,6 @@ func _on_transition_completed() -> void:
 		_ship_physics.set_active(true)
 	if _maintenance_manager and _maintenance_manager.has_method("set_active"):
 		_maintenance_manager.set_active(true)
-	if _system_panel:
-		_system_panel.unlock_buttons()
 
 func _play_crt_flicker(duration: float) -> void:
 	var flick_count := 4
@@ -840,8 +868,6 @@ func _on_resource_depleted(resource_type: String) -> void:
 		_ship_physics.set_active(false)
 	if _maintenance_manager and _maintenance_manager.has_method("set_active"):
 		_maintenance_manager.set_active(false)
-	if _system_panel:
-		_system_panel.lock_buttons()
 	push_warning("RESOURCE DEPLETED: %s — GAME OVER" % resource_type.to_upper())
 
 func _apply_channel_consequences() -> void:
@@ -877,8 +903,6 @@ func _handle_storm(node_data: Dictionary) -> void:
 	_storm_active = true
 	if _ship_physics:
 		_ship_physics.set_active(false)
-	if _system_panel:
-		_system_panel.lock_buttons()
 	if narrative_manager and narrative_manager.has_method("show_intro"):
 		narrative_manager.show_intro(node_data)
 	get_tree().create_timer(2.0).timeout.connect(_storm_begin)
@@ -945,8 +969,6 @@ func _storm_finish() -> void:
 	_storm_active = false
 	_storm_accepting_brake = false
 	_input_locked = false
-	if _system_panel:
-		_system_panel.unlock_buttons()
 	var node_data: Dictionary = nav_system.get_current_node()
 	var auto_to: int = node_data.get("auto_advance_to", -1)
 	if auto_to >= 0 and nav_system:
@@ -961,8 +983,6 @@ func _handle_slingshot_placeholder(node_data: Dictionary) -> void:
 		_ship_physics.set_active(false)
 	if _maintenance_manager and _maintenance_manager.has_method("set_active"):
 		_maintenance_manager.set_active(false)
-	if _system_panel:
-		_system_panel.lock_buttons()
 
 	var sling_cfg: Dictionary = config.get("slingshot", {})
 	_sling_duration = sling_cfg.get("duration", 8.0)
@@ -980,11 +1000,13 @@ func _handle_slingshot_placeholder(node_data: Dictionary) -> void:
 	)
 
 func _sling_check_readiness() -> void:
+	var nav_control: Node = _get_control("nav_knob")
+	var nav_val: float = nav_control.get_meta("drag_value", 0.5) if nav_control else 0.5
 	var hints: Array = []
 	if _fuel_valve_stop != 3:
 		hints.append("燃料阀门 → HIGH")
-	if _nav_knob_stop != 2:
-		hints.append("导航旋钮 → SLING")
+	if nav_val < 0.9:
+		hints.append("方向盘 → 右满舵")
 	var thrust_lever: Node = _get_control("thrust_lever")
 	var thrust_val: float = thrust_lever.get_meta("value") if thrust_lever else 0.0
 	if thrust_val < _sling_thrust_min or thrust_val > _sling_thrust_max:
@@ -1024,7 +1046,9 @@ func _update_slingshot(delta: float) -> void:
 	if _sling_state == "SETUP":
 		var thrust_lever: Node = _get_control("thrust_lever")
 		var thrust_val: float = thrust_lever.get_meta("value") if thrust_lever else 0.0
-		if _fuel_valve_stop == 3 and _nav_knob_stop == 2 and thrust_val >= _sling_thrust_min and thrust_val <= _sling_thrust_max:
+		var nav_control: Node = _get_control("nav_knob")
+		var nav_val: float = nav_control.get_meta("drag_value", 0.5) if nav_control else 0.5
+		if _fuel_valve_stop == 3 and nav_val >= 0.9 and thrust_val >= _sling_thrust_min and thrust_val <= _sling_thrust_max:
 			_sling_enter_armed()
 		return
 
@@ -1107,8 +1131,6 @@ func _on_bad_ending(ending_type: String) -> void:
 	_game_over = true
 	if _ship_physics:
 		_ship_physics.set_active(false)
-	if _system_panel:
-		_system_panel.lock_buttons()
 	if narrative_manager and narrative_manager.has_method("show_ending"):
 		narrative_manager.show_ending(ending_type)
 	transition_player.play_zone_transition("ENDING", ending_type.to_upper(), func():
@@ -1215,6 +1237,19 @@ func _handle_control_drag(control: Node, delta: Vector2) -> void:
 		_scrub_anim(control, val)
 		control.set_meta("value", val)
 
+func _do_thrust() -> void:
+	if _input_locked or _game_over or _selected_channel_id == "":
+		return
+	var thrust_fuel: float = config.get("actions", {}).get("thrust_fuel_cost", 5.0)
+	var thrust_o2: float = config.get("actions", {}).get("thrust_oxygen_cost", 3.0)
+	if ship_resources and ship_resources.has_method("can_consume"):
+		if not ship_resources.can_consume({"fuel": thrust_fuel, "oxygen": thrust_o2}):
+			return
+		ship_resources.consume_fuel(thrust_fuel)
+		ship_resources.consume_oxygen(thrust_o2)
+	if nav_system:
+		nav_system.select_channel(_selected_channel_id)
+
 func _on_control_interacted(control_name: String) -> void:
 	if control_name == "ignition":
 		if _storm_accepting_brake:
@@ -1222,7 +1257,7 @@ func _on_control_interacted(control_name: String) -> void:
 		elif _sling_state == "ARMED" or _sling_state == "TIMING":
 			_sling_fire()
 		else:
-			_on_thrust_requested()
+			_do_thrust()
 
 func _on_control_value_changed(_new_value: float, _control_name: String) -> void:
 	pass
@@ -1280,7 +1315,7 @@ func _check_tutorial_progress() -> void:
 			_show_tutorial_step()
 		1:
 			var nav_control: Node = _get_control("nav_knob")
-			if nav_control and absf(_nav_knob_stop - 0) < 0.01:
+			if nav_control:
 				var val: float = nav_control.get_meta("drag_value", 0.5)
 				if absf(val - 0.5) > 0.1:
 					_tutorial_step = 2
@@ -1299,3 +1334,319 @@ func _audio_play(method: String) -> void:
 func _audio_alarm(type: String) -> void:
 	if _audio_manager and _audio_manager.has_method("play_alarm"):
 		_audio_manager.call("play_alarm", type)
+
+func _setup_level2() -> void:
+	player_cam.current = true
+	_setup_level2_game_viewport()
+	_setup_level2_comm_viewport()
+	_setup_level2_map_viewport()
+	_setup_level2_system_viewport()
+	_setup_level2_hint_viewport()
+	_setup_level2_input()
+	_setup_level2_update_timer()
+	_init_level2_game_camera()
+
+func _init_level2_game_camera() -> void:
+	if _level2_game == null:
+		return
+	var scene_cam: Camera3D = _level2_game.camera
+	if scene_cam == null:
+		return
+	scene_cam.projection = Camera3D.PROJECTION_PERSPECTIVE
+	scene_cam.fov = 90.0
+	scene_cam.position = Vector3(0.0, 300.0, 300.0)
+	scene_cam.rotation_degrees = Vector3(-45.0, 0.0, 0.0)
+	scene_cam.cull_mask = 0b11111111
+	scene_cam.current = true
+
+func _setup_level2_game_viewport() -> void:
+	_level2_game_vp = SubViewport.new()
+	_level2_game_vp.name = "Level2GameViewport"
+	_level2_game_vp.size = Vector2i(640, 480)
+	_level2_game_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_level2_game_vp.transparent_bg = false
+	_level2_game_vp.own_world_3d = true
+	add_child(_level2_game_vp)
+
+	var level2_scene := load("res://scenes/levels/level-2-spasim.tscn") as PackedScene
+	if level2_scene == null:
+		push_error("Level 2 scene not found")
+		return
+	_level2_game = level2_scene.instantiate()
+	_level2_game_vp.add_child(_level2_game)
+
+	_bind_screen(main_screen, _level2_game_vp)
+
+	_level2_game.terminal_output.connect(_on_level2_terminal_output)
+	_level2_game.level_completed.connect(_on_level2_completed)
+	_level2_game.level_failed.connect(_on_level2_failed)
+
+func _setup_level2_comm_viewport() -> void:
+	_level2_comm_vp = SubViewport.new()
+	_level2_comm_vp.name = "Level2CommViewport"
+	_level2_comm_vp.size = Vector2i(640, 140)
+	_level2_comm_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_level2_comm_vp.transparent_bg = false
+	add_child(_level2_comm_vp)
+
+	var comm_panel_scene := load("res://scenes/panels/level2-comm-panel.tscn") as PackedScene
+	if comm_panel_scene == null:
+		push_error("Level 2 comm panel scene not found")
+		return
+	_level2_terminal = comm_panel_scene.instantiate()
+	_level2_comm_vp.add_child(_level2_terminal)
+	_level2_terminal.command_submitted.connect(_on_level2_command)
+
+	_bind_screen(comm_screen_slot, _level2_comm_vp)
+
+func _setup_level2_map_viewport() -> void:
+	_level2_map_vp = left_screen_viewport
+	_level2_map_vp.size = Vector2i(210, 300)
+	_level2_map_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_level2_map_vp.transparent_bg = false
+
+	for child in _level2_map_vp.get_children():
+		child.queue_free()
+
+	var map_scene := load("res://scenes/panels/level2-left-panel.tscn") as PackedScene
+	if map_scene:
+		_level2_minimap = map_scene.instantiate()
+		_level2_minimap.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_level2_minimap.offset_left = 0.0
+		_level2_minimap.offset_right = 0.0
+		_level2_minimap.offset_top = 0.0
+		_level2_minimap.offset_bottom = 0.0
+		_level2_minimap.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		_level2_minimap.grow_vertical = Control.GROW_DIRECTION_BOTH
+		var map_script := load("res://scripts/panels/level2_minimap.gd") as Script
+		_level2_minimap.set_script(map_script)
+		_level2_map_vp.add_child(_level2_minimap)
+	else:
+		push_warning("Level 2 left panel scene not found")
+
+	_bind_screen(left_screen, _level2_map_vp)
+
+func _setup_level2_system_viewport() -> void:
+	_level2_system_vp = SubViewport.new()
+	_level2_system_vp.name = "Level2SystemViewport"
+	_level2_system_vp.size = Vector2i(560, 120)
+	_level2_system_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_level2_system_vp.transparent_bg = false
+	add_child(_level2_system_vp)
+
+	var sys_panel_scene := load("res://scenes/panels/level2-system-panel.tscn") as PackedScene
+	if sys_panel_scene == null:
+		push_error("Level 2 system panel scene not found")
+		return
+	_level2_system_panel = sys_panel_scene.instantiate()
+	_level2_system_vp.add_child(_level2_system_panel)
+
+	_bind_screen(system_panel_slot, _level2_system_vp)
+
+func _setup_level2_input() -> void:
+	set_process_input(true)
+
+func _setup_level2_hint_viewport() -> void:
+	var hint_vp: SubViewport = right_screen_viewport
+	hint_vp.size = Vector2i(210, 300)
+	hint_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	hint_vp.transparent_bg = false
+
+	for child in hint_vp.get_children():
+		child.queue_free()
+
+	var hint_scene := load("res://scenes/panels/level2-right-panel.tscn") as PackedScene
+	if hint_scene:
+		var hint_panel := hint_scene.instantiate()
+		hint_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+		hint_panel.offset_left = 0.0
+		hint_panel.offset_right = 0.0
+		hint_panel.offset_top = 0.0
+		hint_panel.offset_bottom = 0.0
+		hint_panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		hint_panel.grow_vertical = Control.GROW_DIRECTION_BOTH
+		hint_vp.add_child(hint_panel)
+	else:
+		push_warning("Level 2 right panel scene not found")
+
+	_bind_screen(right_screen, hint_vp)
+
+func _setup_level2_update_timer() -> void:
+	var target_fps: int = 10
+	var spasim_cfg: Dictionary = config.get("spasim", {})
+	if spasim_cfg.has("target_fps"):
+		target_fps = int(spasim_cfg["target_fps"])
+	_level2_fps_timer = Timer.new()
+	_level2_fps_timer.wait_time = 1.0 / target_fps
+	_level2_fps_timer.autostart = true
+	_level2_fps_timer.one_shot = false
+	_level2_fps_timer.timeout.connect(_on_level2_fps_tick)
+	add_child(_level2_fps_timer)
+
+func _on_level2_fps_tick() -> void:
+	if _level2_game_vp:
+		_level2_game_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _level2_comm_vp:
+		_level2_comm_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _level2_map_vp:
+		_level2_map_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _level2_game and _level2_minimap:
+		var player_pos: Vector3 = _level2_game.get_player_position()
+		var heading: float = _level2_game.heading
+		var enemies: Array = _level2_game.get_enemies_for_map()
+		var end_pos: Vector3 = _level2_game.get_end_point_position()
+		_level2_minimap.update_data(player_pos, heading, enemies, end_pos)
+	if _level2_game and _level2_system_panel:
+		var status: Dictionary = _level2_game.get_status_data()
+		_level2_system_panel.update_hp(
+			status.get("hp", 0.0), status.get("hp_max", 100.0)
+		)
+
+func _on_level2_terminal_output(text: String) -> void:
+	if _level2_terminal and _level2_terminal.has_method("print_line"):
+		_level2_terminal.print_line(text)
+
+func _on_level2_command(cmd: String) -> void:
+	if _level2_game and _level2_game.has_method("execute_command"):
+		_level2_game.execute_command(cmd)
+
+func _on_level2_completed() -> void:
+	if _level2_terminal:
+		_level2_terminal.print_line("[color=green]=== LEVEL COMPLETE ===[/color]")
+		_level2_terminal.print_line("Returning to title...")
+		var tween := create_tween()
+		tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/title-screen.tscn")).set_delay(3.0)
+
+func _on_level2_failed() -> void:
+	if _level2_terminal:
+		_level2_terminal.print_line("[color=red]=== GAME OVER ===[/color]")
+		_level2_terminal.print_line("Returning to title...")
+		var tween := create_tween()
+		tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/title-screen.tscn")).set_delay(3.0)
+
+func _setup_level3() -> void:
+	player_cam.current = true
+	_setup_level3_game_viewport()
+	_setup_level3_comm_viewport()
+	_setup_level3_map_viewport()
+	_setup_level3_update_timer()
+	_init_level3_game_camera()
+
+func _setup_level3_game_viewport() -> void:
+	_level3_game_vp = SubViewport.new()
+	_level3_game_vp.name = "Level3GameViewport"
+	_level3_game_vp.size = Vector2i(640, 480)
+	_level3_game_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_level3_game_vp.transparent_bg = false
+	_level3_game_vp.own_world_3d = true
+	add_child(_level3_game_vp)
+
+	var level3_scene := load("res://scenes/levels/level-3-elite.tscn") as PackedScene
+	if level3_scene == null:
+		push_error("Level 3 scene not found")
+		return
+	_level3_game = level3_scene.instantiate()
+	_level3_game_vp.add_child(_level3_game)
+
+	_bind_screen(main_screen, _level3_game_vp)
+
+	_level3_game.comm_output.connect(_on_level3_comm_output)
+	_level3_game.level_completed.connect(_on_level3_completed)
+	_level3_game.level_failed.connect(_on_level3_failed)
+
+func _setup_level3_comm_viewport() -> void:
+	_level3_comm_vp = SubViewport.new()
+	_level3_comm_vp.name = "Level3CommViewport"
+	_level3_comm_vp.size = Vector2i(480, 100)
+	_level3_comm_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_level3_comm_vp.transparent_bg = false
+	add_child(_level3_comm_vp)
+
+	var comms_script := load("res://scripts/panels/level3_comms.gd") as Script
+	_level3_comms = Control.new()
+	_level3_comms.name = "Level3Comms"
+	_level3_comms.size = Vector2(480, 100)
+	_level3_comms.set_script(comms_script)
+	_level3_comm_vp.add_child(_level3_comms)
+	_level3_comms.command_submitted.connect(_on_level3_command)
+
+	_bind_screen(comm_screen_slot, _level3_comm_vp)
+
+func _setup_level3_map_viewport() -> void:
+	_level3_map_vp = left_screen_viewport
+	_level3_map_vp.size = Vector2i(210, 300)
+	_level3_map_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_level3_map_vp.transparent_bg = false
+
+	for child in _level3_map_vp.get_children():
+		child.queue_free()
+
+	var radar_script := load("res://scripts/panels/level3_radar.gd") as Script
+	_level3_radar = Control.new()
+	_level3_radar.name = "Level3Radar"
+	_level3_radar.size = Vector2(210, 300)
+	_level3_radar.set_script(radar_script)
+	_level3_map_vp.add_child(_level3_radar)
+
+	_bind_screen(left_screen, _level3_map_vp)
+
+func _init_level3_game_camera() -> void:
+	if _level3_game == null:
+		return
+	var scene_cam: Camera3D = _level3_game.camera
+	if scene_cam == null:
+		return
+	scene_cam.cull_mask = 0b11111111
+	scene_cam.current = true
+
+func _setup_level3_update_timer() -> void:
+	var target_fps: int = 20
+	var elite_cfg: Dictionary = config.get("elite", {})
+	if elite_cfg.has("target_fps"):
+		target_fps = int(elite_cfg["target_fps"])
+	_level3_update_timer = Timer.new()
+	_level3_update_timer.wait_time = 1.0 / target_fps
+	_level3_update_timer.autostart = true
+	_level3_update_timer.one_shot = false
+	_level3_update_timer.timeout.connect(_on_level3_update_tick)
+	add_child(_level3_update_timer)
+
+func _on_level3_update_tick() -> void:
+	if _level3_game_vp:
+		_level3_game_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _level3_comm_vp:
+		_level3_comm_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _level3_map_vp:
+		_level3_map_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _level3_game and _level3_radar:
+		var player_pos: Vector3 = _level3_game.get_player_position()
+		var heading: float = _level3_game.get_player_heading()
+		var enemies: Array = _level3_game.get_enemies_for_radar()
+		var stations: Array = _level3_game.get_stations_for_radar()
+		var exit_pos: Vector3 = _level3_game.get_exit_position()
+		_level3_radar.update_data(player_pos, heading, enemies, stations, exit_pos)
+	if _level3_game and _level3_comms:
+		var status: Dictionary = _level3_game.get_status_data()
+		_level3_comms.update_status(status)
+
+func _on_level3_comm_output(text: String) -> void:
+	if _level3_comms and _level3_comms.has_method("print_line"):
+		_level3_comms.print_line(text)
+
+func _on_level3_command(cmd: String) -> void:
+	if _level3_game and _level3_game.has_method("execute_trade_command"):
+		_level3_game.execute_trade_command(cmd)
+
+func _on_level3_completed() -> void:
+	if _level3_comms:
+		_level3_comms.print_line("[color=green]=== LEVEL COMPLETE ===[/color]")
+		_level3_comms.print_line("Returning to title...")
+		var tween := create_tween()
+		tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/title-screen.tscn")).set_delay(3.0)
+
+func _on_level3_failed() -> void:
+	if _level3_comms:
+		_level3_comms.print_line("[color=red]=== SHIP DESTROYED ===[/color]")
+		_level3_comms.print_line("Returning to title...")
+		var tween := create_tween()
+		tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/title-screen.tscn")).set_delay(3.0)

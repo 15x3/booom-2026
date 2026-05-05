@@ -1,0 +1,137 @@
+[gd_scene format=3 uid="uid://cg6l5spiryr4q"]
+
+[ext_resource type="Script" uid="uid://y0buxhmoqpap" path="res://scripts/levels/level_3_elite.gd" id="1_dygrr"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hgpob"]
+radius = 5.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_xkcua"]
+size = Vector3(6, 3, 15)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_foqad"]
+top_radius = 0.3
+bottom_radius = 0.3
+height = 500.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_station"]
+size = Vector3(40, 40, 40)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_dock"]
+radius = 80.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_enemy"]
+size = Vector3(16, 16, 16)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_detect"]
+radius = 600.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_coriolis"]
+size = Vector3(80, 80, 80)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_exit"]
+radius = 100.0
+
+[node name="Level3Elite" type="Node3D" unique_id=120344206]
+script = ExtResource("1_dygrr")
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=1790612363]
+
+[node name="Camera3D" type="Camera3D" parent="Player" unique_id=205074375]
+current = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=135064480]
+shape = SubResource("SphereShape3D_hgpob")
+
+[node name="ShipMesh" type="MeshInstance3D" parent="Player" unique_id=1963947889]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 3)
+visible = false
+mesh = SubResource("BoxMesh_xkcua")
+
+[node name="LaserBeam" type="MeshInstance3D" parent="Player" unique_id=1818835758]
+visible = false
+mesh = SubResource("CylinderMesh_foqad")
+
+[node name="Starfield" type="MeshInstance3D" parent="." unique_id=1758787310]
+
+[node name="StationAlpha" type="MeshInstance3D" parent="." unique_id=730743269]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 800, 0, 800)
+mesh = SubResource("BoxMesh_station")
+
+[node name="DockRange" type="Area3D" parent="StationAlpha" unique_id=502927285]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationAlpha/DockRange" unique_id=773528888]
+shape = SubResource("SphereShape3D_dock")
+
+[node name="StationBeta" type="MeshInstance3D" parent="." unique_id=42878713]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -600, 0, 1000)
+mesh = SubResource("BoxMesh_station")
+
+[node name="DockRange" type="Area3D" parent="StationBeta" unique_id=1950640156]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationBeta/DockRange" unique_id=1256134490]
+shape = SubResource("SphereShape3D_dock")
+
+[node name="StationGamma" type="MeshInstance3D" parent="." unique_id=1663235414]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1000, 0, -500)
+mesh = SubResource("BoxMesh_station")
+
+[node name="DockRange" type="Area3D" parent="StationGamma" unique_id=917377026]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationGamma/DockRange" unique_id=364734924]
+shape = SubResource("SphereShape3D_dock")
+
+[node name="Enemy0" type="MeshInstance3D" parent="." unique_id=1864066901]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 500, 0, 400)
+mesh = SubResource("BoxMesh_enemy")
+
+[node name="Detection" type="Area3D" parent="Enemy0" unique_id=1449032718]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy0/Detection" unique_id=1766791656]
+shape = SubResource("SphereShape3D_detect")
+
+[node name="Enemy1" type="MeshInstance3D" parent="." unique_id=869723314]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -400, 0, 600)
+mesh = SubResource("BoxMesh_enemy")
+
+[node name="Detection" type="Area3D" parent="Enemy1" unique_id=1383318334]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy1/Detection" unique_id=1120866645]
+shape = SubResource("SphereShape3D_detect")
+
+[node name="Enemy2" type="MeshInstance3D" parent="." unique_id=35183774]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 700, 0, -300)
+mesh = SubResource("BoxMesh_enemy")
+
+[node name="Detection" type="Area3D" parent="Enemy2" unique_id=942627469]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy2/Detection" unique_id=1756967500]
+shape = SubResource("SphereShape3D_detect")
+
+[node name="Enemy3" type="MeshInstance3D" parent="." unique_id=109276129]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -800, 0, -200)
+mesh = SubResource("BoxMesh_enemy")
+
+[node name="Detection" type="Area3D" parent="Enemy3" unique_id=463024057]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy3/Detection" unique_id=509384715]
+shape = SubResource("SphereShape3D_detect")
+
+[node name="Enemy4" type="MeshInstance3D" parent="." unique_id=1732451581]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 200, 0, -700)
+mesh = SubResource("BoxMesh_enemy")
+
+[node name="Detection" type="Area3D" parent="Enemy4" unique_id=263711721]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy4/Detection" unique_id=54627826]
+shape = SubResource("SphereShape3D_detect")
+
+[node name="ExitStation" type="Node3D" parent="." unique_id=2009112655]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2500)
+
+[node name="CoriolisMesh" type="MeshInstance3D" parent="ExitStation" unique_id=1079398725]
+mesh = SubResource("BoxMesh_coriolis")
+
+[node name="DockArea" type="Area3D" parent="ExitStation" unique_id=657150302]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExitStation/DockArea" unique_id=1228973073]
+shape = SubResource("SphereShape3D_exit")

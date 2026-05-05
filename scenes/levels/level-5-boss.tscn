@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://qogu657w2r0h"]
+
+[ext_resource type="Script" uid="uid://d0h4nw6wdu5og" path="res://scripts/levels/level_5_boss.gd" id="1_ikwuh"]
+
+[node name="Level5Boss" type="Node3D" unique_id=1477795096]
+script = ExtResource("1_ikwuh")

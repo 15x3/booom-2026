@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://req6ewgu7hv7"]
+
+[ext_resource type="Script" uid="uid://c33djha1ws563" path="res://scripts/panels/level2_system_panel.gd" id="1_vpcgk"]
+[ext_resource type="Shader" uid="uid://dorsse1lgolcb" path="res://assets/shaders/progres_bar.gdshader" id="1_y7bex"]
+[ext_resource type="Texture2D" uid="uid://duual02ss7scu" path="res://assets/Gemini_Generated_Image_vatcbbvatcbbvatc-removebg-preview (1).png" id="2_vpcgk"]
+[ext_resource type="FontFile" uid="uid://djkfq3xaa0iff" path="res://assets/fonts/FSEX302-alt.ttf" id="3_driy6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6sdrj"]
+shader = ExtResource("1_y7bex")
+shader_parameter/progress = 0.6450000306375
+shader_parameter/color_good = Color(1, 0.56078434, 0, 1)
+shader_parameter/color_warning = Color(1, 0.65, 0, 1)
+shader_parameter/color_danger = Color(1, 0, 0, 1)
+shader_parameter/color_empty = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/warning_threshold = 0.6
+shader_parameter/danger_threshold = 0.3
+
+[node name="Level2SystemPanel" type="Control" unique_id=1966040690]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 560.0
+offset_bottom = 120.0
+script = ExtResource("1_vpcgk")
+
+[node name="Background" type="ColorRect" parent="." unique_id=577047047]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.04, 0.06, 1)
+
+[node name="ShipDiagram" type="Control" parent="." unique_id=799682028]
+anchors_preset = 0
+offset_right = 250.0
+offset_bottom = 120.0
+
+[node name="Label" type="Label" parent="ShipDiagram" unique_id=1570967995]
+layout_mode = 0
+offset_left = 160.0
+offset_top = -20.0
+offset_right = 344.0
+offset_bottom = 224.0
+rotation = 1.5707964
+scale = Vector2(0.6, 0.6)
+theme_override_colors/font_color = Color(1, 0.56078434, 0, 1)
+theme_override_fonts/font = ExtResource("3_driy6")
+text = "              _
+              / \\
+             |   |
+             |   |
+             |   |
+             |   |
+             |   |
+            /|   |\\
+           / |   | \\
+          /  |   |  \\
+         |___|   |___|
+              | |
+             /   \\"
+
+[node name="HP" type="Control" parent="." unique_id=2042547705]
+anchors_preset = 0
+offset_left = 313.0
+offset_top = 10.0
+offset_right = 545.0
+offset_bottom = 110.0
+
+[node name="Sprite2D" type="Sprite2D" parent="HP" unique_id=113046525]
+material = SubResource("ShaderMaterial_6sdrj")
+position = Vector2(121, 58.5)
+scale = Vector2(0.2851852, 0.29393938)
+texture = ExtResource("2_vpcgk")
+
+[node name="HullLabel" type="Label" parent="HP" unique_id=59527139]
+layout_mode = 0
+offset_left = 22.0
+offset_right = 103.0
+offset_bottom = 45.0
+theme_override_colors/font_color = Color(1, 0.56078434, 0, 1)
+theme_override_fonts/font = ExtResource("3_driy6")
+theme_override_font_sizes/font_size = 32
+text = "Hull"
+
+[node name="HPValue" type="Label" parent="HP" unique_id=1816083432]
+layout_mode = 0
+offset_left = 100.0
+offset_right = 280.0
+offset_bottom = 45.0
+theme_override_colors/font_color = Color(1, 0.56078434, 0, 1)
+theme_override_fonts/font = ExtResource("3_driy6")
+theme_override_font_sizes/font_size = 32
+text = "100/100"

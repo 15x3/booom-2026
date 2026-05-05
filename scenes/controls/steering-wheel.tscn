@@ -76,42 +76,35 @@ tracks/2/keys = {
 [sub_resource type="Animation" id="Animation_ugl7v"]
 resource_name = "drag"
 length = 2.0
-tracks/0/type = "position_3d"
+tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sketchfab_Scene")
+tracks/0/path = NodePath("Sketchfab_Scene:rotation:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array()
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 2, 2),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 1.5707964, -0.16666667, -0.2617994, 0, 0, 3.1241393, -0.16666667, -0.2588905, 0, 0),
+"times": PackedFloat32Array(0, 1, 2)
+}
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sketchfab_Scene:rotation:x")
+tracks/1/path = NodePath("Sketchfab_Scene:rotation:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "handle_modes": PackedInt32Array(0, 2, 2),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 1.5707964, -0.16666667, -0.2617994, 0, 0, 3.1241393, -0.16666667, -0.2588905, 0, 0),
+"points": PackedFloat32Array(1.5707964, -0.25, 0, 0.25, 0, 1.5707964, -0.16666667, 0, 0, 0, 1.5707964, -0.16666667, 0, 0, 0),
 "times": PackedFloat32Array(0, 1, 2)
 }
 tracks/2/type = "bezier"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sketchfab_Scene:rotation:y")
+tracks/2/path = NodePath("Sketchfab_Scene:rotation:z")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 2, 2),
-"points": PackedFloat32Array(1.5707964, -0.25, 0, 0.25, 0, 1.5707964, -0.16666667, 0, 0, 0, 1.5707964, -0.16666667, 0, 0, 0),
-"times": PackedFloat32Array(0, 1, 2)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Sketchfab_Scene:rotation:z")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
 "handle_modes": PackedInt32Array(0, 2, 2),
 "points": PackedFloat32Array(1.5707964, -0.25, 0, 0.25, 0, 1.5707964, -0.16666667, 0, 0, 0, 1.5707964, -0.16666667, 0, 0, 0),
 "times": PackedFloat32Array(0, 1, 2)

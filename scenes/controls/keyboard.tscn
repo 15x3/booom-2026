@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://ookukmwl1omb"]
+
+[ext_resource type="PackedScene" uid="uid://bbw8mfmronxqf" path="res://assets/models/lowpoly_keyboard.glb" id="1_juenh"]
+[ext_resource type="Shader" uid="uid://ch7tsrqs0n67o" path="res://assets/shaders/3d-2-gameboy.gdshader" id="2_bcgi4"]
+[ext_resource type="Texture2D" uid="uid://41t7jruyhq2p" path="res://assets/palette/horehound-4-8x.png" id="3_v8wlf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vqxfj"]
+render_priority = 0
+shader = ExtResource("2_bcgi4")
+shader_parameter/palette = ExtResource("3_v8wlf")
+shader_parameter/light_dir = Color(0.5, 1, 0.5, 1)
+shader_parameter/ambient = 0.15
+
+[node name="Sketchfab_Scene" unique_id=793517670 instance=ExtResource("1_juenh")]
+
+[node name="Keyboards_Material_0" parent="Sketchfab_model/keyboard_FINAL_fbx/RootNode/Keyboards" parent_id_path=PackedInt32Array(2085388847) index="0" unique_id=837285165]
+surface_material_override/0 = SubResource("ShaderMaterial_vqxfj")

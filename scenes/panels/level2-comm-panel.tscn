@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://djd4k3h4h481e"]
+
+[ext_resource type="Script" uid="uid://cllrvk3iibxp0" path="res://scripts/panels/level2_terminal.gd" id="1_hi4r1"]
+[ext_resource type="FontFile" uid="uid://djkfq3xaa0iff" path="res://assets/fonts/FSEX302-alt.ttf" id="1_yhae7"]
+
+[node name="Level2CommPanel" type="Control" unique_id=1992457921]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 640.0
+offset_bottom = 140.0
+script = ExtResource("1_hi4r1")
+
+[node name="Background" type="ColorRect" parent="." unique_id=859052127]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.04, 0.06, 1)
+
+[node name="History" type="RichTextLabel" parent="." unique_id=1179165504]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 636.0
+offset_bottom = 116.0
+theme_override_colors/default_color = Color(1, 0.56078434, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_yhae7")
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+
+[node name="CommandPanel" type="Label" parent="." unique_id=984466958]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 118.0
+offset_right = 636.0
+offset_bottom = 140.0
+theme_override_colors/font_color = Color(1, 0.7, 0.2, 1)
+theme_override_fonts/font = ExtResource("1_yhae7")
+theme_override_font_sizes/font_size = 14
+text = "> _"

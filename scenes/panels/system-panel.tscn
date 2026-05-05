@@ -1,6 +1,23 @@
 [gd_scene format=3 uid="uid://bg3ey6qf5yqt7"]
 
 [ext_resource type="Script" uid="uid://bobo2ulje6g7p" path="res://scripts/system_panel.gd" id="1_qtsff"]
+[ext_resource type="Shader" uid="uid://dorsse1lgolcb" path="res://assets/shaders/progres_bar.gdshader" id="2_4l6eb"]
+[ext_resource type="Texture2D" uid="uid://duual02ss7scu" path="res://assets/Gemini_Generated_Image_vatcbbvatcbbvatc-removebg-preview (1).png" id="3_ag3sr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qtsff"]
+
+[sub_resource type="Theme" id="Theme_qtsff"]
+ProgressBar/styles/background = SubResource("StyleBoxFlat_qtsff")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4kwpo"]
+shader = ExtResource("2_4l6eb")
+shader_parameter/progress = 0.6450000306375
+shader_parameter/color_good = Color(0, 1, 0, 1)
+shader_parameter/color_warning = Color(1, 0.65, 0, 1)
+shader_parameter/color_danger = Color(1, 0, 0, 1)
+shader_parameter/color_empty = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/warning_threshold = 0.6
+shader_parameter/danger_threshold = 0.3
 
 [node name="SystemPanel" type="Control" unique_id=904506453]
 layout_mode = 3
@@ -130,6 +147,7 @@ offset_bottom = 58.0
 color = Color(0.2, 0.25, 0.3, 1)
 
 [node name="ScanButton" type="Button" parent="." unique_id=2020538350]
+visible = false
 layout_mode = 0
 offset_left = 20.0
 offset_top = 68.0
@@ -139,6 +157,7 @@ disabled = true
 text = "[ SCAN ]"
 
 [node name="ThrustButton" type="Button" parent="." unique_id=1608066777]
+visible = false
 layout_mode = 0
 offset_left = 170.0
 offset_top = 68.0
@@ -162,6 +181,20 @@ offset_right = 468.0
 offset_bottom = 140.0
 text = "S: Scan  T: Thrust  W: Wreck  SPACE: Brake"
 uppercase = true
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=1376620015]
+layout_mode = 0
+offset_left = 73.0
+offset_top = 69.0
+offset_right = 383.0
+offset_bottom = 106.0
+theme = SubResource("Theme_qtsff")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=310820044]
+material = SubResource("ShaderMaterial_4kwpo")
+position = Vector2(109, 173.99998)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_ag3sr")
 
 [connection signal="pressed" from="ScanButton" to="." method="_on_scan_button_pressed"]
 [connection signal="pressed" from="ThrustButton" to="." method="_on_thrust_button_pressed"]

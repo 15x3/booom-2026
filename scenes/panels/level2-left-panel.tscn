@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://c6ml65fx0jntf"]
+
+[ext_resource type="FontFile" uid="uid://djkfq3xaa0iff" path="res://assets/fonts/FSEX302-alt.ttf" id="1_c5mhm"]
+
+[node name="Level2LeftPanel" type="Control" unique_id=429768941]
+layout_mode = 3
+anchor_right = 0.18200001
+anchor_bottom = 0.46300003
+offset_right = 0.33598328
+offset_bottom = -0.024017334
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=289116963]
+layout_mode = 0
+offset_right = 210.0
+offset_bottom = 300.0
+color = Color(0, 0, 0, 1)
+
+[node name="Player" type="Label" parent="." unique_id=561290412]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -8.0
+offset_right = 15.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.56078434, 0, 1)
+theme_override_fonts/font = ExtResource("1_c5mhm")
+text = "-->"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Enemy" type="Label" parent="." unique_id=81247278]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -81.0
+offset_right = 11.0
+offset_bottom = -65.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.56078434, 0, 1)
+theme_override_fonts/font = ExtResource("1_c5mhm")
+text = "E"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Exit" type="Label" parent="." unique_id=73018755]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -56.0
+offset_top = -144.0
+offset_right = 59.0
+offset_bottom = -112.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.56078434, 0, 1)
+theme_override_fonts/font = ExtResource("1_c5mhm")
+text = " ( ( Exit ) )"
+horizontal_alignment = 1
+vertical_alignment = 1

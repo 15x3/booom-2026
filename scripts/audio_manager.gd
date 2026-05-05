@@ -1,5 +1,23 @@
 extends Node
 
+@export_group("SFX Files")
+@export var sfx_click: AudioStream
+@export var sfx_knob_turn: AudioStream
+@export var sfx_switch_toggle: AudioStream
+@export var sfx_lever_move: AudioStream
+@export var sfx_panel_toggle: AudioStream
+@export var sfx_collision: AudioStream
+@export var sfx_breaker_trip: AudioStream
+@export var sfx_sling_beep: AudioStream
+
+@export_group("Alarm Files")
+@export var alarm_o2: AudioStream
+@export var alarm_temp: AudioStream
+@export var alarm_storm: AudioStream
+
+@export_group("Gameplay")
+@export var sfx_engine_loop: AudioStream
+
 var _sfx_pool: Array[AudioStreamPlayer] = []
 var _engine_player: AudioStreamPlayer = null
 var _engine_gen: AudioStreamGenerator = null
@@ -12,8 +30,6 @@ var _engine_target_freq: float = 60.0
 var _alarm_player: AudioStreamPlayer = null
 var _alarm_active: bool = false
 var _alarm_type: String = ""
-
-var _audio_dir: String = "res://assets/audio/"
 
 func _ready() -> void:
 	for i in range(6):
@@ -57,12 +73,6 @@ func _play_sfx(stream: AudioStream) -> void:
 	_sfx_pool.append(p)
 	p.stream = stream
 	p.play()
-
-func _try_file(name: String) -> AudioStream:
-	var path: String = _audio_dir + name + ".ogg"
-	if ResourceLoader.exists(path):
-		return load(path)
-	return null
 
 func _make_tone(freq: float, duration: float, volume: float = 0.5, wave_type: String = "sine") -> AudioStreamWAV:
 	var sample_rate: int = 22050
@@ -179,53 +189,32 @@ func _make_alarm_tone(freq: float) -> AudioStreamWAV:
 	return wav
 
 func play_click() -> void:
-	var s: AudioStream = _try_file("click")
-	if s == null:
-		s = _make_click_tone()
-	_play_sfx(s)
+	_play_sfx(sfx_click if sfx_click else _make_click_tone())
 
 func play_knob_turn() -> void:
-	var s: AudioStream = _try_file("knob_turn")
-	if s == null:
-		s = _make_tone(300.0, 0.06, 0.3, "noise")
-	_play_sfx(s)
+	_play_sfx(sfx_knob_turn if sfx_knob_turn else _make_tone(300.0, 0.06, 0.3, "noise"))
 
 func play_switch_toggle() -> void:
-	var s: AudioStream = _try_file("switch_toggle")
-	if s == null:
-		s = _make_click_tone()
-	_play_sfx(s)
+	_play_sfx(sfx_switch_toggle if sfx_switch_toggle else _make_click_tone())
 
 func play_lever_move() -> void:
-	var s: AudioStream = _try_file("lever_move")
-	if s == null:
-		s = _make_tone(200.0, 0.1, 0.3, "saw")
-	_play_sfx(s)
+	_play_sfx(sfx_lever_move if sfx_lever_move else _make_tone(200.0, 0.1, 0.3, "saw"))
 
 func play_panel_toggle() -> void:
-	var s: AudioStream = _try_file("panel_toggle")
-	if s == null:
-		s = _make_tone(400.0, 0.15, 0.3, "sine")
-	_play_sfx(s)
+	_play_sfx(sfx_panel_toggle if sfx_panel_toggle else _make_tone(400.0, 0.15, 0.3, "sine"))
 
 func play_collision() -> void:
-	var s: AudioStream = _try_file("collision")
-	if s == null:
-		s = _make_collision_tone()
-	_play_sfx(s)
+	_play_sfx(sfx_collision if sfx_collision else _make_collision_tone())
 
 func play_breaker_trip() -> void:
-	var s: AudioStream = _try_file("breaker_trip")
-	if s == null:
-		s = _make_breaker_tone()
-	_play_sfx(s)
+	_play_sfx(sfx_breaker_trip if sfx_breaker_trip else _make_breaker_tone())
 
 func play_alarm(type: String) -> void:
 	if _alarm_active:
 		return
-	var file_map: Dictionary = {"o2": "alarm_o2", "temp": "alarm_temp", "storm": "alarm_storm"}
-	var s: AudioStream = _try_file(file_map.get(type, ""))
+	var alarm_map: Dictionary = {"o2": alarm_o2, "temp": alarm_temp, "storm": alarm_storm}
 	var freq_map: Dictionary = {"o2": 880.0, "temp": 660.0, "storm": 1200.0}
+	var s: AudioStream = alarm_map.get(type, null)
 	if s == null:
 		s = _make_alarm_tone(freq_map.get(type, 880.0))
 	_alarm_player.stream = s
@@ -247,17 +236,13 @@ func _on_alarm_finished() -> void:
 	_alarm_type = ""
 
 func play_sling_beep() -> void:
-	var s: AudioStream = _try_file("sling_beep")
-	if s == null:
-		s = _make_tone(660.0, 0.1, 0.4, "sine")
-	_play_sfx(s)
+	_play_sfx(sfx_sling_beep if sfx_sling_beep else _make_tone(660.0, 0.1, 0.4, "sine"))
 
 func engine_start() -> void:
 	if _engine_active:
 		return
-	var s: AudioStream = _try_file("engine_loop")
-	if s != null:
-		_engine_player.stream = s
+	if sfx_engine_loop:
+		_engine_player.stream = sfx_engine_loop
 		_engine_player.play()
 		_engine_active = true
 		return

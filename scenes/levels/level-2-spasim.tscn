@@ -1,0 +1,131 @@
+[gd_scene format=3 uid="uid://tffh0xrkb47t"]
+
+[ext_resource type="Script" uid="uid://ctw3kev6w1nmg" path="res://scripts/levels/level_2_spasim.gd" id="1_klpnt"]
+[ext_resource type="ArrayMesh" uid="uid://bwd83t3rfbbe0" path="res://assets/spasim-main/meshes/rship.obj" id="2_8uh6c"]
+[ext_resource type="Shader" uid="uid://c2q2s08jnyahq" path="res://assets/shaders/advance hologram.gdshader" id="3_1wxuj"]
+[ext_resource type="ArrayMesh" uid="uid://18uivyft3t3l" path="res://assets/spasim-main/meshes/tship.obj" id="4_nhsl1"]
+
+[sub_resource type="Environment" id="Environment_8uh6c"]
+background_mode = 1
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ncsu1"]
+height = 1.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_7ad4p"]
+radius = 2.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_74wdv"]
+height = 450.0
+radius = 1500.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1fvbo"]
+render_priority = 0
+shader = ExtResource("3_1wxuj")
+shader_parameter/albedo_alpha = 1.0
+shader_parameter/tint_color = Color(1, 0.56078434, 0, 1)
+shader_parameter/edge_color = Color(1, 0, 0, 1)
+shader_parameter/edge_power = 0.5
+shader_parameter/edge_size = 1.0
+shader_parameter/edge_intensity = 0.8
+shader_parameter/scanline_tint = Color(1, 0.5, 0, 1)
+shader_parameter/scanline_intensity = 0.0
+shader_parameter/scanline_density = 5.0
+shader_parameter/scanline_thickness = 1.0
+shader_parameter/scanline_spacing = 1.0
+shader_parameter/scanline_angle = 0.0
+shader_parameter/scanline_speed = 0.2
+shader_parameter/enable_glitch = false
+shader_parameter/glitch_intensity = 0.5
+shader_parameter/shake_power = 0.5
+shader_parameter/shake_rate = 0.5
+shader_parameter/shake_speed = 5.0
+shader_parameter/shake_block_size = 30.5
+shader_parameter/shake_color_rate = 0.5
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_spnrt"]
+radius = 300.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_11hcd"]
+radius = 4.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_78lke"]
+render_priority = 0
+shader = ExtResource("3_1wxuj")
+shader_parameter/albedo_alpha = 1.0
+shader_parameter/tint_color = Color(1, 0.56078434, 0, 1)
+shader_parameter/edge_color = Color(1, 0, 0, 1)
+shader_parameter/edge_power = 0.5
+shader_parameter/edge_size = 1.0
+shader_parameter/edge_intensity = 0.8
+shader_parameter/scanline_tint = Color(1, 0.5, 0, 1)
+shader_parameter/scanline_intensity = 0.0
+shader_parameter/scanline_density = 5.0
+shader_parameter/scanline_thickness = 1.0
+shader_parameter/scanline_spacing = 1.0
+shader_parameter/scanline_angle = 0.0
+shader_parameter/scanline_speed = 0.2
+shader_parameter/enable_glitch = false
+shader_parameter/glitch_intensity = 0.5
+shader_parameter/shake_power = 0.5
+shader_parameter/shake_rate = 0.5
+shader_parameter/shake_speed = 5.0
+shader_parameter/shake_block_size = 30.5
+shader_parameter/shake_color_rate = 0.5
+
+[node name="Level2Spasim" type="Node3D" unique_id=868497138]
+script = ExtResource("1_klpnt")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1390715149]
+environment = SubResource("Environment_8uh6c")
+
+[node name="Player" type="StaticBody3D" parent="." unique_id=1649255506]
+transform = Transform3D(-0.99999994, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -0.99999994, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Player" unique_id=1986098158]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=597479718]
+shape = SubResource("CylinderShape3D_ncsu1")
+
+[node name="EndPoint" type="Area3D" parent="." unique_id=1924829163]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1550)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EndPoint" unique_id=194688706]
+shape = SubResource("CylinderShape3D_7ad4p")
+
+[node name="PlayingGroundSize" type="Area3D" parent="EndPoint" unique_id=429343393]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1000)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EndPoint/PlayingGroundSize" unique_id=1229342134]
+shape = SubResource("CylinderShape3D_74wdv")
+
+[node name="Enemy1" type="StaticBody3D" parent="." unique_id=1077364264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18.892334)
+
+[node name="Rship" type="MeshInstance3D" parent="Enemy1" unique_id=52180724]
+transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, 0, 0, 0)
+mesh = ExtResource("2_8uh6c")
+surface_material_override/0 = SubResource("ShaderMaterial_1fvbo")
+
+[node name="Detection" type="Area3D" parent="Enemy1" unique_id=730305614]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy1/Detection" unique_id=329744526]
+shape = SubResource("SphereShape3D_spnrt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy1" unique_id=2142318834]
+shape = SubResource("SphereShape3D_11hcd")
+
+[node name="Enemy2" type="StaticBody3D" parent="." unique_id=75392257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 900)
+
+[node name="Tship" type="MeshInstance3D" parent="Enemy2" unique_id=2044856423]
+transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, 0, 0, 0)
+mesh = ExtResource("4_nhsl1")
+surface_material_override/0 = SubResource("ShaderMaterial_78lke")
+
+[node name="Detection" type="Area3D" parent="Enemy2" unique_id=1316964800]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy2/Detection" unique_id=621667001]
+shape = SubResource("SphereShape3D_spnrt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy2" unique_id=1577138206]
+shape = SubResource("SphereShape3D_11hcd")

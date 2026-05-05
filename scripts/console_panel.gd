@@ -53,7 +53,6 @@ func _build_center() -> void:
 	var nav: Node3D = _find_node("NavKnob")
 	if nav:
 		_setup_steering_wheel(nav)
-		nav.set_meta("stops", 3)
 		_register("nav_knob", nav)
 		if center:
 			_add_label(center, "导航", nav.position + Vector3(0, 0.06, 0))

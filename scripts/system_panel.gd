@@ -1,80 +1,102 @@
 extends Control
 
-signal scan_requested
-signal thrust_requested
+const SEGMENT_COUNT := 20
+const BAR_WIDTH := 152.0
+const BAR_HEIGHT := 10.0
+const SPARKLINE_POINTS := 60
+const SPARKLINE_HEIGHT := 24.0
+const TEMP_MAX := 120.0
 
-var _selected_channel_id: String = ""
-var _can_scan: bool = false
-var _can_thrust: bool = false
-var _warning_active: bool = false
-var _warning_visible: bool = true
-var _warning_timer: float = 0.0
+var _low_threshold := 25.0
 
-var _bar_bg_width: float = 152.0
-var _low_threshold: float = 25.0
-
-@onready var scan_button: Button = $ScanButton
-@onready var thrust_button: Button = $ThrustButton
-@onready var fuel_bar_fill: ColorRect = $FuelBarFill
-@onready var hull_bar_fill: ColorRect = $HullBarFill
-@onready var o2_bar_fill: ColorRect = $O2BarFill
-@onready var fuel_value: Label = $FuelValue
-@onready var hull_value: Label = $HullValue
-@onready var o2_value: Label = $O2Value
-@onready var status_text: Label = $StatusText
-@onready var warning_label: Label = $WarningLabel
+@onready var fuel_bar_bg: ColorRect = $FuelBarBg
+@onready var hull_bar_bg: ColorRect = $HullBarBg
+@onready var o2_bar_bg: ColorRect = $O2BarBg
 @onready var fuel_label: Label = $FuelLabel
 @onready var hull_label: Label = $HullLabel
 @onready var o2_label: Label = $O2Label
+@onready var status_text: Label = $StatusText
 
-var _fuel_color_normal := Color(0.2, 0.8, 1.0)
-var _hull_color_normal := Color(0.3, 0.9, 0.4)
-var _o2_color_normal := Color(0.4, 0.7, 1.0)
-var _warning_color := Color(1.0, 0.3, 0.2)
-
+var _fuel_segments: Array[ColorRect] = []
+var _hull_segments: Array[ColorRect] = []
+var _o2_segments: Array[ColorRect] = []
+var _temp_segments: Array[ColorRect] = []
 var _temp_label: Label
-var _temp_bar_bg: ColorRect
-var _temp_bar_fill: ColorRect
 var _temp_value: Label
 var _breaker_lights: Array = []
 var _cooling_label: Label
 var _o2_supply_label: Label
+var _sparkline_label: Label
+var _sparkline_bars: Array[ColorRect] = []
+var _sparkline_data: Array[float] = []
+var _sparkline_value_label: Label
+
+var _fuel_normal := Color(0.2, 0.8, 1.0)
+var _hull_normal := Color(0.3, 0.9, 0.4)
+var _o2_normal := Color(0.4, 0.7, 1.0)
+var _danger := Color(1.0, 0.2, 0.15)
+var _warning := Color(1.0, 0.65, 0.1)
+var _caution := Color(0.85, 0.85, 0.2)
+var _dim := Color(0.12, 0.12, 0.18)
 
 func _ready() -> void:
-	_build_maintenance_ui()
-	_update_buttons()
+	_fuel_segments = _build_segments(fuel_bar_bg.position.x, fuel_bar_bg.position.y, BAR_WIDTH, BAR_HEIGHT, _fuel_normal)
+	_hull_segments = _build_segments(hull_bar_bg.position.x, hull_bar_bg.position.y, BAR_WIDTH, BAR_HEIGHT, _hull_normal)
+	_o2_segments = _build_segments(o2_bar_bg.position.x, o2_bar_bg.position.y, BAR_WIDTH, BAR_HEIGHT, _o2_normal)
+
 	var info: Label = get_node_or_null("InfoLabel")
 	if info:
 		info.visible = false
+	var fb: Label = get_node_or_null("FuelValue")
+	if fb:
+		fb.visible = false
+	var hb: Label = get_node_or_null("HullValue")
+	if hb:
+		hb.visible = false
+	var ob: Label = get_node_or_null("O2Value")
+	if ob:
+		ob.visible = false
+
+	_build_maintenance_ui()
+	_build_sparkline()
+
+func _build_segments(start_x: float, start_y: float, total_w: float, h: float, _theme_color: Color) -> Array[ColorRect]:
+	var gap := 1.0
+	var seg_w := (total_w - gap * (SEGMENT_COUNT - 1)) / SEGMENT_COUNT
+	var segs: Array[ColorRect] = []
+	for i in SEGMENT_COUNT:
+		var seg := ColorRect.new()
+		seg.position = Vector2(start_x + i * (seg_w + gap), start_y)
+		seg.size = Vector2(seg_w, h)
+		seg.color = _dim
+		add_child(seg)
+		segs.append(seg)
+	return segs
 
 func _build_maintenance_ui() -> void:
 	_temp_label = Label.new()
 	_temp_label.text = "TMP"
-	_temp_label.position = Vector2(12, 105)
+	_temp_label.position = Vector2(12, 58)
 	_temp_label.add_theme_font_size_override("font_size", 10)
 	add_child(_temp_label)
 
-	_temp_bar_bg = ColorRect.new()
-	_temp_bar_bg.position = Vector2(48, 107)
-	_temp_bar_bg.size = Vector2(100, 8)
-	_temp_bar_bg.color = Color(0.15, 0.15, 0.2)
-	add_child(_temp_bar_bg)
+	var temp_bg := ColorRect.new()
+	temp_bg.position = Vector2(48, 60)
+	temp_bg.size = Vector2(BAR_WIDTH, BAR_HEIGHT)
+	temp_bg.color = Color(0.1, 0.1, 0.15)
+	add_child(temp_bg)
 
-	_temp_bar_fill = ColorRect.new()
-	_temp_bar_fill.position = Vector2(48, 107)
-	_temp_bar_fill.size = Vector2(100, 8)
-	_temp_bar_fill.color = Color(0.2, 0.6, 1.0)
-	add_child(_temp_bar_fill)
+	_temp_segments = _build_segments(48, 60, BAR_WIDTH, BAR_HEIGHT, Color(0.2, 0.6, 1.0))
 
 	_temp_value = Label.new()
 	_temp_value.text = "20C"
-	_temp_value.position = Vector2(152, 105)
+	_temp_value.position = Vector2(205, 58)
 	_temp_value.add_theme_font_size_override("font_size", 10)
 	add_child(_temp_value)
 
 	for i in range(4):
 		var light := ColorRect.new()
-		light.position = Vector2(210 + i * 20, 105)
+		light.position = Vector2(260 + i * 20, 58)
 		light.size = Vector2(14, 14)
 		light.color = Color(0.1, 0.4, 0.1)
 		add_child(light)
@@ -82,111 +104,129 @@ func _build_maintenance_ui() -> void:
 
 		var bl := Label.new()
 		bl.text = "B%d" % (i + 1)
-		bl.position = Vector2(210 + i * 20, 120)
+		bl.position = Vector2(260 + i * 20, 74)
 		bl.add_theme_font_size_override("font_size", 8)
 		add_child(bl)
 
 	_cooling_label = Label.new()
 	_cooling_label.text = "COOL:OFF"
-	_cooling_label.position = Vector2(310, 105)
+	_cooling_label.position = Vector2(350, 58)
 	_cooling_label.add_theme_font_size_override("font_size", 10)
 	add_child(_cooling_label)
 
 	_o2_supply_label = Label.new()
 	_o2_supply_label.text = ""
-	_o2_supply_label.position = Vector2(390, 105)
+	_o2_supply_label.position = Vector2(430, 58)
 	_o2_supply_label.add_theme_font_size_override("font_size", 10)
 	_o2_supply_label.modulate = Color(0.4, 0.7, 1.0)
 	add_child(_o2_supply_label)
 
-func _process(delta: float) -> void:
-	if _warning_active:
-		_warning_timer += delta
-		if _warning_timer >= 0.5:
-			_warning_timer = 0.0
-			_warning_visible = not _warning_visible
-			warning_label.visible = _warning_visible
-			if _warning_visible:
-				var blink_children := [fuel_label, hull_label, o2_label]
-				for child: Label in blink_children:
-					if child and child.modulate == _warning_color:
-						child.visible = not child.visible
+func _build_sparkline() -> void:
+	_sparkline_label = Label.new()
+	_sparkline_label.text = "HIS"
+	_sparkline_label.position = Vector2(12, 90)
+	_sparkline_label.add_theme_font_size_override("font_size", 10)
+	add_child(_sparkline_label)
 
-func set_selected_channel(channel_id: String, can_scan: bool) -> void:
-	_selected_channel_id = channel_id
-	_can_scan = can_scan
-	_can_thrust = channel_id != ""
-	_update_buttons()
+	var spark_bg := ColorRect.new()
+	spark_bg.position = Vector2(48, 92)
+	spark_bg.size = Vector2(BAR_WIDTH, SPARKLINE_HEIGHT)
+	spark_bg.color = Color(0.08, 0.08, 0.12)
+	add_child(spark_bg)
 
-func set_scan_complete() -> void:
-	_can_scan = false
-	_update_buttons()
+	for i in SPARKLINE_POINTS:
+		var bar := ColorRect.new()
+		bar.position = Vector2(48 + i * (BAR_WIDTH / SPARKLINE_POINTS), 92)
+		bar.size = Vector2(maxf(BAR_WIDTH / SPARKLINE_POINTS - 1.0, 1.0), 0)
+		bar.color = Color(0.2, 0.6, 1.0)
+		add_child(bar)
+		_sparkline_bars.append(bar)
 
-func lock_buttons() -> void:
-	scan_button.disabled = true
-	thrust_button.disabled = true
+	_sparkline_value_label = Label.new()
+	_sparkline_value_label.text = ""
+	_sparkline_value_label.position = Vector2(205, 90)
+	_sparkline_value_label.add_theme_font_size_override("font_size", 10)
+	add_child(_sparkline_value_label)
 
-func unlock_buttons() -> void:
-	_update_buttons()
+	_sparkline_data.resize(SPARKLINE_POINTS)
+	for i in SPARKLINE_POINTS:
+		_sparkline_data[i] = 20.0
 
-func set_thrust_enabled(enabled: bool) -> void:
-	_can_thrust = enabled and _selected_channel_id != ""
-	if thrust_button:
-		thrust_button.disabled = not _can_thrust
-
-func get_selected_channel() -> String:
-	return _selected_channel_id
+func _process(_delta: float) -> void:
+	pass
 
 func update_resources(fuel: float, hull: float, oxygen: float) -> void:
-	_set_bar(fuel_bar_fill, fuel_value, fuel, $FuelBarBg, fuel_label, _fuel_color_normal)
-	_set_bar(hull_bar_fill, hull_value, hull, $HullBarBg, hull_label, _hull_color_normal)
-	_set_bar(o2_bar_fill, o2_value, oxygen, $O2BarBg, o2_label, _o2_color_normal)
+	_apply_segments(_fuel_segments, fuel / 100.0, _fuel_normal)
+	_apply_segments(_hull_segments, hull / 100.0, _hull_normal)
+	_apply_segments(_o2_segments, oxygen / 100.0, _o2_normal)
 	var warnings: PackedStringArray = []
 	if fuel <= _low_threshold:
 		warnings.append("LOW FUEL")
+		fuel_label.modulate = _danger
+	else:
+		fuel_label.modulate = Color.WHITE
 	if hull <= _low_threshold:
 		warnings.append("HULL DMG")
+		hull_label.modulate = _danger
+	else:
+		hull_label.modulate = Color.WHITE
 	if oxygen <= _low_threshold:
 		warnings.append("LOW O2")
+		o2_label.modulate = _danger
+	else:
+		o2_label.modulate = Color.WHITE
 	if warnings.is_empty():
 		status_text.text = "NOMINAL"
 		status_text.modulate = Color.WHITE
-		_warning_active = false
-		warning_label.text = ""
-		warning_label.visible = false
-		fuel_label.visible = true
-		hull_label.visible = true
-		o2_label.visible = true
 	else:
-		status_text.text = "WARNING"
-		status_text.modulate = _warning_color
-		warning_label.text = " ".join(warnings)
-		_warning_active = true
-		_warning_visible = true
-		warning_label.visible = true
+		status_text.text = " ".join(warnings)
+		status_text.modulate = _danger
 
 func update_engine_temp(temp: float) -> void:
-	if _temp_bar_fill == null:
-		return
-	var pct := clampf(temp / 120.0, 0.0, 1.0)
-	_temp_bar_fill.size = Vector2(100.0 * pct, 8)
-	_temp_value.text = "%dC" % int(temp)
+	_apply_segments(_temp_segments, clampf(temp / TEMP_MAX, 0.0, 1.0), Color(0.2, 0.6, 1.0))
+	if _temp_value:
+		_temp_value.text = "%dC" % int(temp)
+		if temp >= 90.0:
+			_temp_value.modulate = _danger
+		elif temp >= 70.0:
+			_temp_value.modulate = _warning
+		else:
+			_temp_value.modulate = Color.WHITE
+	_push_sparkline(temp)
+
+func _push_sparkline(temp: float) -> void:
+	_sparkline_data.pop_front()
+	_sparkline_data.append(temp)
+	var spark_y := 92.0
+	for i in SPARKLINE_POINTS:
+		var t: float = _sparkline_data[i]
+		var pct := clampf(t / TEMP_MAX, 0.0, 1.0)
+		var h := SPARKLINE_HEIGHT * pct
+		var bar: ColorRect = _sparkline_bars[i]
+		bar.position.y = spark_y + (SPARKLINE_HEIGHT - h)
+		bar.size.y = h
+		bar.color = _temp_color(t)
+	if _sparkline_value_label:
+		_sparkline_value_label.text = "%dC" % int(temp)
+		_sparkline_value_label.modulate = _temp_color(temp)
+
+func _temp_color(temp: float) -> Color:
 	if temp >= 90.0:
-		_temp_bar_fill.color = Color(1.0, 0.2, 0.1)
-		_temp_value.modulate = _warning_color
+		return _danger
 	elif temp >= 70.0:
-		_temp_bar_fill.color = Color(1.0, 0.7, 0.1)
-		_temp_value.modulate = Color(1.0, 0.8, 0.2)
+		return _warning
 	else:
-		_temp_bar_fill.color = Color(0.2, 0.6, 1.0)
-		_temp_value.modulate = Color.WHITE
+		return Color(0.2, 0.6, 1.0)
+
+func set_scan_complete() -> void:
+	pass
 
 func set_breaker_state(index: int, tripped: bool) -> void:
 	if index < 0 or index >= _breaker_lights.size():
 		return
 	var light: ColorRect = _breaker_lights[index]
 	if tripped:
-		light.color = Color(1.0, 0.2, 0.1)
+		light.color = _danger
 	else:
 		light.color = Color(0.1, 0.4, 0.1)
 
@@ -212,33 +252,19 @@ func set_o2_supplying(active: bool) -> void:
 	else:
 		_o2_supply_label.text = ""
 
-func _set_bar(fill: ColorRect, val_label: Label, value: float, bg: ColorRect, label_node: Label, normal_color: Color) -> void:
-	var pct := clampf(value / 100.0, 0.0, 1.0)
-	var fill_w: float = _bar_bg_width * pct
-	var bg_pos: Vector2 = bg.position
-	fill.position = bg_pos
-	fill.size = Vector2(fill_w, bg.size.y)
-	val_label.text = "%d%%" % int(value)
-	if value <= _low_threshold:
-		fill.color = _warning_color
-		label_node.modulate = _warning_color
-	elif value <= 50.0:
-		fill.color = normal_color.lerp(Color(1.0, 0.8, 0.2), 0.4)
-		label_node.modulate = Color.WHITE
-	else:
-		fill.color = normal_color
-		label_node.modulate = Color.WHITE
-
-func _update_buttons() -> void:
-	if scan_button:
-		scan_button.disabled = not _can_scan or _selected_channel_id == ""
-	if thrust_button:
-		thrust_button.disabled = not _can_thrust
-
-func _on_scan_button_pressed() -> void:
-	if _can_scan and _selected_channel_id != "":
-		scan_requested.emit()
-
-func _on_thrust_button_pressed() -> void:
-	if _can_thrust and _selected_channel_id != "":
-		thrust_requested.emit()
+func _apply_segments(segments: Array[ColorRect], pct: float, theme_color: Color) -> void:
+	var filled := int(pct * SEGMENT_COUNT)
+	for i in SEGMENT_COUNT:
+		var seg: ColorRect = segments[i]
+		if i < filled:
+			var ratio := float(i) / float(SEGMENT_COUNT)
+			if ratio < 0.25:
+				seg.color = _danger
+			elif ratio < 0.5:
+				seg.color = _warning
+			elif ratio < 0.75:
+				seg.color = _caution
+			else:
+				seg.color = theme_color
+		else:
+			seg.color = _dim
