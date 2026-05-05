@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://veor5gmedy22" path="res://scenes/controls/button.tscn" id="11_7nj66"]
 [ext_resource type="PackedScene" uid="uid://byy7phdpr5cht" path="res://scenes/controls/steering-wheel.tscn" id="12_6tcqw"]
 [ext_resource type="PackedScene" uid="uid://dlhts0s45rhrs" path="res://scenes/controls/knob.tscn" id="13_0g4l1"]
+[ext_resource type="Material" uid="uid://cfh4lj4dmgeac" path="res://assets/shaders/pixel_shader.tres" id="13_rw3oe"]
 [ext_resource type="PackedScene" uid="uid://b5affdm7setsf" path="res://scenes/controls/lever.tscn" id="14_ifc1d"]
 [ext_resource type="PackedScene" uid="uid://6nwo5hk721gn" path="res://scenes/controls/switch.tscn" id="15_iuvpg"]
 [ext_resource type="Script" uid="uid://bbmc5l72beetn" path="res://scripts/audio_manager.gd" id="16_6tcqw"]
@@ -103,6 +104,9 @@ size = Vector2(1.6, 0.35)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_comm"]
 size = Vector3(1.6, 0.1, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rw3oe"]
+size = Vector3(0.8, 0.3, 0.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rw3oe"]
 shader = ExtResource("4_dy0mh")
@@ -193,7 +197,7 @@ mesh = SubResource("PlaneMesh_comm")
 shape = SubResource("BoxShape3D_comm")
 
 [node name="blockbench_export" parent="CockpitInterior" unique_id=603848736 instance=ExtResource("2_g7lyc")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.9730673, 1.0372081)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.0024003983, -0.9730672, 1.0368708)
 
 [node name="blockbench_export2" parent="CockpitInterior" unique_id=1982222536 instance=ExtResource("3_3s2td")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -1, 1)
@@ -202,11 +206,21 @@ visible = false
 [node name="Sketchfab_Scene" parent="CockpitInterior" unique_id=793517670 instance=ExtResource("4_41w8a")]
 transform = Transform3D(0.8, 0, 0, 0, 0.3112992, -0.7369483, 0, 0.7369483, 0.3112992, -0.045548975, -0.1992351, -1.3748289)
 
+[node name="KeyboardArea" type="Node3D" parent="CockpitInterior/Sketchfab_Scene" unique_id=1816757948]
+
+[node name="KeyboardBody" type="StaticBody3D" parent="CockpitInterior/Sketchfab_Scene/KeyboardArea" unique_id=1259682113]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/Sketchfab_Scene/KeyboardArea/KeyboardBody" unique_id=1153976045]
+shape = SubResource("BoxShape3D_rw3oe")
+
 [node name="PlayerCamera" type="Camera3D" parent="." unique_id=2126927117]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 current = true
 fov = 70.0
 script = ExtResource("4_cam")
+focus_offset_main = Vector3(0, 0, 2)
+focus_offset_left = Vector3(0.3, -0.1, 1.5)
+focus_offset_right = Vector3(-0.5, 0, 1.5)
 
 [node name="BackBufferCopy" type="BackBufferCopy" parent="PlayerCamera" unique_id=1354974794]
 visible = false
@@ -301,6 +315,12 @@ script = ExtResource("6_cross")
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("6_c1ege")
+
+[node name="ColorRect" type="ColorRect" parent="HUD" unique_id=1836515440]
+material = ExtResource("13_rw3oe")
+offset_right = 1171.0
+offset_bottom = 658.0
+mouse_filter = 2
 
 [node name="SystemPanelViewport" type="SubViewport" parent="." unique_id=598996555]
 size = Vector2i(480, 160)

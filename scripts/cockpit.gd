@@ -120,6 +120,7 @@ func _ready() -> void:
 	_setup_pause_menu()
 	_connect_signals()
 	_setup_view_arrows()
+	_setup_focus_system()
 	if nav_system and nav_system.has_method("start"):
 		nav_system.start()
 
@@ -208,6 +209,10 @@ func _setup_pause_menu() -> void:
 	_pause_menu.name = "PauseMenu"
 	_pause_menu.set_script(script)
 	hud.add_child(_pause_menu)
+
+func _setup_focus_system() -> void:
+	if player_cam and player_cam.has_method("setup_focus_targets"):
+		player_cam.setup_focus_targets(main_screen, left_screen, right_screen)
 
 func _setup_console_panel() -> void:
 	var scene := load("res://scenes/console-panel.tscn") as PackedScene
@@ -649,6 +654,9 @@ func _push_viewport_click(vp: SubViewport, uv: Vector2) -> void:
 func _input(event: InputEvent) -> void:
 	if level_mode == "spasim":
 		if event is InputEventKey:
+			if player_cam and player_cam.get_focus_state() != 1:
+				get_viewport().set_input_as_handled()
+				return
 			if _level2_terminal and _level2_terminal.has_method("handle_key_input"):
 				_level2_terminal.handle_key_input(event)
 			get_viewport().set_input_as_handled()
@@ -1345,6 +1353,7 @@ func _setup_level2() -> void:
 	_setup_level2_input()
 	_setup_level2_update_timer()
 	_init_level2_game_camera()
+	_setup_focus_system()
 
 func _init_level2_game_camera() -> void:
 	if _level2_game == null:

@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cfh4lj4dmgeac"]
+
+[ext_resource type="Shader" uid="uid://bihws2d71bxua" path="res://assets/shaders/ColorRectDitherTest.gdshader" id="1_0tsc6"]
+
+[resource]
+shader = ExtResource("1_0tsc6")
+shader_parameter/quantize_size = 2.0
+shader_parameter/handle_scale = false
+shader_parameter/handle_subpixels = true
+shader_parameter/dither_enabled = true
+shader_parameter/bayer_pattern = 1.0
+shader_parameter/divisions = 8.0
+shader_parameter/contrast = 1.0
+shader_parameter/shift = 0.0
+shader_parameter/grayscale = false
+shader_parameter/use_palette = false
