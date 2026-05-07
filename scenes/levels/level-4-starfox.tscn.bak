@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ctu70vx0jjv3h"]
+
+[ext_resource type="Script" uid="uid://cy734ikt4ou6a" path="res://scripts/levels/level_4_starfox.gd" id="1_k6o1s"]
+
+[node name="Level4StarFox" type="Node3D" unique_id=1195402953]
+script = ExtResource("1_k6o1s")

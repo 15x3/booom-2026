@@ -100,7 +100,7 @@ func _on_level_selected(idx: int) -> void:
 		return
 	_started = true
 	_pending_level = idx
-	if idx == 1 or idx == 2:
+	if idx <= 3:
 		ResourceLoader.load_threaded_request("res://scenes/cockpit.tscn")
 		set_process(true)
 	else:
@@ -108,13 +108,13 @@ func _on_level_selected(idx: int) -> void:
 		get_tree().change_scene_to_file(scene_path)
 
 func _process(_delta: float) -> void:
-	if _pending_level == 1 or _pending_level == 2:
+	if _pending_level <= 3:
 		var status := ResourceLoader.load_threaded_get_status("res://scenes/cockpit.tscn")
 		if status == ResourceLoader.THREAD_LOAD_LOADED:
 			var scene: PackedScene = ResourceLoader.load_threaded_get("res://scenes/cockpit.tscn")
 			var cockpit := scene.instantiate()
-			var mode := "spasim" if _pending_level == 1 else "elite"
-			cockpit.set_meta("level_mode", mode)
+			var modes: Array[String] = ["spacewar", "spasim", "elite", "starfox"]
+			cockpit.set_meta("level_mode", modes[_pending_level])
 			get_tree().root.add_child(cockpit)
 			get_tree().current_scene = cockpit
 			get_tree().root.remove_child(self)

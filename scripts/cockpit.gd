@@ -93,6 +93,12 @@ var _level3_comm_vp: SubViewport = null
 var _level3_map_vp: SubViewport = null
 var _level3_update_timer: Timer = null
 
+var _level4_game: Node3D = null
+var _level4_game_vp: SubViewport = null
+var _level4_system_vp: SubViewport = null
+var _level4_system_panel: Control = null
+var _level4_update_timer: Timer = null
+
 func _ready() -> void:
 	_load_config()
 	if has_meta("level_mode"):
@@ -102,6 +108,11 @@ func _ready() -> void:
 		return
 	if level_mode == "elite":
 		_setup_level3()
+		return
+	if level_mode == "starfox":
+		_setup_level4()
+		return
+	if level_mode == "spacewar":
 		return
 	_setup_viewports()
 	_setup_cameras()
@@ -661,6 +672,10 @@ func _input(event: InputEvent) -> void:
 				_level2_terminal.handle_key_input(event)
 			get_viewport().set_input_as_handled()
 		return
+	if level_mode == "spacewar":
+		if event is InputEventKey:
+			get_viewport().set_input_as_handled()
+		return
 	if level_mode == "elite":
 		if event is InputEventKey:
 			var kc: int = event.keycode if event.keycode != 0 else event.physical_keycode
@@ -678,6 +693,10 @@ func _input(event: InputEvent) -> void:
 				if not ch.is_empty() and _level3_comms and _level3_comms.has_method("handle_key_input"):
 					_level3_comms.handle_key_input(event)
 		get_viewport().set_input_as_handled()
+		return
+	if level_mode == "starfox":
+		if event is InputEventKey:
+			get_viewport().set_input_as_handled()
 		return
 	if event is InputEventKey and event.pressed:
 		var key: int = event.keycode if event.keycode != 0 else event.physical_keycode
@@ -1562,6 +1581,7 @@ func _setup_level3_game_viewport() -> void:
 	_level3_game.comm_output.connect(_on_level3_comm_output)
 	_level3_game.level_completed.connect(_on_level3_completed)
 	_level3_game.level_failed.connect(_on_level3_failed)
+	_level3_game.sfx_requested.connect(_on_level3_sfx)
 
 func _setup_level3_comm_viewport() -> void:
 	_level3_comm_vp = SubViewport.new()
@@ -1659,3 +1679,82 @@ func _on_level3_failed() -> void:
 		_level3_comms.print_line("Returning to title...")
 		var tween := create_tween()
 		tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/title-screen.tscn")).set_delay(3.0)
+
+func _on_level3_sfx(_sfx_name: String) -> void:
+	pass
+
+func _setup_level4() -> void:
+	player_cam.current = true
+	_setup_level4_game_viewport()
+	_setup_level4_system_viewport()
+	_setup_level4_update_timer()
+
+func _setup_level4_game_viewport() -> void:
+	_level4_game_vp = SubViewport.new()
+	_level4_game_vp.name = "Level4GameViewport"
+	_level4_game_vp.size = Vector2i(640, 480)
+	_level4_game_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_level4_game_vp.transparent_bg = false
+	_level4_game_vp.own_world_3d = true
+	add_child(_level4_game_vp)
+
+	var level4_scene := load("res://scenes/levels/level-4-starfox.tscn") as PackedScene
+	if level4_scene == null:
+		push_error("Level 4 scene not found")
+		return
+	_level4_game = level4_scene.instantiate()
+	_level4_game_vp.add_child(_level4_game)
+
+	_bind_screen(main_screen, _level4_game_vp)
+
+	_level4_game.level_completed.connect(_on_level4_completed)
+	_level4_game.level_failed.connect(_on_level4_failed)
+	_level4_game.sfx_requested.connect(_on_level4_sfx)
+
+func _setup_level4_system_viewport() -> void:
+	_level4_system_vp = SubViewport.new()
+	_level4_system_vp.name = "Level4SystemViewport"
+	_level4_system_vp.size = Vector2i(560, 120)
+	_level4_system_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_level4_system_vp.transparent_bg = false
+	add_child(_level4_system_vp)
+
+	_level4_system_panel = Control.new()
+	_level4_system_panel.name = "Level4HUD"
+	_level4_system_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_level4_system_vp.add_child(_level4_system_panel)
+
+	_bind_screen(system_panel_slot, _level4_system_vp)
+
+func _setup_level4_update_timer() -> void:
+	var target_fps: int = 30
+	var starfox_cfg: Dictionary = config.get("starfox", {})
+	if starfox_cfg.has("target_fps"):
+		target_fps = int(starfox_cfg["target_fps"])
+	_level4_update_timer = Timer.new()
+	_level4_update_timer.wait_time = 1.0 / target_fps
+	_level4_update_timer.autostart = true
+	_level4_update_timer.one_shot = false
+	_level4_update_timer.timeout.connect(_on_level4_update_tick)
+	add_child(_level4_update_timer)
+
+func _on_level4_update_tick() -> void:
+	if _level4_game_vp:
+		_level4_game_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	if _level4_system_vp and _level4_system_panel and _level4_game:
+		var status: Dictionary = _level4_game.get_status_data()
+		_draw_level4_hud(status)
+
+func _draw_level4_hud(status: Dictionary) -> void:
+	_level4_system_panel.queue_redraw()
+
+func _on_level4_completed() -> void:
+	var tween := create_tween()
+	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/title-screen.tscn")).set_delay(3.0)
+
+func _on_level4_failed() -> void:
+	var tween := create_tween()
+	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/title-screen.tscn")).set_delay(3.0)
+
+func _on_level4_sfx(_sfx_name: String) -> void:
+	pass

@@ -3,6 +3,7 @@ extends Node3D
 signal level_completed
 signal level_failed
 signal comm_output(text: String)
+signal sfx_requested(sfx_name: String)
 
 @onready var player: CharacterBody3D = $Player
 @onready var camera: Camera3D = $Player/Camera3D
@@ -67,6 +68,8 @@ var commodity_names: Dictionary = {
 
 var _roll_cur: float = 0.0
 var _pitch_cur: float = 0.0
+var _station_counter: int = 0
+var _hit_flash_timer: float = 0.0
 
 func _ready() -> void:
 	_load_config()
@@ -74,7 +77,7 @@ func _ready() -> void:
 	_emit_comm.call_deferred("=== ELITE TERMINAL v1.0 ===")
 	_emit_comm.call_deferred("1984 — WIREFRAME SPACE")
 	_emit_comm.call_deferred("WASD:Roll/Pitch I/K:Thrust SPACE:Fire")
-	_emit_comm.call_deferred("E:Dock(near station)")
+	_emit_comm.call_deferred("T:Dock(near station)")
 	_emit_comm.call_deferred("")
 
 func _load_config() -> void:
@@ -112,11 +115,28 @@ func _load_config() -> void:
 
 func _setup_scene() -> void:
 	_create_wireframe_material()
+	_assign_meshes()
 	_apply_materials()
 	_setup_laser_beam_material()
 	_setup_starfield()
 	_collect_stations()
 	_collect_enemies()
+
+func _assign_meshes() -> void:
+	if _coriolis_mesh:
+		_coriolis_mesh.mesh = _create_coriolis_mesh()
+	if laser_beam and laser_beam.mesh == null:
+		var beam := CylinderMesh.new()
+		beam.top_radius = 0.3
+		beam.bottom_radius = 0.3
+		beam.height = 1.0
+		laser_beam.mesh = beam
+	for child in get_children():
+		if child.name.begins_with("Station") and child is MeshInstance3D:
+			child.mesh = _create_station_mesh(_station_counter)
+			_station_counter += 1
+		if child.name.begins_with("Enemy") and child is MeshInstance3D:
+			child.mesh = _create_enemy_ship_mesh()
 
 func _create_wireframe_material() -> void:
 	wireframe_mat = ShaderMaterial.new()
@@ -171,6 +191,91 @@ func _setup_starfield() -> void:
 	mat.point_size = 2.5
 	_starfield_node.material_override = mat
 
+func _create_enemy_ship_mesh() -> ArrayMesh:
+	var verts := PackedVector3Array([
+		Vector3(0, 0, -10),
+		Vector3(-6, 0, 6),
+		Vector3(6, 0, 6),
+		Vector3(0, 3, 0),
+		Vector3(0, -2, 2),
+	])
+	var indices := PackedInt32Array([
+		0, 1, 2,
+		0, 2, 3,
+		0, 3, 1,
+		1, 2, 4,
+		1, 4, 3,
+		2, 3, 4,
+	])
+	var mesh := ArrayMesh.new()
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	arrays[Mesh.ARRAY_INDEX] = indices
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh
+
+func _create_coriolis_mesh() -> ArrayMesh:
+	var h := 40.0
+	var verts := PackedVector3Array([
+		Vector3(-h, -h, -h), Vector3(h, -h, -h), Vector3(h, h, -h), Vector3(-h, h, -h),
+		Vector3(-h, -h, h), Vector3(h, -h, h), Vector3(h, h, h), Vector3(-h, h, h),
+	])
+	var indices := PackedInt32Array([
+		0, 1, 2, 0, 2, 3,
+		4, 6, 5, 4, 7, 6,
+		0, 4, 5, 0, 5, 1,
+		2, 6, 7, 2, 7, 3,
+		0, 3, 7, 0, 7, 4,
+	])
+	var mesh := ArrayMesh.new()
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	arrays[Mesh.ARRAY_INDEX] = indices
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh
+
+func _create_station_mesh(variant: int) -> ArrayMesh:
+	var s := 20.0
+	var verts: PackedVector3Array
+	match variant % 3:
+		0:
+			verts = PackedVector3Array([
+				Vector3(-s, -s, -s), Vector3(s, -s, -s), Vector3(s, s, -s), Vector3(-s, s, -s),
+				Vector3(-s, -s, s), Vector3(s, -s, s), Vector3(s, s, s), Vector3(-s, s, s),
+			])
+		1:
+			verts = PackedVector3Array([
+				Vector3(0, s * 1.2, 0),
+				Vector3(-s, -s * 0.5, -s),
+				Vector3(s, -s * 0.5, -s),
+				Vector3(s, -s * 0.5, s),
+				Vector3(-s, -s * 0.5, s),
+			])
+		_:
+			verts = PackedVector3Array([
+				Vector3(0, s, -s), Vector3(-s, -s, -s), Vector3(s, -s, -s),
+				Vector3(0, s, s), Vector3(-s, -s, s), Vector3(s, -s, s),
+			])
+	var indices := PackedInt32Array()
+	if verts.size() == 8:
+		indices = PackedInt32Array([
+			0, 1, 2, 0, 2, 3, 4, 6, 5, 4, 7, 6,
+			0, 4, 5, 0, 5, 1, 2, 6, 7, 2, 7, 3, 0, 3, 7, 0, 7, 4,
+		])
+	elif verts.size() == 5:
+		indices = PackedInt32Array([0,1,2, 0,2,3, 0,3,4, 0,4,1, 1,3,2, 1,4,3])
+	else:
+		indices = PackedInt32Array([0,1,2, 3,5,4, 0,2,5, 0,5,3, 1,4,2, 2,4,5])
+	var mesh := ArrayMesh.new()
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	arrays[Mesh.ARRAY_INDEX] = indices
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh
+
 func _collect_stations() -> void:
 	var station_names := ["Alpha Station", "Beta Station", "Gamma Station"]
 	var price_sets := [
@@ -201,6 +306,7 @@ func _collect_enemies() -> void:
 	var fire_interval: float = float(ecfg.get("fire_interval", 2.0))
 	var e_damage: float = float(ecfg.get("damage", 8.0))
 	var bounty: int = int(ecfg.get("bounty_base", 100))
+	var e_hp: float = float(ecfg.get("hp", 30.0))
 	var idx := 0
 	for child in get_children():
 		if not child.name.begins_with("Enemy"):
@@ -209,8 +315,8 @@ func _collect_enemies() -> void:
 		enemies.append({
 			"node": child,
 			"detection": detection,
-			"hp": 30.0,
-			"hp_max": 30.0,
+			"hp": e_hp,
+			"hp_max": e_hp,
 			"alive": true,
 			"state": "patrol",
 			"patrol_center": child.position,
@@ -234,6 +340,8 @@ func _process(delta: float) -> void:
 	_rotate_exit_station(delta)
 	_check_docking()
 	_update_starfield_position()
+	if _hit_flash_timer > 0.0:
+		_hit_flash_timer -= delta
 
 func _process_flight(delta: float) -> void:
 	if roll_input != 0.0:
@@ -264,6 +372,7 @@ func _process_combat(delta: float) -> void:
 		laser_beam.position = Vector3(0, 0, -laser_range * 0.5)
 		laser_beam.rotation_degrees = Vector3(90, 0, 0)
 		_check_laser_hit()
+		sfx_requested.emit("laser_fire")
 		get_tree().create_timer(0.15).timeout.connect(func(): if is_instance_valid(laser_beam): laser_beam.visible = false)
 
 func _check_laser_hit() -> void:
@@ -289,8 +398,10 @@ func _check_laser_hit() -> void:
 				var bounty: int = int(e["bounty"])
 				credits += bounty
 				_emit_comm("[color=green]ENEMY DESTROYED! Bounty: %d cr[/color]" % bounty)
+				sfx_requested.emit("enemy_explode")
 			else:
 				_emit_comm("HIT! Enemy HP: %.0f/%.0f" % [float(e["hp"]), float(e["hp_max"])])
+				sfx_requested.emit("laser_hit")
 			return
 
 func _process_enemies(delta: float) -> void:
@@ -318,6 +429,7 @@ func _process_enemies(delta: float) -> void:
 			if float(e["fire_cooldown"]) <= 0.0:
 				e["fire_cooldown"] = e["fire_interval"]
 				_spawn_enemy_projectile(e)
+				sfx_requested.emit("enemy_fire")
 			if dist > 800.0:
 				e["state"] = "patrol"
 
@@ -336,7 +448,12 @@ func _spawn_enemy_projectile(e: Dictionary) -> void:
 	proj.material_override = mat
 	var enode: Node3D = e["node"]
 	proj.position = enode.global_position
-	var dir: Vector3 = (player.global_position - enode.global_position).normalized()
+	var to_player: Vector3 = player.global_position - enode.global_position
+	var dist := to_player.length()
+	var proj_speed: float = float(config.get("enemy", {}).get("projectile_speed", 80.0))
+	var lead_time := dist / proj_speed
+	var predicted_pos := player.global_position + velocity * lead_time
+	var dir: Vector3 = (predicted_pos - enode.global_position).normalized()
 	add_child(proj)
 	enemy_projectiles.append({
 		"mesh": proj,
@@ -361,8 +478,8 @@ func _process_projectiles(delta: float) -> void:
 		if float(p["life"]) <= 0.0:
 			p["mesh"].queue_free()
 			to_remove.append(i)
-	for idx in to_remove:
-		enemy_projectiles.remove_at(idx)
+	for idx in range(to_remove.size() - 1, -1, -1):
+		enemy_projectiles.remove_at(to_remove[idx])
 
 func _rotate_exit_station(delta: float) -> void:
 	if _exit_station:
@@ -391,6 +508,7 @@ func _check_docking() -> void:
 		return
 	_emit_comm("[color=green]=== DOCKING SUCCESSFUL ===[/color]")
 	_emit_comm("[color=green]=== LEVEL COMPLETE ===[/color]")
+	sfx_requested.emit("dock_success")
 	set_process(false)
 	level_completed.emit()
 
@@ -405,8 +523,11 @@ func _take_damage(amount: float) -> void:
 		amount -= shield_absorb
 	hp -= amount
 	_emit_comm("[color=red]HIT! Shield: %.0f HP: %.0f[/color]" % [shield, hp])
+	_hit_flash_timer = 0.3
+	sfx_requested.emit("player_hit")
 	if hp <= 0.0:
 		_emit_comm("[color=red]=== SHIP DESTROYED ===[/color]")
+		sfx_requested.emit("player_destroyed")
 		set_process(false)
 		level_failed.emit()
 
@@ -523,6 +644,10 @@ func _cargo_used() -> int:
 func _emit_comm(text: String) -> void:
 	comm_output.emit(text)
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		handle_input(event)
+
 func handle_input(event: InputEventKey) -> void:
 	if not event.pressed:
 		var kc: int = event.keycode if event.keycode != 0 else event.physical_keycode
@@ -558,7 +683,7 @@ func handle_input(event: InputEventKey) -> void:
 			_emit_comm("Thrust: %d/%d" % [thrust_level, thrust_speeds.size() - 1])
 		KEY_SPACE:
 			laser_active = true
-		KEY_R:
+		KEY_T:
 			try_dock()
 
 func get_player_position() -> Vector3:
@@ -608,4 +733,5 @@ func get_status_data() -> Dictionary:
 		"thrust_level": thrust_level,
 		"cargo_used": _cargo_used(),
 		"cargo_max": max_cargo,
+		"hit_flash": _hit_flash_timer > 0.0,
 	}

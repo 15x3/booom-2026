@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://br3ioj82h7s61"]
+
+[ext_resource type="Script" uid="uid://bqg2bb1m52tue" path="res://scripts/levels/level4_bullet.gd" id="1_vmc5f"]
+[ext_resource type="Material" path="res://assets/materials/level4/bullet_enemy.tres" id="1_woy3q"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_4sbr6"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_woy3q"]
+radius = 0.15
+
+[node name="BulletEnemy" type="Node3D" unique_id=1156863773]
+script = ExtResource("1_vmc5f")
+
+[node name="Orb" type="MeshInstance3D" parent="." unique_id=810852124]
+material_override = ExtResource("1_woy3q")
+mesh = SubResource("SphereMesh_4sbr6")
+
+[node name="Hitbox" type="Area3D" parent="." unique_id=1489317093]
+collision_layer = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox" unique_id=1890523286]
+shape = SubResource("SphereShape3D_woy3q")
