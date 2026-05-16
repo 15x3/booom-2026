@@ -14,6 +14,7 @@ radius = 0.15
 script = ExtResource("1_vmc5f")
 
 [node name="Orb" type="MeshInstance3D" parent="." unique_id=810852124]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
 material_override = ExtResource("1_woy3q")
 mesh = SubResource("SphereMesh_4sbr6")
 

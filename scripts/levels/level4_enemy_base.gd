@@ -36,6 +36,9 @@ var _phase: int = 0
 
 var _harass_timer: float = 0.0
 var _lissa_phase: float = 0.0
+var _escort_x: float = 12.0
+var _charge_flash_tween: Tween = null
+var _wide_shot_timer: float = 0.0
 
 var _evade_dir: Vector3 = Vector3.ZERO
 var _evade_start: Vector3 = Vector3.ZERO
@@ -48,6 +51,16 @@ var _death_spin_speed: float = 5.0
 var _death_duration: float = 0.5
 var _combat_bounds: Vector2 = Vector2(6.0, 4.4)
 
+func _to_local(world_pos: Vector3) -> Vector3:
+	if not _path_follow_ref or not is_instance_valid(_path_follow_ref):
+		return world_pos
+	return _path_follow_ref.global_transform.affine_inverse() * world_pos
+
+func _to_world(local_pos: Vector3) -> Vector3:
+	if not _path_follow_ref or not is_instance_valid(_path_follow_ref):
+		return local_pos
+	return _path_follow_ref.global_transform * local_pos
+
 var _cached_player_vel: Vector3 = Vector3.ZERO
 var _prev_player_pos: Vector3 = Vector3.ZERO
 var _lock_timer: float = 0.0
@@ -55,13 +68,18 @@ var _player_firing: bool = false
 var _attack_center: Vector3 = Vector3.ZERO
 var _out_of_view_timer: float = 0.0
 var _exit_pull_dir: Vector2 = Vector2.ZERO
+var _spawn_face: String = "FrontSpawn"
+var _entry_z: float = -30.0
+var _straightening: bool = false
 
-func setup(ship_anchor: Node3D, path_follow: PathFollow3D, cfg: Dictionary, track_speed: float, combat_bounds: Vector2 = Vector2(6.0, 4.4)) -> void:
+func setup(ship_anchor: Node3D, path_follow: PathFollow3D, cfg: Dictionary, track_speed: float, combat_bounds: Vector2 = Vector2(6.0, 4.4), spawn_face: String = "FrontSpawn", entry_z: float = -30.0) -> void:
 	_player_ref = ship_anchor
 	_path_follow_ref = path_follow
 	_cfg = cfg
 	_track_speed = track_speed
 	_combat_bounds = combat_bounds
+	_spawn_face = spawn_face
+	_entry_z = entry_z
 	_seed = randf() * TAU
 	max_hp = float(cfg.get("hp", 1.0))
 	hp = max_hp
@@ -72,6 +90,18 @@ func setup(ship_anchor: Node3D, path_follow: PathFollow3D, cfg: Dictionary, trac
 	var entry_offset := float(cfg.get("entry_target_z_offset", -15.0))
 	_entry_target_z = entry_offset
 	_burst_fired = 0
+	_relative_z = entry_z
+	if spawn_face != "FrontSpawn":
+		_snap_z_to_track()
+	match spawn_face:
+		"LeftSpawn":
+			rotation = Vector3(0.0, deg_to_rad(45.0), 0.3)
+		"RightSpawn":
+			rotation = Vector3(0.0, deg_to_rad(-45.0), -0.3)
+		"TopSpawn":
+			rotation = Vector3(deg_to_rad(-25.0), 0.0, 0.0)
+		"DownSpawn":
+			rotation = Vector3(deg_to_rad(15.0), 0.0, 0.0)
 
 func set_entry_path(path: Path3D) -> void:
 	_entry_path = path
@@ -113,6 +143,22 @@ var _relative_z: float = -50.0
 var _entry_target_z: float = -15.0
 
 func _process_entry(delta: float) -> void:
+	if _cfg.get("attack_type", "") == "escort":
+		_snap_z_to_track()
+		var side_dir := 1.0
+		if _spawn_face == "RightSpawn":
+			side_dir = -1.0
+		var x_start := float(_cfg.get("escort_x_start", 24.0))
+		var y_center := 0.0
+		var cam_name := "LeftCamera" if side_dir > 0.0 else "RightCamera"
+		var wing_cam := _path_follow_ref.get_node_or_null("CameraRig/ShakeContainer/" + cam_name) as Camera3D
+		if wing_cam:
+			y_center = _to_local(wing_cam.global_position).y
+		global_position = _to_world(Vector3(x_start * side_dir, y_center, 0.0))
+		_escort_x = x_start
+		_attack_center = _to_local(global_position)
+		_transition_to(State.ATTACK)
+		return
 	if _entry_path and _entry_path.curve and _entry_path.curve.get_baked_length() > 0.0:
 		if _entry_path_follow == null:
 			_entry_path_follow = PathFollow3D.new()
@@ -123,25 +169,102 @@ func _process_entry(delta: float) -> void:
 		if _entry_path_follow.progress_ratio >= 1.0:
 			_snap_z_to_track()
 			_lissa_phase = randf() * TAU
-			_attack_center = global_position
+			_attack_center = _to_local(global_position)
 			_transition_to(State.ATTACK)
-	else:
-		var ease_weight := float(_cfg.get("entry_ease_weight", 4.0))
-		if _path_follow_ref and is_instance_valid(_path_follow_ref):
-			_relative_z = lerpf(_relative_z, _entry_target_z, ease_weight * delta)
-			var xy_weight := ease_weight * 0.5
-			var target_x: float = global_position.x
-			var target_y: float = global_position.y
-			if _player_ref and is_instance_valid(_player_ref):
-				target_x = _player_ref.global_position.x
-				target_y = _player_ref.global_position.y
-			global_position.x = lerpf(global_position.x, target_x, xy_weight * delta)
-			global_position.y = lerpf(global_position.y, target_y, xy_weight * delta)
-			global_position.z = _path_follow_ref.global_position.z + _relative_z
-			if absf(_relative_z - _entry_target_z) < 1.0:
-				_lissa_phase = randf() * TAU
-				_attack_center = global_position
-				_transition_to(State.ATTACK)
+		return
+	match _spawn_face:
+		"FrontSpawn", _:
+			_process_entry_front(delta)
+		"LeftSpawn":
+			_process_entry_flank(delta, 1.0)
+		"RightSpawn":
+			_process_entry_flank(delta, -1.0)
+		"TopSpawn":
+			_process_entry_dive(delta)
+		"DownSpawn":
+			_process_entry_rise(delta)
+
+func _finish_entry() -> void:
+	_snap_z_to_track()
+	_lissa_phase = randf() * TAU
+	_attack_center = _to_local(global_position)
+	_transition_to(State.ATTACK)
+
+func _start_straighten() -> void:
+	if _straightening:
+		return
+	_straightening = true
+	var tween := create_tween()
+	tween.tween_property(self, "rotation", Vector3.ZERO, 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _process_entry_front(delta: float) -> void:
+	var ease_weight := float(_cfg.get("entry_ease_weight", 4.0))
+	if _path_follow_ref and is_instance_valid(_path_follow_ref):
+		_relative_z = lerpf(_relative_z, _entry_target_z, ease_weight * delta)
+		var xy_weight := ease_weight * 0.5
+		var target_x: float = global_position.x
+		var target_y: float = global_position.y
+		if _player_ref and is_instance_valid(_player_ref):
+			target_x = _player_ref.global_position.x
+			target_y = _player_ref.global_position.y
+		global_position.x = lerpf(global_position.x, target_x, xy_weight * delta)
+		global_position.y = lerpf(global_position.y, target_y, xy_weight * delta)
+		global_position.z = _path_follow_ref.global_position.z + _relative_z
+		if absf(_relative_z - _entry_target_z) < 1.0:
+			_finish_entry()
+
+func _process_entry_flank(delta: float, dir: float) -> void:
+	if not _path_follow_ref or not is_instance_valid(_path_follow_ref):
+		return
+	var entry_weight := float(_cfg.get("entry_ease_weight", 4.0))
+	var local_pos := _path_follow_ref.global_transform.affine_inverse() * global_position
+	var target_x: float = 0.0
+	if _player_ref and is_instance_valid(_player_ref):
+		target_x = _player_ref.global_position.x - _path_follow_ref.global_position.x
+	local_pos.x = lerpf(local_pos.x, target_x, entry_weight * delta)
+	var target_y := 0.0
+	var cam_name := "LeftCamera" if dir > 0.0 else "RightCamera"
+	var wing_cam := _path_follow_ref.get_node_or_null("CameraRig/ShakeContainer/" + cam_name) as Camera3D
+	if wing_cam:
+		target_y = _to_local(wing_cam.global_position).y
+	local_pos.y = lerpf(local_pos.y, target_y, entry_weight * 0.5 * delta)
+	_relative_z = lerpf(_relative_z, _entry_target_z, entry_weight * 0.5 * delta)
+	local_pos.z = _relative_z
+	global_position = _path_follow_ref.global_transform * local_pos
+	if absf(local_pos.x) < _combat_bounds.x * 0.8:
+		_start_straighten()
+	if absf(local_pos.x) < _combat_bounds.x * 0.5 and absf(_relative_z - _entry_target_z) < 2.0:
+		_finish_entry()
+
+func _process_entry_dive(delta: float) -> void:
+	if not _path_follow_ref or not is_instance_valid(_path_follow_ref):
+		return
+	var entry_weight := float(_cfg.get("entry_ease_weight", 4.0))
+	var local_pos := _path_follow_ref.global_transform.affine_inverse() * global_position
+	local_pos.y = lerpf(local_pos.y, 0.0, entry_weight * delta)
+	local_pos.x = lerpf(local_pos.x, 0.0, entry_weight * 0.3 * delta)
+	_relative_z = lerpf(_relative_z, _entry_target_z, entry_weight * 0.5 * delta)
+	local_pos.z = _relative_z
+	global_position = _path_follow_ref.global_transform * local_pos
+	if absf(local_pos.y) < _combat_bounds.y * 0.8:
+		_start_straighten()
+	if absf(local_pos.y) < _combat_bounds.y * 0.5 and absf(_relative_z - _entry_target_z) < 2.0:
+		_finish_entry()
+
+func _process_entry_rise(delta: float) -> void:
+	if not _path_follow_ref or not is_instance_valid(_path_follow_ref):
+		return
+	var entry_weight := float(_cfg.get("entry_ease_weight", 4.0))
+	var local_pos := _path_follow_ref.global_transform.affine_inverse() * global_position
+	local_pos.y = lerpf(local_pos.y, 0.0, entry_weight * delta)
+	local_pos.x = lerpf(local_pos.x, 0.0, entry_weight * 0.3 * delta)
+	_relative_z = lerpf(_relative_z, _entry_target_z, entry_weight * 0.5 * delta)
+	local_pos.z = _relative_z
+	global_position = _path_follow_ref.global_transform * local_pos
+	if absf(local_pos.y) < _combat_bounds.y * 0.8:
+		_start_straighten()
+	if absf(local_pos.y) < _combat_bounds.y * 0.5 and absf(_relative_z - _entry_target_z) < 2.0:
+		_finish_entry()
 
 func _process_attack(delta: float) -> void:
 	var attack_type: String = _cfg.get("attack_type", "flyby")
@@ -152,11 +275,14 @@ func _process_attack(delta: float) -> void:
 			_attack_sniping(delta)
 		"reactive":
 			_attack_reactive(delta)
+		"escort":
+			_attack_escort(delta)
 
-	if _cfg.get("attack_type", "") == "reactive":
+	if attack_type == "reactive":
 		_check_evade_trigger(delta)
 
-	_check_out_of_view(delta)
+	if attack_type != "escort":
+		_check_out_of_view(delta)
 
 
 func _check_in_view() -> bool:
@@ -193,18 +319,19 @@ func _attack_flyby(delta: float) -> void:
 	_lissa_phase += delta
 	var orbit_x := cos(_lissa_phase * orbit_fx + _seed) * orbit_amp_x
 	var orbit_y := sin(_lissa_phase * orbit_fy + _seed) * orbit_amp_y
-	var target_x := clampf(_attack_center.x + orbit_x, -_combat_bounds.x, _combat_bounds.x)
-	var target_y := clampf(_attack_center.y + orbit_y, -_combat_bounds.y, _combat_bounds.y)
+	var local_x := clampf(_attack_center.x + orbit_x, -_combat_bounds.x, _combat_bounds.x)
+	var local_y := clampf(_attack_center.y + orbit_y, -_combat_bounds.y, _combat_bounds.y)
 
 	if _player_ref and is_instance_valid(_player_ref):
-		var pp := _player_ref.global_position
-		target_x = lerpf(target_x, target_x + (pp.x - _attack_center.x) * drift_weight * delta, 1.0)
-		target_y = lerpf(target_y, target_y + (pp.y - _attack_center.y) * drift_weight * delta, 1.0)
-		target_x = clampf(target_x, -_combat_bounds.x, _combat_bounds.x)
-		target_y = clampf(target_y, -_combat_bounds.y, _combat_bounds.y)
+		var player_local := _to_local(_player_ref.global_position)
+		local_x = lerpf(local_x, local_x + (player_local.x - _attack_center.x) * drift_weight * delta, 1.0)
+		local_y = lerpf(local_y, local_y + (player_local.y - _attack_center.y) * drift_weight * delta, 1.0)
+		local_x = clampf(local_x, -_combat_bounds.x, _combat_bounds.x)
+		local_y = clampf(local_y, -_combat_bounds.y, _combat_bounds.y)
 
-	global_position.x = lerpf(global_position.x, target_x, 3.0 * delta)
-	global_position.y = lerpf(global_position.y, target_y, 3.0 * delta)
+	var target_world := _to_world(Vector3(local_x, local_y, 0.0))
+	global_position.x = lerpf(global_position.x, target_world.x, 3.0 * delta)
+	global_position.y = lerpf(global_position.y, target_world.y, 3.0 * delta)
 
 	if _path_follow_ref and is_instance_valid(_path_follow_ref):
 		_relative_z = lerpf(_relative_z, harass_z, 1.0 * delta)
@@ -223,8 +350,11 @@ func _attack_sniping(delta: float) -> void:
 	var approach_z := float(_cfg.get("sniping_approach_z", -12.0))
 	var approach_spd := float(_cfg.get("approach_speed", 0.3))
 
-	global_position.x = clampf(_attack_center.x + sin(_time * sway_freq + _seed) * sway_amp, -_combat_bounds.x, _combat_bounds.x)
-	global_position.y = clampf(_attack_center.y + cos(_time * sway_freq * 0.7 + _seed) * sway_amp * 0.3, -_combat_bounds.y, _combat_bounds.y)
+	var local_x := clampf(_attack_center.x + sin(_time * sway_freq + _seed) * sway_amp, -_combat_bounds.x, _combat_bounds.x)
+	var local_y := clampf(_attack_center.y + cos(_time * sway_freq * 0.7 + _seed) * sway_amp * 0.3, -_combat_bounds.y, _combat_bounds.y)
+	var target_world := _to_world(Vector3(local_x, local_y, 0.0))
+	global_position.x = target_world.x
+	global_position.y = target_world.y
 	if _path_follow_ref and is_instance_valid(_path_follow_ref):
 		_relative_z = lerpf(_relative_z, approach_z, approach_spd * delta)
 		global_position.z = _path_follow_ref.global_position.z + _relative_z
@@ -245,17 +375,24 @@ func _attack_reactive(delta: float) -> void:
 	var approach_spd := float(_cfg.get("approach_speed", 0.2))
 
 	var current_sway_amp := sway_amp
-	if _phase >= 1:
+	if _phase >= 2:
+		current_sway_amp *= float(_cfg.get("phase3_sway_mult", 2.0))
+	elif _phase >= 1:
 		current_sway_amp *= phase2_sway_mult
 
-	global_position.x = clampf(_attack_center.x + sin(_time * sway_freq + _seed) * current_sway_amp, -_combat_bounds.x, _combat_bounds.x)
-	global_position.y = clampf(_attack_center.y + cos(_time * sway_freq * 0.6 + _seed) * current_sway_amp * 0.2, -_combat_bounds.y, _combat_bounds.y)
+	var local_x := clampf(_attack_center.x + sin(_time * sway_freq + _seed) * current_sway_amp, -_combat_bounds.x, _combat_bounds.x)
+	var local_y := clampf(_attack_center.y + cos(_time * sway_freq * 0.6 + _seed) * current_sway_amp * 0.2, -_combat_bounds.y, _combat_bounds.y)
+	var target_world := _to_world(Vector3(local_x, local_y, 0.0))
+	global_position.x = target_world.x
+	global_position.y = target_world.y
 	if _path_follow_ref and is_instance_valid(_path_follow_ref):
 		_relative_z = lerpf(_relative_z, approach_z, approach_spd * delta)
 		global_position.z = _path_follow_ref.global_position.z + _relative_z
 
 	var fire_interval := float(_cfg.get("fire_interval", 0.8))
-	if _phase >= 1:
+	if _phase >= 2:
+		fire_interval *= float(_cfg.get("phase3_fire_mult", 0.4))
+	elif _phase >= 1:
 		fire_interval *= float(_cfg.get("phase2_fire_mult", 0.6))
 
 	var burst_count := int(_cfg.get("burst_count", 3))
@@ -274,6 +411,113 @@ func _attack_reactive(delta: float) -> void:
 				_burst_pause_timer = burst_interval
 
 	_check_phase2()
+
+	var wide_interval := float(_cfg.get("wide_shot_interval", 0.0))
+	if wide_interval > 0.0:
+		_wide_shot_timer -= delta
+		if _wide_shot_timer <= 0.0:
+			_wide_shot_timer = wide_interval
+			var gap := "left" if randi() % 2 == 0 else "right"
+			_fire_wide_shot(gap)
+
+func _attack_escort(delta: float) -> void:
+	_harass_timer += delta
+	var harass_time := float(_cfg.get("harass_time", 10.0))
+	var x_start := float(_cfg.get("escort_x_start", 12.0))
+	var x_min := float(_cfg.get("escort_x_min", 6.0))
+	var approach_spd := float(_cfg.get("escort_approach_speed", 2.0))
+	var sway_freq := float(_cfg.get("escort_sway_freq", 0.8))
+	var sway_amp := float(_cfg.get("escort_sway_amp", 1.5))
+	var breath_weight := float(_cfg.get("escort_breath_weight", 3.0))
+	var fire_interval := float(_cfg.get("fire_interval", 1.2))
+
+	if not _path_follow_ref or not is_instance_valid(_path_follow_ref):
+		return
+
+	var side_dir: float = 1.0
+	if _spawn_face == "RightSpawn":
+		side_dir = -1.0
+
+	if _state_time < 0.1:
+		_escort_x = x_start
+
+	_escort_x = lerpf(_escort_x, x_min, approach_spd * delta)
+
+	var local_x := _escort_x * side_dir
+	if _player_ref and is_instance_valid(_player_ref):
+		var player_local := _to_local(_player_ref.global_position)
+		local_x = lerpf(local_x, local_x + player_local.x * 0.15, breath_weight * delta)
+
+	var y_center := 0.0
+	var cam_name := "LeftCamera" if side_dir > 0.0 else "RightCamera"
+	var wing_cam := _path_follow_ref.get_node_or_null("CameraRig/ShakeContainer/" + cam_name) as Camera3D
+	if wing_cam:
+		y_center = _to_local(wing_cam.global_position).y
+	var local_y := y_center + sin(_time * sway_freq + _seed) * sway_amp
+
+	var target_world := _to_world(Vector3(local_x, local_y, 0.0))
+	global_position = target_world
+
+	rotation = Vector3.ZERO
+
+	_fire_timer -= delta
+	if _fire_timer <= 0.0:
+		_fire_timer = fire_interval
+		_show_charge_flash()
+		get_tree().create_timer(0.3).timeout.connect(_fire_escort_shot)
+
+	if _harass_timer >= harass_time:
+		_exit_pull_dir = Vector2(side_dir, 0.5).normalized()
+		_transition_to(State.EXIT)
+
+func _show_charge_flash() -> void:
+	if _charge_flash_tween and _charge_flash_tween.is_valid():
+		_charge_flash_tween.kill()
+	var body := get_node_or_null("Body") as MeshInstance3D
+	if body:
+		if not body.material_override or ResourceLoader.exists(body.material_override.resource_path):
+			body.material_override = body.material_override.duplicate()
+		_charge_flash_tween = create_tween()
+		_charge_flash_tween.tween_property(body.material_override, "albedo_color", Color(3.0, 1.5, 0.5), 0.15)
+		_charge_flash_tween.tween_property(body.material_override, "albedo_color", Color.WHITE, 0.15)
+
+func _fire_escort_shot() -> void:
+	if not is_instance_valid(self) or state != State.ATTACK:
+		return
+	if not _player_ref or not is_instance_valid(_player_ref):
+		return
+	var lead_time := float(_cfg.get("lead_time", 0.4))
+	var predicted := _player_ref.global_position + _cached_player_vel * lead_time
+	var dir := (predicted - global_position).normalized()
+	fire_bullet.emit(global_position, dir)
+
+func _fire_wide_shot(gap_side: String) -> void:
+	if not _player_ref or not is_instance_valid(_player_ref):
+		return
+	if not _path_follow_ref or not is_instance_valid(_path_follow_ref):
+		return
+	var count := int(_cfg.get("wide_shot_count", 7))
+	var spread := float(_cfg.get("wide_shot_spread", 14.0))
+	var gap_width := int(_cfg.get("wide_shot_gap_width", 2))
+	var bullet_speed := float(_cfg.get("wide_shot_speed", 40.0))
+	var pf_pos := _path_follow_ref.global_position
+	var pf_right := _path_follow_ref.global_basis.x
+	var pf_fwd := -_path_follow_ref.global_basis.z
+	var step := spread / float(count - 1)
+	var start_x := -spread * 0.5
+	var gap_center: int = int(count * 0.5)
+	if gap_side == "left":
+		gap_center = 1
+	elif gap_side == "right":
+		gap_center = count - 2
+	for i in range(count):
+		var diff := absi(i - gap_center)
+		if diff < gap_width:
+			continue
+		var x_off := start_x + step * float(i)
+		var spawn_pos := pf_pos + pf_right * x_off + pf_fwd * 5.0
+		var dir := pf_fwd
+		fire_bullet.emit(spawn_pos, dir)
 
 func _fire_predicted() -> void:
 	if not _player_ref or not is_instance_valid(_player_ref):
@@ -333,6 +577,12 @@ func _fire_burst(index: int) -> void:
 	fire_bullet.emit(fire_pos, dir)
 
 func _check_phase2() -> void:
+	if _phase >= 2:
+		return
+	var phase3_ratio := float(_cfg.get("phase3_hp_ratio", 0.25))
+	if hp / max_hp < phase3_ratio:
+		_phase = 2
+		return
 	if _phase >= 1:
 		return
 	var phase2_ratio := float(_cfg.get("phase2_hp_ratio", 0.5))
@@ -390,7 +640,7 @@ func _process_evade(delta: float) -> void:
 	rotation.z = lerpf(rotation.z, 0.0, 5.0 * delta)
 	if t >= 1.0:
 		rotation.z = 0.0
-		_attack_center = global_position
+		_attack_center = _to_local(global_position)
 		_transition_to(State.ATTACK)
 
 func _process_exit(delta: float) -> void:
@@ -421,7 +671,7 @@ func _transition_to(new_state: State) -> void:
 	_state_time = 0.0
 	match new_state:
 		State.ATTACK:
-			_attack_center = global_position
+			_attack_center = _to_local(global_position)
 		State.EXIT:
 			rotation = Vector3.ZERO
 			if _exit_pull_dir == Vector2.ZERO:

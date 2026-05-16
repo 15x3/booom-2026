@@ -1,0 +1,196 @@
+[gd_scene format=3 uid="uid://bgt7x2k4n8qhp"]
+
+[ext_resource type="FontFile" uid="uid://4b2oe14lngiq" path="res://assets/fonts/VonwaonBitmap-12px.ttf" id="1_font12"]
+[ext_resource type="FontFile" uid="uid://bhmcm2fk2nxhp" path="res://assets/fonts/VonwaonBitmap-16px.ttf" id="2_font16"]
+
+[node name="ControlsGuide" type="Control" unique_id=1000000001]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.02, 0.08, 0.92)
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 30.0
+offset_right = 200.0
+offset_bottom = 65.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.3, 0.8, 1, 1)
+text = "操 作 说 明"
+horizontal_alignment = 1
+
+[node name="SepLine1" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 70.0
+offset_right = 250.0
+offset_bottom = 72.0
+grow_horizontal = 2
+color = Color(0.2, 0.5, 0.8, 0.6)
+
+[node name="Section1Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 90.0
+offset_right = 400.0
+offset_bottom = 115.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+text = "【瞄准与移动】"
+
+[node name="Section1Body" type="Label" parent="."]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 118.0
+offset_right = 600.0
+offset_bottom = 158.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+text = "移动鼠标 → 控制瞄准准星"
+
+[node name="Section2Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 160.0
+offset_right = 400.0
+offset_bottom = 185.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+text = "【武器系统】"
+
+[node name="Section2Body" type="Label" parent="."]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 188.0
+offset_right = 700.0
+offset_bottom = 248.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+text = "鼠标左键 / 空格 → 发射激光
+R 键 → 发射导弹
+持续射击会过热，需等待冷却"
+
+[node name="Section3Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 250.0
+offset_right = 400.0
+offset_bottom = 275.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+text = "【闪避动作】"
+
+[node name="Section3Body" type="Label" parent="."]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 278.0
+offset_right = 700.0
+offset_bottom = 338.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+text = "Q 键 → 向左桶滚闪避
+E 键 → 向右桶滚闪避
+闪避期间无敌，但有冷却时间"
+
+[node name="Section4Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 340.0
+offset_right = 400.0
+offset_bottom = 365.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+text = "【屏幕信息】"
+
+[node name="Section4Body" type="Label" parent="."]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 368.0
+offset_right = 700.0
+offset_bottom = 428.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+text = "左上 — 船体完整度
+右上 — 当前分数
+左下 — 武器热量 / 导弹数量"
+
+[node name="Section5Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 430.0
+offset_right = 400.0
+offset_bottom = 455.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+text = "【关卡流程】"
+
+[node name="Section5Body" type="Label" parent="."]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 458.0
+offset_right = 700.0
+offset_bottom = 518.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+text = "击败所有敌人 → 选择升级强化 → 进入下一关
+共 5 关，最终关为 Boss 战"
+
+[node name="Section6Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 520.0
+offset_right = 400.0
+offset_bottom = 545.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+text = "【通用操作】"
+
+[node name="Section6Body" type="Label" parent="."]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 548.0
+offset_right = 700.0
+offset_bottom = 608.0
+theme_override_fonts/font = ExtResource("2_font16")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+text = "ESC → 暂停游戏 / 返回上级菜单"
+
+[node name="SepLine2" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 116.0
+offset_top = 616.0
+offset_right = 1036.0
+offset_bottom = 618.0
+color = Color(0.2, 0.5, 0.8, 0.4)

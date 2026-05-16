@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://rxjb1p1kpkt7"]
+
+[ext_resource type="Material" path="res://assets/materials/level4/ship_body.tres" id="1_rpnn2"]
+[ext_resource type="Material" path="res://assets/materials/level4/ship_wing.tres" id="2_uhnel"]
+[ext_resource type="Material" path="res://assets/materials/level4/dark_gray.tres" id="3_nyx8m"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_jfthu"]
+size = Vector3(0.8, 0.25, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rpnn2"]
+size = Vector3(0.5, 0.2, 0.7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uhnel"]
+size = Vector3(1, 0.05, 0.7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nyx8m"]
+size = Vector3(1, 0.05, 0.7)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_jfthu"]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rpnn2"]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.3
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nyx8m"]
+size = Vector3(1.8, 0.4, 2.5)
+
+[node name="Ship" type="Node3D" unique_id=77927397]
+
+[node name="Body" type="MeshInstance3D" parent="." unique_id=355622398]
+material_override = ExtResource("1_rpnn2")
+mesh = SubResource("BoxMesh_jfthu")
+
+[node name="Nose" type="MeshInstance3D" parent="." unique_id=1846754021]
+transform = Transform3D(1, 0, 0, 0, 0.9659257, 0.25881964, 0, -0.25881964, 0.9659257, 0, 0, -1.3)
+material_override = ExtResource("1_rpnn2")
+mesh = SubResource("BoxMesh_rpnn2")
+
+[node name="WingL" type="MeshInstance3D" parent="." unique_id=573383876]
+transform = Transform3D(0.9659257, 0, -0.25881964, 0, 1, 0, 0.25881964, 0, 0.9659257, -0.9, 0, 0.2)
+material_override = ExtResource("2_uhnel")
+mesh = SubResource("BoxMesh_uhnel")
+
+[node name="WingR" type="MeshInstance3D" parent="." unique_id=559211098]
+transform = Transform3D(0.9659257, 0, 0.25881964, 0, 1, 0, -0.25881964, 0, 0.9659257, 0.9, 0, 0.2)
+material_override = ExtResource("2_uhnel")
+mesh = SubResource("BoxMesh_nyx8m")
+
+[node name="EngineL" type="MeshInstance3D" parent="." unique_id=2001830317]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 0, 1.1)
+material_override = ExtResource("3_nyx8m")
+mesh = SubResource("CylinderMesh_jfthu")
+
+[node name="EngineR" type="MeshInstance3D" parent="." unique_id=277683204]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0, 1.1)
+material_override = ExtResource("3_nyx8m")
+mesh = SubResource("CylinderMesh_rpnn2")
+
+[node name="Hitbox" type="Area3D" parent="." unique_id=1529666433]
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox" unique_id=721831993]
+shape = SubResource("BoxShape3D_nyx8m")

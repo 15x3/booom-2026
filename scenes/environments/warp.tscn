@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://c4f0v5xpg081t"]
+
+[node name="WarpEnvironment" type="Node3D" unique_id=1903533820]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1509563779]
+
+[node name="StarLight" type="DirectionalLight3D" parent="." unique_id=1465652819]
+transform = Transform3D(0.9553365, -0.14167994, 0.2593434, 0, 0.87758255, 0.47942555, -0.29552022, -0.45801273, 0.83838665, 0, 0, 0)
+light_color = Color(0.6, 0.85, 1, 1)
+light_energy = 1.2

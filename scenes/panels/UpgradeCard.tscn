@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://dbcycv8ws4jy5"]
+
+[ext_resource type="Texture2D" uid="uid://ca5abdgbyo2qs" path="res://icon.svg" id="1_3mwrg"]
+[ext_resource type="FontFile" uid="uid://bhmcm2fk2nxhp" path="res://assets/fonts/VonwaonBitmap-16px.ttf" id="2_4vsfx"]
+
+[node name="UpgradeCard" type="Control" unique_id=1081048888]
+layout_mode = 3
+anchor_right = 0.30200002
+anchor_bottom = 0.79
+offset_right = 36.095978
+offset_bottom = 0.07998657
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1992285969]
+position = Vector2(192, 104)
+texture = ExtResource("1_3mwrg")
+
+[node name="Label" type="Label" parent="." unique_id=584131778]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 192.0
+offset_right = 352.0
+offset_bottom = 480.0
+theme_override_fonts/font = ExtResource("2_4vsfx")
+theme_override_font_sizes/font_size = 32
+text = "测试文本"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://76i7o303m6xk"]
+
+[node name="FireStormEnvironment" type="Node3D" unique_id=616663674]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1347223607]
+
+[node name="StarLight" type="DirectionalLight3D" parent="." unique_id=1209367650]
+transform = Transform3D(0.8253356, -0.16686328, 0.5394236, 0, 0.9553365, 0.29552022, -0.5646425, -0.24390337, 0.78847325, 0, 0, 0)
+light_color = Color(1, 0.4, 0.2, 1)
+light_energy = 0.9

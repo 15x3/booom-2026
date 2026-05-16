@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://cilubn4lj3yir"]
+
+[ext_resource type="Script" path="res://scripts/levels/level4_enemy_base.gd" id="1_h45lx"]
+[ext_resource type="Material" path="res://assets/materials/level4/enemy_medium.tres" id="1_tgn15"]
+[ext_resource type="Material" path="res://assets/materials/level4/dark_gray.tres" id="2_ywvmg"]
+[ext_resource type="Material" path="res://assets/materials/level4/enemy_small.tres" id="3_dyue8"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_oiyjn"]
+size = Vector3(1.5, 0.5, 2.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tgn15"]
+size = Vector3(0.5, 0.4, 0.5)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_oiyjn"]
+top_radius = 0.08
+bottom_radius = 0.08
+height = 0.8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tgn15"]
+top_radius = 0.08
+bottom_radius = 0.08
+height = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_ywvmg"]
+size = Vector3(0.6, 0.4, 1.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dyue8"]
+size = Vector3(0.6, 0.4, 1.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dyue8"]
+size = Vector3(3.5, 1.2, 4.0)
+
+[node name="EnemyMedium" type="Node3D" unique_id=151829810 groups=["enemy"]]
+script = ExtResource("1_h45lx")
+
+[node name="Hull" type="MeshInstance3D" parent="." unique_id=1311561642]
+material_override = ExtResource("1_tgn15")
+mesh = SubResource("BoxMesh_oiyjn")
+
+[node name="Tower" type="MeshInstance3D" parent="." unique_id=1463313190]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -0.3)
+material_override = ExtResource("2_ywvmg")
+mesh = SubResource("BoxMesh_tgn15")
+
+[node name="GunL" type="MeshInstance3D" parent="." unique_id=254109646]
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, -1, 0, 1, -3.6199901e-06, -0.6, 0, -1)
+material_override = ExtResource("2_ywvmg")
+mesh = SubResource("CylinderMesh_oiyjn")
+
+[node name="GunR" type="MeshInstance3D" parent="." unique_id=1138867245]
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, -1, 0, 1, -3.6199901e-06, 0.6, 0, -1)
+material_override = ExtResource("2_ywvmg")
+mesh = SubResource("CylinderMesh_tgn15")
+
+[node name="ArmorL" type="MeshInstance3D" parent="." unique_id=327214157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0.3)
+material_override = ExtResource("3_dyue8")
+mesh = SubResource("BoxMesh_ywvmg")
+
+[node name="ArmorR" type="MeshInstance3D" parent="." unique_id=1118297839]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0.3)
+material_override = ExtResource("3_dyue8")
+mesh = SubResource("BoxMesh_dyue8")
+
+[node name="Hitbox" type="Area3D" parent="." unique_id=718576418]
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox" unique_id=808263836]
+shape = SubResource("BoxShape3D_dyue8")

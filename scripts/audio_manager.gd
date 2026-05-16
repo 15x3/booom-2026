@@ -18,7 +18,32 @@ extends Node
 @export_group("Gameplay")
 @export var sfx_engine_loop: AudioStream
 
+@export_group("Combat SFX")
+@export var sfx_player_fire_1: AudioStream
+@export var sfx_player_fire_2: AudioStream
+@export var sfx_player_fire_3: AudioStream
+@export var sfx_player_fire_4: AudioStream
+@export var sfx_explosion_1: AudioStream
+@export var sfx_explosion_2: AudioStream
+@export var sfx_explosion_3: AudioStream
+@export var sfx_explosion_4: AudioStream
+@export_range(0.0, 1.0) var combat_volume: float = 1.0
+@export var sfx_enemy_fire: AudioStream
+@export var sfx_explosion_boss: AudioStream
+@export var sfx_player_hit: AudioStream
+@export var sfx_player_death: AudioStream
+@export var sfx_barrel_roll: AudioStream
+@export var sfx_missile_fire: AudioStream
+@export var sfx_laser_hum: AudioStream
+@export var sfx_laser_overheat: AudioStream
+@export var sfx_turret_fire: AudioStream
+@export var sfx_level_complete: AudioStream
+@export var sfx_level_failed: AudioStream
+@export var sfx_upgrade_select: AudioStream
+
 var _sfx_pool: Array[AudioStreamPlayer] = []
+var _player_fire_pool: Array[AudioStream] = []
+var _explosion_pool: Array[AudioStream] = []
 var _engine_player: AudioStreamPlayer = null
 var _engine_gen: AudioStreamGenerator = null
 var _engine_playback: AudioStreamGeneratorPlayback = null
@@ -37,6 +62,8 @@ func _ready() -> void:
 		p.bus = "Master"
 		add_child(p)
 		_sfx_pool.append(p)
+	_player_fire_pool = _build_pool([sfx_player_fire_1, sfx_player_fire_2, sfx_player_fire_3, sfx_player_fire_4])
+	_explosion_pool = _build_pool([sfx_explosion_1, sfx_explosion_2, sfx_explosion_3, sfx_explosion_4])
 	_engine_player = AudioStreamPlayer.new()
 	_engine_player.bus = "Master"
 	_engine_player.volume_db = -8.0
@@ -61,7 +88,36 @@ func _process(_delta: float) -> void:
 			buf[i] = Vector2(val, val)
 		_engine_playback.push_buffer(buf)
 
+func _build_pool(streams: Array[AudioStream]) -> Array[AudioStream]:
+	var result: Array[AudioStream] = []
+	for s in streams:
+		if s != null:
+			result.append(s)
+	return result
+
+func _play_combat_sfx(pool: Array[AudioStream], fallback: Callable) -> void:
+	var stream: AudioStream = null
+	if pool.size() > 0:
+		stream = pool[randi() % pool.size()]
+	else:
+		stream = fallback.call()
+	for p: AudioStreamPlayer in _sfx_pool:
+		if not p.playing:
+			p.stream = stream
+			p.volume_db = linear_to_db(combat_volume)
+			p.play()
+			return
+	var p := AudioStreamPlayer.new()
+	p.bus = "Master"
+	add_child(p)
+	_sfx_pool.append(p)
+	p.stream = stream
+	p.volume_db = linear_to_db(combat_volume)
+	p.play()
+
 func _play_sfx(stream: AudioStream) -> void:
+	if stream == null:
+		return
 	for p: AudioStreamPlayer in _sfx_pool:
 		if not p.playing:
 			p.stream = stream
@@ -268,3 +324,251 @@ func engine_set_throttle(level: int) -> void:
 		engine_start()
 	elif level == 0 and _engine_active:
 		engine_stop()
+
+func _make_player_fire_tone() -> AudioStreamWAV:
+	return _make_tone(880.0, 0.08, 0.4, "square")
+
+func _make_enemy_fire_tone() -> AudioStreamWAV:
+	return _make_tone(440.0, 0.1, 0.35, "square")
+
+func _make_explosion_tone() -> AudioStreamWAV:
+	var sample_rate: int = 22050
+	var samples: int = int(sample_rate * 0.4)
+	var data := PackedByteArray()
+	data.resize(samples * 2)
+	for i in range(samples):
+		var t: float = float(i) / float(sample_rate)
+		var env: float = exp(-t * 5.0)
+		var val: float = randf_range(-1.0, 1.0) * 0.6
+		val += sin(t * 120.0 * TAU) * 0.3 * exp(-t * 3.0)
+		val *= env
+		var ival: int = clampi(int(val * 32767.0), -32768, 32767)
+		data.encode_s16(i * 2, ival)
+	var wav := AudioStreamWAV.new()
+	wav.data = data
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	return wav
+
+func _make_explosion_boss_tone() -> AudioStreamWAV:
+	var sample_rate: int = 22050
+	var samples: int = int(sample_rate * 0.8)
+	var data := PackedByteArray()
+	data.resize(samples * 2)
+	for i in range(samples):
+		var t: float = float(i) / float(sample_rate)
+		var env: float = exp(-t * 3.0)
+		var val: float = randf_range(-1.0, 1.0) * 0.7
+		val += sin(t * 80.0 * TAU) * 0.4 * exp(-t * 2.0)
+		val += sin(t * 200.0 * TAU) * 0.2 * exp(-t * 4.0)
+		val *= env
+		var ival: int = clampi(int(val * 32767.0), -32768, 32767)
+		data.encode_s16(i * 2, ival)
+	var wav := AudioStreamWAV.new()
+	wav.data = data
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	return wav
+
+func _make_player_hit_tone() -> AudioStreamWAV:
+	return _make_tone(200.0, 0.15, 0.5, "noise")
+
+func _make_player_death_tone() -> AudioStreamWAV:
+	var sample_rate: int = 22050
+	var samples: int = int(sample_rate * 0.6)
+	var data := PackedByteArray()
+	data.resize(samples * 2)
+	for i in range(samples):
+		var t: float = float(i) / float(sample_rate)
+		var env: float = exp(-t * 4.0)
+		var freq: float = lerpf(600.0, 100.0, t / 0.6)
+		var val: float = sin(t * freq * TAU) * 0.4
+		val += randf_range(-1.0, 1.0) * 0.3 * exp(-t * 6.0)
+		val *= env
+		var ival: int = clampi(int(val * 32767.0), -32768, 32767)
+		data.encode_s16(i * 2, ival)
+	var wav := AudioStreamWAV.new()
+	wav.data = data
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	return wav
+
+func _make_barrel_roll_tone() -> AudioStreamWAV:
+	var sample_rate: int = 22050
+	var samples: int = int(sample_rate * 0.3)
+	var data := PackedByteArray()
+	data.resize(samples * 2)
+	for i in range(samples):
+		var t: float = float(i) / float(sample_rate)
+		var freq: float = lerpf(400.0, 1200.0, t / 0.3)
+		var val: float = sin(t * freq * TAU) * 0.35
+		val *= 1.0 - t / 0.3
+		var ival: int = clampi(int(val * 32767.0), -32768, 32767)
+		data.encode_s16(i * 2, ival)
+	var wav := AudioStreamWAV.new()
+	wav.data = data
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	return wav
+
+func _make_missile_fire_tone() -> AudioStreamWAV:
+	var sample_rate: int = 22050
+	var samples: int = int(sample_rate * 0.25)
+	var data := PackedByteArray()
+	data.resize(samples * 2)
+	for i in range(samples):
+		var t: float = float(i) / float(sample_rate)
+		var freq: float = lerpf(800.0, 200.0, t / 0.25)
+		var val: float = sin(t * freq * TAU) * 0.4
+		val += randf_range(-1.0, 1.0) * 0.15 * exp(-t * 10.0)
+		val *= 1.0 - t / 0.25
+		var ival: int = clampi(int(val * 32767.0), -32768, 32767)
+		data.encode_s16(i * 2, ival)
+	var wav := AudioStreamWAV.new()
+	wav.data = data
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	return wav
+
+func _make_laser_hum_tone() -> AudioStreamWAV:
+	return _make_tone(500.0, 0.15, 0.25, "sine")
+
+func _make_laser_overheat_tone() -> AudioStreamWAV:
+	var sample_rate: int = 22050
+	var samples: int = int(sample_rate * 0.3)
+	var data := PackedByteArray()
+	data.resize(samples * 2)
+	for i in range(samples):
+		var t: float = float(i) / float(sample_rate)
+		var freq: float = lerpf(1000.0, 150.0, t / 0.3)
+		var val: float = sin(t * freq * TAU) * 0.5
+		val *= 1.0 - t / 0.3
+		var ival: int = clampi(int(val * 32767.0), -32768, 32767)
+		data.encode_s16(i * 2, ival)
+	var wav := AudioStreamWAV.new()
+	wav.data = data
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	return wav
+
+func _make_turret_fire_tone() -> AudioStreamWAV:
+	return _make_tone(660.0, 0.06, 0.3, "square")
+
+func _make_level_complete_tone() -> AudioStreamWAV:
+	var sample_rate: int = 22050
+	var samples: int = int(sample_rate * 0.6)
+	var data := PackedByteArray()
+	data.resize(samples * 2)
+	var notes: Array = [523.0, 659.0, 784.0, 1047.0]
+	var note_len: int = samples / notes.size()
+	for n in range(notes.size()):
+		for i in range(note_len):
+			var t: float = float(i) / float(sample_rate)
+			var env: float = 1.0 - float(n * note_len + i) / float(samples)
+			var val: float = sin(t * notes[n] * TAU) * 0.4 * env
+			var idx: int = n * note_len + i
+			if idx < samples:
+				var ival: int = clampi(int(val * 32767.0), -32768, 32767)
+				data.encode_s16(idx * 2, ival)
+	var wav := AudioStreamWAV.new()
+	wav.data = data
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	return wav
+
+func _make_level_failed_tone() -> AudioStreamWAV:
+	var sample_rate: int = 22050
+	var samples: int = int(sample_rate * 0.8)
+	var data := PackedByteArray()
+	data.resize(samples * 2)
+	var notes: Array = [400.0, 350.0, 300.0, 200.0]
+	var note_len: int = samples / notes.size()
+	for n in range(notes.size()):
+		for i in range(note_len):
+			var t: float = float(i) / float(sample_rate)
+			var env: float = 1.0 - float(n * note_len + i) / float(samples)
+			var val: float = sin(t * notes[n] * TAU) * 0.4 * env
+			var idx: int = n * note_len + i
+			if idx < samples:
+				var ival: int = clampi(int(val * 32767.0), -32768, 32767)
+				data.encode_s16(idx * 2, ival)
+	var wav := AudioStreamWAV.new()
+	wav.data = data
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	return wav
+
+func _make_upgrade_select_tone() -> AudioStreamWAV:
+	var sample_rate: int = 22050
+	var samples: int = int(sample_rate * 0.2)
+	var data := PackedByteArray()
+	data.resize(samples * 2)
+	for i in range(samples):
+		var t: float = float(i) / float(sample_rate)
+		var val: float = sin(t * 880.0 * TAU) * 0.3
+		val += sin(t * 1320.0 * TAU) * 0.2
+		val *= 1.0 - t / 0.2
+		var ival: int = clampi(int(val * 32767.0), -32768, 32767)
+		data.encode_s16(i * 2, ival)
+	var wav := AudioStreamWAV.new()
+	wav.data = data
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	return wav
+
+func play_player_fire() -> void:
+	_play_combat_sfx(_player_fire_pool, _make_player_fire_tone)
+
+func play_enemy_fire() -> void:
+	_play_sfx(sfx_enemy_fire if sfx_enemy_fire else _make_enemy_fire_tone())
+
+func play_explosion() -> void:
+	_play_combat_sfx(_explosion_pool, _make_explosion_tone)
+
+func play_explosion_boss() -> void:
+	_play_sfx(sfx_explosion_boss if sfx_explosion_boss else _make_explosion_boss_tone())
+
+func play_player_hit() -> void:
+	_play_sfx(sfx_player_hit if sfx_player_hit else _make_player_hit_tone())
+
+func play_player_death() -> void:
+	_play_sfx(sfx_player_death if sfx_player_death else _make_player_death_tone())
+
+func play_barrel_roll() -> void:
+	_play_sfx(sfx_barrel_roll if sfx_barrel_roll else _make_barrel_roll_tone())
+
+func play_missile_fire() -> void:
+	_play_sfx(sfx_missile_fire if sfx_missile_fire else _make_missile_fire_tone())
+
+func play_laser_hum() -> void:
+	_play_sfx(sfx_laser_hum if sfx_laser_hum else _make_laser_hum_tone())
+
+func play_laser_overheat() -> void:
+	_play_sfx(sfx_laser_overheat if sfx_laser_overheat else _make_laser_overheat_tone())
+
+func play_turret_fire() -> void:
+	_play_sfx(sfx_turret_fire if sfx_turret_fire else _make_turret_fire_tone())
+
+func play_level_complete() -> void:
+	_play_sfx(sfx_level_complete if sfx_level_complete else _make_level_complete_tone())
+
+func play_level_failed() -> void:
+	_play_sfx(sfx_level_failed if sfx_level_failed else _make_level_failed_tone())
+
+func play_upgrade_select() -> void:
+	_play_sfx(sfx_upgrade_select if sfx_upgrade_select else _make_upgrade_select_tone())
+
+func set_combat_volume(value: float) -> void:
+	combat_volume = clampf(value, 0.0, 1.0)
+
+func get_combat_volume() -> float:
+	return combat_volume

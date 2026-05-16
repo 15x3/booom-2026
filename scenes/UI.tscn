@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://brmklsxs7sj0f"]
+
+[ext_resource type="Shader" uid="uid://dorsse1lgolcb" path="res://assets/shaders/progres_bar.gdshader" id="1_ua6yw"]
+[ext_resource type="Texture2D" uid="uid://duual02ss7scu" path="res://assets/Gemini_Generated_Image_vatcbbvatcbbvatc-removebg-preview (1).png" id="2_75u2n"]
+[ext_resource type="Material" uid="uid://cfh4lj4dmgeac" path="res://assets/shaders/pixel_shader.tres" id="3_3wlde"]
+[ext_resource type="FontFile" uid="uid://djkfq3xaa0iff" path="res://assets/fonts/FSEX302-alt.ttf" id="4_xpksx"]
+[ext_resource type="Texture2D" uid="uid://b7mqoivb0o8o8" path="res://assets/Aim.png" id="5_3wlde"]
+[ext_resource type="Texture2D" uid="uid://c1yxnuy7pnf0f" path="res://assets/cursor.png" id="6_xpksx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_24e4x"]
+shader = ExtResource("1_ua6yw")
+shader_parameter/progress = 0.6450000306375
+shader_parameter/color_good = Color(1, 0.56078434, 0, 1)
+shader_parameter/color_warning = Color(1, 0.65, 0, 1)
+shader_parameter/color_danger = Color(1, 0, 0, 1)
+shader_parameter/color_empty = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/warning_threshold = 0.6
+shader_parameter/danger_threshold = 0.3
+
+[node name="Ui" type="Control" unique_id=8374273]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HullProgressBar" type="Sprite2D" parent="." unique_id=1738639306]
+material = SubResource("ShaderMaterial_24e4x")
+position = Vector2(1008.99994, 591)
+scale = Vector2(0.2851852, 0.29393938)
+skew = 0.5235988
+texture = ExtResource("2_75u2n")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1049223523]
+material = ExtResource("3_3wlde")
+layout_mode = 0
+offset_right = 1171.0
+offset_bottom = 658.0
+mouse_filter = 2
+
+[node name="Hull2" type="Label" parent="." unique_id=963617704]
+layout_mode = 0
+offset_left = 758.0
+offset_top = 544.0
+offset_right = 886.0
+offset_bottom = 608.0
+theme_override_fonts/font = ExtResource("4_xpksx")
+theme_override_font_sizes/font_size = 64
+text = "HULL"
+
+[node name="ScoreLabel" type="Label" parent="." unique_id=155445363]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 20.0
+offset_right = 1140.0
+offset_bottom = 70.0
+theme_override_fonts/font = ExtResource("4_xpksx")
+theme_override_font_sizes/font_size = 40
+text = "SCORE: 0"
+
+[node name="SegmentLabel" type="Label" parent="." unique_id=543367705]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 600.0
+offset_right = 720.0
+offset_bottom = 640.0
+theme_override_fonts/font = ExtResource("4_xpksx")
+theme_override_font_sizes/font_size = 32
+text = "SECTOR 1/4"
+horizontal_alignment = 1
+
+[node name="Aim" type="Sprite2D" parent="." unique_id=380437467]
+position = Vector2(576.00006, 320.00003)
+scale = Vector2(0.85, 0.85)
+texture = ExtResource("5_3wlde")
+
+[node name="Cursor" type="Sprite2D" parent="." unique_id=2031165327]
+visible = false
+position = Vector2(576, 315)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("6_xpksx")

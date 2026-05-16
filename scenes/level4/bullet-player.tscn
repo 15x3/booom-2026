@@ -8,7 +8,7 @@ radius = 0.1
 height = 0.2
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_oceq2"]
-radius = 0.15
+radius = 0.3
 
 [node name="BulletPlayer" type="Node3D" unique_id=1778844083]
 script = ExtResource("1_61jhe")

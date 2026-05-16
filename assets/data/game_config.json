@@ -1,343 +1,2741 @@
 {
   "resources": {
-    "initial_fuel": 100.0,
-    "initial_hull": 100.0,
-    "initial_oxygen": 100.0,
-    "initial_engine_temp": 20.0,
-    "oxygen_drain_rate": 0.05
+	"initial_fuel": 100.0,
+	"initial_hull": 100.0,
+	"initial_oxygen": 100.0,
+	"initial_engine_temp": 20.0,
+	"oxygen_drain_rate": 0.05
   },
   "actions": {
-    "scan_fuel_cost": 8.0,
-    "scan_time": 5.0,
-    "thrust_fuel_cost": 5.0,
-    "thrust_oxygen_cost": 3.0,
-    "brake_fuel_cost": 3.0,
-    "brake_hull_savings": 7.0,
-    "o2_supply_amount": 12.0,
-    "o2_supply_duration": 3.0
+	"scan_fuel_cost": 8.0,
+	"scan_time": 5.0,
+	"thrust_fuel_cost": 5.0,
+	"thrust_oxygen_cost": 3.0,
+	"brake_fuel_cost": 3.0,
+	"brake_hull_savings": 7.0,
+	"o2_supply_amount": 12.0,
+	"o2_supply_duration": 3.0
   },
   "damage": {
-    "base_collision_damage": 2.0,
-    "high_speed_threshold": 0.7,
-    "high_speed_damage_mult": 2.5,
-    "storm_hit_damage": 8.0,
-    "storm_min_wear": 3.0,
-    "wrong_turn_damage_heavy": 25.0,
-    "wrong_turn_fuel_penalty": 20.0
+	"base_collision_damage": 2.0,
+	"high_speed_threshold": 0.7,
+	"high_speed_damage_mult": 2.5,
+	"storm_hit_damage": 8.0,
+	"storm_min_wear": 3.0,
+	"wrong_turn_damage_heavy": 25.0,
+	"wrong_turn_fuel_penalty": 20.0
   },
   "ship_physics": {
-    "max_turn_rate": 45.0,
-    "turn_damping": 0.85,
-    "acceleration": 80.0,
-    "max_speed_off": 0.0,
-    "max_speed_low": 60.0,
-    "max_speed_mid": 120.0,
-    "max_speed_high": 200.0,
-    "drag": 0.02,
-    "fuel_drain_off": 0.0,
-    "fuel_drain_low": 0.05,
-    "fuel_drain_mid": 0.12,
-    "fuel_drain_high": 0.25
+	"max_turn_rate": 45.0,
+	"turn_damping": 0.85,
+	"acceleration": 80.0,
+	"max_speed_off": 0.0,
+	"max_speed_low": 60.0,
+	"max_speed_mid": 120.0,
+	"max_speed_high": 200.0,
+	"drag": 0.02,
+	"fuel_drain_off": 0.0,
+	"fuel_drain_low": 0.05,
+	"fuel_drain_mid": 0.12,
+	"fuel_drain_high": 0.25
   },
   "gravity": {
-    "gravity_direction": [0, -1],
-    "gravity_base_strength": 0.3,
-    "speed_penalty_max": 0.5,
-    "gravity_curve_exponent": 1.5
+	"gravity_direction": [
+	  0,
+	  -1
+	],
+	"gravity_base_strength": 0.3,
+	"speed_penalty_max": 0.5,
+	"gravity_curve_exponent": 1.5
   },
   "scan": {
-    "scan_time_fast": 3.0,
-    "scan_time_slow": 5.0,
-    "data_freshness": 15.0,
-    "debris_drift_speed": 5.0,
-    "destination_reveal_radius": 200.0,
-    "signal_strong_threshold": 0.7,
-    "signal_weak_threshold": 0.3
+	"scan_time_fast": 3.0,
+	"scan_time_slow": 5.0,
+	"data_freshness": 15.0,
+	"debris_drift_speed": 5.0,
+	"destination_reveal_radius": 200.0,
+	"signal_strong_threshold": 0.7,
+	"signal_weak_threshold": 0.3
   },
   "maintenance": {
-    "breaker_base_rate_early": 0.02,
-    "breaker_base_rate_late": 0.04,
-    "breaker_heat_factor_warm": 2.0,
-    "breaker_heat_factor_hot": 4.0,
-    "breaker_heat_threshold": 70.0,
-    "breaker_overheat_threshold": 90.0,
-    "natural_cooling_rate": 1.0,
-    "cooling_rate_low": 2.0,
-    "cooling_rate_high": 5.0,
-    "high_throttle_heat": 15.0,
-    "cascade_heat": 5.0,
-    "overheat_fuel_mult": 1.5,
-    "o2_trigger_threshold": 40.0
+	"breaker_base_rate_early": 0.02,
+	"breaker_base_rate_late": 0.04,
+	"breaker_heat_factor_warm": 2.0,
+	"breaker_heat_factor_hot": 4.0,
+	"breaker_heat_threshold": 70.0,
+	"breaker_overheat_threshold": 90.0,
+	"natural_cooling_rate": 1.0,
+	"cooling_rate_low": 2.0,
+	"cooling_rate_high": 5.0,
+	"high_throttle_heat": 15.0,
+	"cascade_heat": 5.0,
+	"overheat_fuel_mult": 1.5,
+	"o2_trigger_threshold": 40.0
   },
   "slingshot": {
-    "duration": 8.0,
-    "optimal_zone_start": 0.4,
-    "optimal_zone_end": 0.6,
-    "optimal_thrust_min": 0.5,
-    "optimal_thrust_max": 0.8
+	"duration": 8.0,
+	"optimal_zone_start": 0.4,
+	"optimal_zone_end": 0.6,
+	"optimal_thrust_min": 0.5,
+	"optimal_thrust_max": 0.8
   },
   "monitor": {
-    "camera_resolution": [320, 240],
-    "camera_fps": 15,
-    "max_lens_distortion": 0.8,
-    "storm_flicker_count": 3,
-    "storm_blackout_duration": 3.0,
-    "storm_window_duration": 1.5,
-    "storm_window_shrink": 0.4
+	"camera_resolution": [
+	  320,
+	  240
+	],
+	"camera_fps": 15,
+	"max_lens_distortion": 0.8,
+	"storm_flicker_count": 3,
+	"storm_blackout_duration": 3.0,
+	"storm_window_duration": 1.5,
+	"storm_window_shrink": 0.4
   },
   "gravity_map": {
-    "ring_color": [0.976, 0.447, 0.023],
-    "rotation_speed": -0.06,
-    "distortion_strength": 2.4,
-    "ring_intensity": 1.2,
-    "mask_sharpness": 1.6,
-    "turbulence_strength": 0.005,
-    "center_offset": [0.0, 0.0],
-    "blackhole_scale": 1.0
+	"ring_color": [
+	  0.976,
+	  0.447,
+	  0.023
+	],
+	"rotation_speed": -0.06,
+	"distortion_strength": 2.4,
+	"ring_intensity": 1.2,
+	"mask_sharpness": 1.6,
+	"turbulence_strength": 0.005,
+	"center_offset": [
+	  0.0,
+	  0.0
+	],
+	"blackhole_scale": 1.0
   },
   "transition": {
-    "crt_flicker_duration": 0.5,
-    "fade_in_duration": 0.5,
-    "zone_display_duration": 1.5,
-    "fade_out_duration": 0.5
+	"crt_flicker_duration": 0.5,
+	"fade_in_duration": 0.5,
+	"zone_display_duration": 1.5,
+	"fade_out_duration": 0.5
   },
   "narrative": {
-    "char_speed": 0.04,
-    "message_pause": 1.0
+	"char_speed": 0.04,
+	"message_pause": 1.0
   },
   "spacewar": {
-    "thrust_max": 200.0,
-    "steer_speed": 2.0,
-    "drag": 0.02,
-    "gravity_strength": 50000.0,
-    "blackhole_arrival_dist": 50.0,
-    "hp_max": 100.0,
-    "damage_multiplier": 0.5
+	"thrust_max": 200.0,
+	"steer_speed": 2.0,
+	"drag": 0.02,
+	"gravity_strength": 50000.0,
+	"blackhole_arrival_dist": 50.0,
+	"hp_max": 100.0,
+	"damage_multiplier": 0.5
   },
   "spasim": {
-    "hp_max": 100.0,
-    "target_fps": 5,
-    "speed_table": [0.0, 20.0, 50.0, 100.0],
-    "phaser_damage": 8.0,
-    "phaser_hit_width": 15.0,
-    "phaser_beam_duration": 0.3,
-    "torpedo_damage": 30.0,
-    "torpedo_ammo": 3,
-    "scan_range": 5000.0,
-    "enemy": {
-      "hover_distance": 200.0,
-      "wander_radius": 150.0,
-      "drift_speed": 2.0,
-      "fire_interval": 4.0,
-      "projectile_speed": 60.0,
-      "projectile_life": 6.0,
-      "projectile_hit_radius": 3.0,
-      "projectile_damage": 5.0
-    }
+	"hp_max": 100.0,
+	"target_fps": 5,
+	"speed_table": [
+	  0.0,
+	  20.0,
+	  50.0,
+	  100.0
+	],
+	"phaser_damage": 8.0,
+	"phaser_hit_width": 15.0,
+	"phaser_beam_duration": 0.3,
+	"torpedo_damage": 30.0,
+	"torpedo_ammo": 3,
+	"scan_range": 5000.0,
+	"enemy": {
+	  "hover_distance": 200.0,
+	  "wander_radius": 150.0,
+	  "drift_speed": 2.0,
+	  "fire_interval": 4.0,
+	  "projectile_speed": 60.0,
+	  "projectile_life": 6.0,
+	  "projectile_hit_radius": 3.0,
+	  "projectile_damage": 5.0
+	}
   },
   "elite": {
-    "target_fps": 20,
-    "hp_max": 100.0,
-    "shield_max": 50.0,
-    "shield_regen": 5.0,
-    "energy_max": 100.0,
-    "energy_regen": 10.0,
-    "max_roll_speed": 90.0,
-    "max_pitch_speed": 60.0,
-    "thrust_speeds": [0.0, 30.0, 60.0, 120.0],
-    "drag": 0.3,
-    "max_cargo": 20,
-    "starting_credits": 100,
-    "toll_fee": 1000,
-    "laser_damage": 10.0,
-    "laser_range": 500.0,
-    "laser_cooldown": 0.5,
-    "fire_energy_cost": 10.0,
-    "station_rotation_speed": 36.0,
-    "dock_max_speed": 15.0,
-    "dock_tolerance_angle": 30.0,
-    "enemy": {
-      "hp": 30.0,
-      "fire_interval": 2.0,
-      "damage": 8.0,
-      "bounty_base": 100,
-      "patrol_radius": 200.0,
-      "detection_range": 500.0,
-      "attack_range": 150.0,
-      "lose_interest_range": 800.0,
-      "projectile_speed": 80.0,
-      "projectile_life": 5.0
-    }
+	"target_fps": 20,
+	"hp_max": 100.0,
+	"shield_max": 50.0,
+	"shield_regen": 5.0,
+	"energy_max": 100.0,
+	"energy_regen": 10.0,
+	"max_roll_speed": 90.0,
+	"max_pitch_speed": 60.0,
+	"thrust_speeds": [
+	  0.0,
+	  30.0,
+	  60.0,
+	  120.0
+	],
+	"drag": 0.3,
+	"max_cargo": 20,
+	"starting_credits": 100,
+	"toll_fee": 1000,
+	"laser_damage": 10.0,
+	"laser_range": 500.0,
+	"laser_cooldown": 0.5,
+	"fire_energy_cost": 10.0,
+	"station_rotation_speed": 36.0,
+	"dock_max_speed": 15.0,
+	"dock_tolerance_angle": 30.0,
+	"enemy": {
+	  "hp": 30.0,
+	  "fire_interval": 2.0,
+	  "damage": 8.0,
+	  "bounty_base": 100,
+	  "patrol_radius": 200.0,
+	  "detection_range": 500.0,
+	  "attack_range": 150.0,
+	  "lose_interest_range": 800.0,
+	  "projectile_speed": 80.0,
+	  "projectile_life": 5.0
+	}
   },
   "starfox": {
-    "target_fps": 30,
-    "hp_max": 100.0,
-    "track_speed": 30.0,
-    "crosshair_speed": 200.0,
-    "crosshair_range_x": 7.5,
-    "crosshair_range_y": 5.5,
-    "crosshair_accel": 800.0,
-    "crosshair_damping": 0.88,
-    "crosshair_soft_edge_ratio": 0.8,
-    "crosshair_spring": 5.0,
-    "crosshair_centering": 0.6,
-    "fire_cooldown": 0.15,
-    "bullet_speed": 150.0,
-    "bullet_life": 2.0,
-    "enemy_bullet_speed": 80.0,
-    "enemy_bullet_life": 4.0,
-    "enemy_bullet_damage": 10.0,
-    "obstacle_damage": 20.0,
-    "ship_follow_weight": 0.08,
-    "ship_snap_threshold": 0.01,
-    "bank_angle_deg": 35.0,
-    "bank_speed": 0.1,
-    "camera_follow_weight": 0.05,
-    "camera_lookahead": 10.0,
-    "base_fov": 70.0,
-    "shake_engine_amp": 0.01,
-    "shake_engine_freq_x": 13.0,
-    "shake_engine_freq_y": 17.0,
-    "shake_fire_amp": 0.02,
-    "shake_fire_duration": 0.08,
-    "shake_hit_amp": 0.15,
-    "shake_hit_duration": 0.3,
-    "shake_hit_decay": 8.0,
-    "shake_threshold": 0.001,
-    "wave_triggers": {
-      "Wave1": 0.08,
-      "Wave2": 0.16,
-      "Wave3": 0.32,
-      "Wave4": 0.48,
-      "Wave5": 0.60,
-      "Wave6": 0.74,
-      "Wave7": 0.87
-    },
-    "enemy_small": {
-      "hp": 1.0,
-      "score": 10,
-      "attack_type": "flyby",
-      "entry_ease_weight": 4.0,
-      "harass_time": 8.0,
-      "orbit_freq_x": 1.2,
-      "orbit_freq_y": 0.8,
-      "orbit_amp_x": 3.0,
-      "orbit_amp_y": 1.5,
-      "flyby_drift_weight": 0.3,
-      "flyby_harass_z": -10.0,
-      "exit_speed_mult": 2.0,
-      "exit_pull_up_speed": 8.0,
-      "exit_pull_side_speed": 6.0,
-      "exit_bank_speed": 4.0,
-      "exit_pitch_speed": 3.0,
-      "death_duration": 0.5,
-      "death_spin_speed": 5.0,
-      "death_gravity": 3.0
-    },
-    "enemy_medium": {
-      "hp": 4.0,
-      "score": 50,
-      "attack_type": "sniping",
-      "entry_ease_weight": 3.5,
-      "sway_freq": 1.5,
-      "sway_amp": 2.0,
-      "fire_interval": 1.5,
-      "lead_time": 0.3,
-      "lead_jitter": 0.15,
-      "sniping_approach_z": -12.0,
-      "approach_speed": 0.3,
-      "exit_speed_mult": 2.0,
-      "exit_pull_up_speed": 8.0,
-      "exit_pull_side_speed": 6.0,
-      "exit_bank_speed": 4.0,
-      "exit_pitch_speed": 3.0,
-      "death_duration": 0.5,
-      "death_spin_speed": 3.0,
-      "death_gravity": 3.0
-    },
-    "enemy_boss": {
-      "hp": 25.0,
-      "score": 500,
-      "attack_type": "reactive",
-      "entry_ease_weight": 3.0,
-      "sway_freq": 0.5,
-      "sway_amp": 1.5,
-      "fire_interval": 0.8,
-      "burst_count": 3,
-      "burst_interval": 1.0,
-      "lead_time": 0.5,
-      "lead_jitter": 0.1,
-      "lock_threshold": 2.0,
-      "evade_chance": 0.6,
-      "evade_distance": 3.0,
-      "evade_duration": 0.2,
-      "evade_cooldown": 2.0,
-      "evade_telegraph": 0.1,
-      "phase2_hp_ratio": 0.5,
-      "phase2_fire_mult": 0.6,
-      "phase2_sway_mult": 1.5,
-      "reactive_approach_z": -14.0,
-      "approach_speed": 0.2,
-      "exit_speed_mult": 2.0,
-      "exit_pull_up_speed": 8.0,
-      "exit_pull_side_speed": 6.0,
-      "exit_bank_speed": 4.0,
-      "exit_pitch_speed": 3.0,
-      "death_duration": 0.8,
-      "death_spin_speed": 8.0,
-      "death_gravity": 2.0
-    },
-    "bullet_magnet_radius": 5.0,
-    "bullet_magnet_strength": 4.0,
-    "crosshair_depth_default": 40.0,
-    "blackhole_arrival_dist": 200.0,
-    "explosion_duration": 0.8,
-    "barrel_roll_duration": 0.4,
-    "barrel_roll_cooldown": 1.5,
-    "barrel_roll_reflect_radius": 3.0,
-    "asteroid": {
-      "spawn_triggers": [0.05, 0.12, 0.22, 0.38, 0.52, 0.65, 0.78],
-      "patterns": [
-        {"name": "left_band", "count": 4, "x_range": [-6.0, -2.0], "y_range": [-3.0, 3.0], "z_spread": 15.0, "size_range": [0.5, 1.5], "hp": 2},
-        {"name": "right_band", "count": 4, "x_range": [2.0, 6.0], "y_range": [-3.0, 3.0], "z_spread": 15.0, "size_range": [0.5, 1.5], "hp": 2},
-        {"name": "center_cross", "count": 6, "x_range": [-3.0, 3.0], "y_range": [-2.0, 2.0], "z_spread": 20.0, "size_range": [0.5, 2.0], "hp": 2},
-        {"name": "gauntlet", "count": 8, "x_range": [-5.0, 5.0], "y_range": [-3.0, 3.0], "z_spread": 30.0, "size_range": [0.5, 2.5], "hp": 3},
-        {"name": "big_wall", "count": 3, "x_range": [-4.0, 4.0], "y_range": [-2.0, 2.0], "z_spread": 8.0, "size_range": [2.0, 3.5], "hp": -1}
-      ],
-      "score": 5,
-      "debris_count": 4,
-      "debris_lifetime": 0.6,
-      "debris_speed": 5.0
-    }
+	"target_fps": 30,
+	"hp_max": 100.0,
+	"track_speed": 30.0,
+	"crosshair_speed": 200.0,
+	"crosshair_range_x": 9.375,
+	"crosshair_range_y": 6.875,
+	"crosshair_accel": 800.0,
+	"crosshair_damping": 0.88,
+	"crosshair_soft_edge_ratio": 0.8,
+	"crosshair_spring": 5.0,
+	"crosshair_centering": 0.6,
+	"fire_cooldown": 0.15,
+	"bullet_speed": 150.0,
+	"bullet_life": 2.0,
+	"enemy_bullet_speed": 55.0,
+	"enemy_bullet_life": 4.0,
+	"enemy_bullet_damage": 10.0,
+	"obstacle_damage": 20.0,
+	"ship_follow_weight": 0.08,
+	"ship_snap_threshold": 0.01,
+	"bank_angle_deg": 35.0,
+	"bank_speed": 0.1,
+	"base_fov": 85.0,
+	"cockpit_offset": {
+	  "x": 0.0,
+	  "y": 0.3,
+	  "z": -0.3
+	},
+	"cockpit_roll_max_deg": 5.0,
+	"cockpit_roll_speed": 5.0,
+	"gun_port_offset": {
+	  "x": 1.0,
+	  "y": -0.2,
+	  "z": -1.5
+	},
+	"aim_damp_weight": 0.15,
+	"screen_margin": 50.0,
+	"muzzle_flash_duration": 0.06,
+	"aim_offset_ratio": 0.1,
+	"shake_engine_amp": 0.02,
+	"shake_engine_freq_x": 13.0,
+	"shake_engine_freq_y": 17.0,
+	"shake_fire_amp": 0.02,
+	"shake_fire_duration": 0.08,
+	"shake_hit_amp": 0.15,
+	"shake_hit_duration": 0.3,
+	"shake_hit_decay": 8.0,
+	"shake_threshold": 0.001,
+	"segments": [
+	  {
+		"name": "straight_approach",
+		"curve_type": "straight",
+		"waves": [
+		  {
+			"trigger_progress": 0.06,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.0,
+				"formation": "v_shape",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.14,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.3,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.22,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 5,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.28,
+			"enemies": [
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.34,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.42,
+			"enemies": [
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.46,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.2,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.52,
+			"enemies": [
+			  {
+				"type": "obstacle_laser_wall",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 0,
+				"entry_z": -80.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.58,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.4,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.72,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "v_shape",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "v_shape",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.86,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.3,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  }
+		],
+		"asteroid": {
+		  "spawn_triggers": [
+			0.1,
+			0.28,
+			0.5,
+			0.68
+		  ],
+		  "patterns": [
+			{
+			  "count": 3,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 12.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 4,
+			  "x_range": [
+				-4.0,
+				4.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 10.0,
+			  "size_range": [
+				0.5,
+				2.0
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 3,
+			  "x_range": [
+				-3.0,
+				3.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 8.0,
+			  "size_range": [
+				1.0,
+				2.5
+			  ],
+			  "hp": 3
+			},
+			{
+			  "count": 2,
+			  "x_range": [
+				-2.0,
+				2.0
+			  ],
+			  "y_range": [
+				-1.0,
+				1.0
+			  ],
+			  "z_spread": 6.0,
+			  "size_range": [
+				2.0,
+				3.0
+			  ],
+			  "hp": -1
+			}
+		  ]
+		}
+	  },
+	  {
+		"name": "canyon_run",
+		"curve_type": "canyon",
+		"waves": [
+		  {
+			"trigger_progress": 0.06,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 5,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.14,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "v_shape",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.2,
+				"formation": "v_shape",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.24,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.3,
+			"enemies": [
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.5,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.38,
+			"enemies": [
+			  {
+				"type": "enemy_lateral_far",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.34,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 6,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 2.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.46,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.3,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.58,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.3,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.72,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.2,
+				"formation": "line",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.86,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 5,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.4,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  }
+		],
+		"asteroid": {
+		  "spawn_triggers": [
+			0.08,
+			0.22,
+			0.4,
+			0.6,
+			0.76
+		  ],
+		  "patterns": [
+			{
+			  "count": 3,
+			  "x_range": [
+				-4.0,
+				4.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 10.0,
+			  "size_range": [
+				1.0,
+				2.0
+			  ],
+			  "hp": 3
+			},
+			{
+			  "count": 4,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 12.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 2,
+			  "x_range": [
+				-2.0,
+				2.0
+			  ],
+			  "y_range": [
+				-1.0,
+				1.0
+			  ],
+			  "z_spread": 6.0,
+			  "size_range": [
+				2.0,
+				3.0
+			  ],
+			  "hp": -1
+			},
+			{
+			  "count": 5,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 15.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 3,
+			  "x_range": [
+				-3.0,
+				3.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 8.0,
+			  "size_range": [
+				1.0,
+				2.5
+			  ],
+			  "hp": 2
+			}
+		  ]
+		}
+	  },
+	  {
+		"name": "swoop",
+		"curve_type": "swoop",
+		"waves": [
+		  {
+			"trigger_progress": 0.06,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.0,
+				"formation": "v_shape",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.2,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.16,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.26,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.2,
+				"formation": "line",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.36,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 5,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.48,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "v_shape",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.3,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.6,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.3,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.74,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.2,
+				"formation": "line",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.88,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 6,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  }
+		],
+		"asteroid": {
+		  "spawn_triggers": [
+			0.1,
+			0.3,
+			0.52,
+			0.7
+		  ],
+		  "patterns": [
+			{
+			  "count": 3,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 12.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 4,
+			  "x_range": [
+				-4.0,
+				4.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 10.0,
+			  "size_range": [
+				0.5,
+				2.0
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 2,
+			  "x_range": [
+				-2.0,
+				2.0
+			  ],
+			  "y_range": [
+				-1.0,
+				1.0
+			  ],
+			  "z_spread": 6.0,
+			  "size_range": [
+				2.0,
+				3.0
+			  ],
+			  "hp": -1
+			},
+			{
+			  "count": 4,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 12.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 2
+			}
+		  ]
+		}
+	  },
+	  {
+		"name": "boss_arena",
+		"curve_type": "boss_arena",
+		"is_boss": true,
+		"waves": [
+		  {
+			"trigger_progress": 0.08,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.2,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.2,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.35,
+			"enemies": [
+			  {
+				"type": "enemy_boss_ship",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 2.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 1.0,
+				"formation": "scatter",
+				"spacing": 4.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.55,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.3,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.75,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.2,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  }
+		],
+		"asteroid": {
+		  "spawn_triggers": [],
+		  "patterns": []
+		}
+	  }
+	],
+	"waves": [
+	  {
+		"trigger_progress": 0.08,
+		"label": "V字编队",
+		"enemies": [
+		  {
+			"type": "enemy_small",
+			"region": "FrontSpawn",
+			"count": 5,
+			"delay": 0.0,
+			"formation": "v_shape",
+			"spacing": 3.0,
+			"entry_z": -200.0
+		  }
+		]
+	  },
+	  {
+		"trigger_progress": 0.16,
+		"label": "侧翼包抄",
+		"enemies": [
+		  {
+			"type": "enemy_small",
+			"region": "LeftSpawn",
+			"count": 3,
+			"delay": 0.0,
+			"formation": "line",
+			"spacing": 3.0,
+			"entry_z": -30.0
+		  },
+		  {
+			"type": "enemy_small",
+			"region": "RightSpawn",
+			"count": 3,
+			"delay": 0.5,
+			"formation": "line",
+			"spacing": 3.0,
+			"entry_z": -30.0
+		  }
+		]
+	  },
+	  {
+		"trigger_progress": 0.32,
+		"label": "上下夹击",
+		"enemies": [
+		  {
+			"type": "enemy_small",
+			"region": "TopSpawn",
+			"count": 3,
+			"delay": 0.0,
+			"formation": "line",
+			"spacing": 3.0,
+			"entry_z": -30.0
+		  },
+		  {
+			"type": "enemy_small",
+			"region": "DownSpawn",
+			"count": 3,
+			"delay": 0.5,
+			"formation": "line",
+			"spacing": 3.0,
+			"entry_z": -30.0
+		  }
+		]
+	  },
+	  {
+		"trigger_progress": 0.48,
+		"label": "混编突击",
+		"enemies": [
+		  {
+			"type": "enemy_small",
+			"region": "FrontSpawn",
+			"count": 4,
+			"delay": 0.0,
+			"formation": "scatter",
+			"spacing": 3.0,
+			"entry_z": -200.0
+		  },
+		  {
+			"type": "enemy_medium",
+			"region": "LeftSpawn",
+			"count": 2,
+			"delay": 0.3,
+			"formation": "scatter",
+			"spacing": 3.0,
+			"entry_z": -30.0
+		  }
+		]
+	  },
+	  {
+		"trigger_progress": 0.6,
+		"label": "全方位",
+		"enemies": [
+		  {
+			"type": "enemy_small",
+			"region": "FrontSpawn",
+			"count": 3,
+			"delay": 0.0,
+			"formation": "v_shape",
+			"spacing": 3.0,
+			"entry_z": -200.0
+		  },
+		  {
+			"type": "enemy_small",
+			"region": "LeftSpawn",
+			"count": 2,
+			"delay": 0.5,
+			"formation": "scatter",
+			"spacing": 3.0,
+			"entry_z": -30.0
+		  },
+		  {
+			"type": "enemy_small",
+			"region": "RightSpawn",
+			"count": 2,
+			"delay": 0.5,
+			"formation": "scatter",
+			"spacing": 3.0,
+			"entry_z": -30.0
+		  },
+		  {
+			"type": "enemy_medium",
+			"region": "TopSpawn",
+			"count": 1,
+			"delay": 1.0,
+			"formation": "scatter",
+			"spacing": 3.0,
+			"entry_z": -30.0
+		  }
+		]
+	  },
+	  {
+		"trigger_progress": 0.74,
+		"label": "全线压制",
+		"enemies": [
+		  {
+			"type": "enemy_small",
+			"region": "FrontSpawn",
+			"count": 6,
+			"delay": 0.0,
+			"formation": "line",
+			"spacing": 2.5,
+			"entry_z": -200.0
+		  },
+		  {
+			"type": "enemy_medium",
+			"region": "FrontSpawn",
+			"count": 3,
+			"delay": 0.4,
+			"formation": "scatter",
+			"spacing": 3.0,
+			"entry_z": -200.0
+		  }
+		]
+	  },
+	  {
+		"trigger_progress": 0.87,
+		"label": "Boss战",
+		"enemies": [
+		  {
+			"type": "enemy_boss",
+			"region": "FrontSpawn",
+			"count": 1,
+			"delay": 0.0,
+			"formation": "scatter",
+			"spacing": 2.0,
+			"entry_z": -200.0
+		  },
+		  {
+			"type": "enemy_small",
+			"region": "FrontSpawn",
+			"count": 3,
+			"delay": 1.0,
+			"formation": "scatter",
+			"spacing": 4.0,
+			"entry_z": -200.0
+		  }
+		]
+	  }
+	],
+	"enemy_small": {
+	  "hp": 1.0,
+	  "score": 10,
+	  "attack_type": "flyby",
+	  "entry_ease_weight": 4.0,
+	  "harass_time": 8.0,
+	  "orbit_freq_x": 1.2,
+	  "orbit_freq_y": 0.8,
+	  "orbit_amp_x": 3.0,
+	  "orbit_amp_y": 1.5,
+	  "flyby_drift_weight": 0.3,
+	  "flyby_harass_z": -10.0,
+	  "exit_speed_mult": 2.0,
+	  "exit_pull_up_speed": 8.0,
+	  "exit_pull_side_speed": 6.0,
+	  "exit_bank_speed": 4.0,
+	  "exit_pitch_speed": 3.0,
+	  "death_duration": 0.5,
+	  "death_spin_speed": 5.0,
+	  "death_gravity": 3.0
+	},
+	"enemy_medium": {
+	  "hp": 4.0,
+	  "score": 50,
+	  "attack_type": "sniping",
+	  "entry_ease_weight": 3.5,
+	  "sway_freq": 1.5,
+	  "sway_amp": 2.0,
+	  "fire_interval": 1.5,
+	  "lead_time": 0.3,
+	  "lead_jitter": 0.15,
+	  "sniping_approach_z": -12.0,
+	  "approach_speed": 0.3,
+	  "exit_speed_mult": 2.0,
+	  "exit_pull_up_speed": 8.0,
+	  "exit_pull_side_speed": 6.0,
+	  "exit_bank_speed": 4.0,
+	  "exit_pitch_speed": 3.0,
+	  "death_duration": 0.5,
+	  "death_spin_speed": 3.0,
+	  "death_gravity": 3.0
+	},
+	"enemy_boss": {
+	  "hp": 25.0,
+	  "score": 500,
+	  "attack_type": "reactive",
+	  "entry_ease_weight": 3.0,
+	  "sway_freq": 0.5,
+	  "sway_amp": 1.5,
+	  "fire_interval": 0.8,
+	  "burst_count": 3,
+	  "burst_interval": 1.0,
+	  "lead_time": 0.5,
+	  "lead_jitter": 0.1,
+	  "lock_threshold": 2.0,
+	  "evade_chance": 0.6,
+	  "evade_distance": 3.0,
+	  "evade_duration": 0.2,
+	  "evade_cooldown": 2.0,
+	  "evade_telegraph": 0.1,
+	  "phase2_hp_ratio": 0.5,
+	  "phase2_fire_mult": 0.6,
+	  "phase2_sway_mult": 1.5,
+	  "wide_shot_interval": 4.0,
+	  "wide_shot_count": 7,
+	  "wide_shot_spread": 14.0,
+	  "wide_shot_gap_width": 2,
+	  "reactive_approach_z": -14.0,
+	  "approach_speed": 0.2,
+	  "exit_speed_mult": 2.0,
+	  "exit_pull_up_speed": 8.0,
+	  "exit_pull_side_speed": 6.0,
+	  "exit_bank_speed": 4.0,
+	  "exit_pitch_speed": 3.0,
+	  "death_duration": 0.8,
+	  "death_spin_speed": 8.0,
+	  "death_gravity": 2.0
+	},
+	"enemy_boss_ship": {
+	  "hp": 700.0,
+	  "score": 1000,
+	  "attack_type": "reactive",
+	  "entry_ease_weight": 3.0,
+	  "entry_target_z_offset": -20.0,
+	  "sway_freq": 0.5,
+	  "sway_amp": 1.5,
+	  "fire_interval": 0.8,
+	  "burst_count": 3,
+	  "burst_interval": 1.0,
+	  "lead_time": 0.5,
+	  "lead_jitter": 0.1,
+	  "lock_threshold": 2.5,
+	  "evade_chance": 0.6,
+	  "evade_distance": 3.0,
+	  "evade_duration": 0.2,
+	  "evade_cooldown": 2.0,
+	  "evade_telegraph": 0.1,
+	  "phase2_hp_ratio": 0.5,
+	  "phase2_fire_mult": 0.6,
+	  "phase2_sway_mult": 1.5,
+	  "phase3_hp_ratio": 0.25,
+	  "phase3_fire_mult": 0.4,
+	  "phase3_sway_mult": 2.0,
+	  "wide_shot_interval": 3.5,
+	  "wide_shot_count": 7,
+	  "wide_shot_spread": 14.0,
+	  "wide_shot_gap_width": 2,
+	  "wide_shot_speed": 40.0,
+	  "reactive_approach_z": -18.0,
+	  "approach_speed": 0.2,
+	  "exit_speed_mult": 2.0,
+	  "exit_pull_up_speed": 8.0,
+	  "exit_pull_side_speed": 6.0,
+	  "exit_bank_speed": 4.0,
+	  "exit_pitch_speed": 3.0,
+	  "death_duration": 1.5,
+	  "death_spin_speed": 10.0,
+	  "death_gravity": 2.0
+	},
+	"enemy_lateral": {
+	  "hp": 2.0,
+	  "score": 30,
+	  "attack_type": "escort",
+	  "entry_ease_weight": 4.0,
+	  "escort_x_start": 32.0,
+	  "escort_x_min": 16.0,
+	  "escort_approach_speed": 2.0,
+	  "escort_sway_freq": 0.8,
+	  "escort_sway_amp": 1.5,
+	  "escort_breath_weight": 3.0,
+	  "fire_interval": 1.2,
+	  "harass_time": 10.0,
+	  "lead_time": 0.4,
+	  "exit_speed_mult": 2.5,
+	  "exit_pull_up_speed": 8.0,
+	  "exit_pull_side_speed": 8.0,
+	  "exit_bank_speed": 4.0,
+	  "exit_pitch_speed": 3.0,
+	  "death_duration": 0.5,
+	  "death_spin_speed": 5.0,
+	  "death_gravity": 3.0
+	},
+	"enemy_lateral_far": {
+	  "hp": 3.0,
+	  "score": 50,
+	  "attack_type": "escort",
+	  "entry_ease_weight": 4.0,
+	  "escort_x_start": 48.0,
+	  "escort_x_min": 28.0,
+	  "escort_approach_speed": 1.5,
+	  "escort_sway_freq": 0.6,
+	  "escort_sway_amp": 1.0,
+	  "escort_breath_weight": 2.0,
+	  "fire_interval": 1.5,
+	  "harass_time": 8.0,
+	  "lead_time": 0.5,
+	  "exit_speed_mult": 2.5,
+	  "exit_pull_up_speed": 8.0,
+	  "exit_pull_side_speed": 8.0,
+	  "exit_bank_speed": 4.0,
+	  "exit_pitch_speed": 3.0,
+	  "death_duration": 0.5,
+	  "death_spin_speed": 5.0,
+	  "death_gravity": 3.0
+	},
+	"bullet_magnet_radius": 5.0,
+	"bullet_magnet_strength": 4.0,
+	"crosshair_depth_default": 40.0,
+	"blackhole_arrival_dist": 200.0,
+	"explosion_duration": 0.8,
+	"barrel_roll_duration": 0.4,
+	"barrel_roll_cooldown": 1.5,
+	"barrel_roll_reflect_radius": 3.0,
+	"drift_speed": 4.0,
+	"drift_max": 16.0,
+	"drift_return_mult": 1.5,
+	"drift_shake_amp": 0.03,
+	"asteroid": {
+	  "spawn_triggers": [
+		0.05,
+		0.12,
+		0.22,
+		0.38,
+		0.52,
+		0.65,
+		0.78
+	  ],
+	  "patterns": [
+		{
+		  "name": "left_band",
+		  "count": 4,
+		  "x_range": [
+			-6.0,
+			-2.0
+		  ],
+		  "y_range": [
+			-3.0,
+			3.0
+		  ],
+		  "z_spread": 15.0,
+		  "size_range": [
+			0.5,
+			1.5
+		  ],
+		  "hp": 2
+		},
+		{
+		  "name": "right_band",
+		  "count": 4,
+		  "x_range": [
+			2.0,
+			6.0
+		  ],
+		  "y_range": [
+			-3.0,
+			3.0
+		  ],
+		  "z_spread": 15.0,
+		  "size_range": [
+			0.5,
+			1.5
+		  ],
+		  "hp": 2
+		},
+		{
+		  "name": "center_cross",
+		  "count": 6,
+		  "x_range": [
+			-3.0,
+			3.0
+		  ],
+		  "y_range": [
+			-2.0,
+			2.0
+		  ],
+		  "z_spread": 20.0,
+		  "size_range": [
+			0.5,
+			2.0
+		  ],
+		  "hp": 2
+		},
+		{
+		  "name": "gauntlet",
+		  "count": 8,
+		  "x_range": [
+			-5.0,
+			5.0
+		  ],
+		  "y_range": [
+			-3.0,
+			3.0
+		  ],
+		  "z_spread": 30.0,
+		  "size_range": [
+			0.5,
+			2.5
+		  ],
+		  "hp": 3
+		},
+		{
+		  "name": "big_wall",
+		  "count": 3,
+		  "x_range": [
+			-4.0,
+			4.0
+		  ],
+		  "y_range": [
+			-2.0,
+			2.0
+		  ],
+		  "z_spread": 8.0,
+		  "size_range": [
+			2.0,
+			3.5
+		  ],
+		  "hp": -1
+		}
+	  ],
+	  "score": 5,
+	  "debris_count": 4,
+	  "debris_lifetime": 0.6,
+	  "debris_speed": 5.0
+	}
   },
   "boss": {
-    "boss_hp": 500.0,
-    "boss_phases": 2,
-    "interference_interval_min": 8.0,
-    "interference_interval_max": 15.0,
-    "spacewar_trigger_hp": 0.3,
-    "spacewar_hp_recovery": 0.25,
-    "hp_max": 100.0
+	"boss_hp": 500.0,
+	"boss_phases": 2,
+	"interference_interval_min": 8.0,
+	"interference_interval_max": 15.0,
+	"spacewar_trigger_hp": 0.3,
+	"spacewar_hp_recovery": 0.25,
+	"hp_max": 100.0
   },
+  "level_tree": {
+	"level_duration": 60.0,
+	"heal_ratio": 0.3,
+	"outro_duration": 2.5,
+	"outro_speed_mult": 5.0,
+	"nodes": [
+	  {
+		"id": "deep_space",
+		"name": "深空出发",
+		"environment": "res://scenes/environments/space.tscn",
+		"curve_type": "straight",
+		"waves": [
+		  {
+			"trigger_progress": 0.08,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.0,
+				"formation": "v_shape",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.2,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.3,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.35,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.5,
+			"enemies": [
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.65,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.2,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.8,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.4,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  }
+		],
+		"asteroid": {
+		  "spawn_triggers": [
+			0.15,
+			0.4,
+			0.6
+		  ],
+		  "patterns": [
+			{
+			  "count": 3,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 12.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 4,
+			  "x_range": [
+				-4.0,
+				4.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 10.0,
+			  "size_range": [
+				0.5,
+				2.0
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 2,
+			  "x_range": [
+				-2.0,
+				2.0
+			  ],
+			  "y_range": [
+				-1.0,
+				1.0
+			  ],
+			  "z_spread": 6.0,
+			  "size_range": [
+				2.0,
+				3.0
+			  ],
+			  "hp": -1
+			}
+		  ]
+		}
+	  },
+	  {
+		"id": "nebula",
+		"name": "星云穿越",
+		"environment": "res://scenes/environments/nebula-vibrant.tscn",
+		"curve_type": "swoop",
+		"waves": [
+		  {
+			"trigger_progress": 0.06,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 5,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.18,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.3,
+			"enemies": [
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.4,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.45,
+			"enemies": [
+			  {
+				"type": "obstacle_laser_wall",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 0,
+				"entry_z": -80.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.58,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 5,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.3,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.75,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "v_shape",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "v_shape",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.88,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  }
+		],
+		"asteroid": {
+		  "spawn_triggers": [
+			0.1,
+			0.35,
+			0.55,
+			0.72
+		  ],
+		  "patterns": [
+			{
+			  "count": 3,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 12.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 4,
+			  "x_range": [
+				-4.0,
+				4.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 10.0,
+			  "size_range": [
+				0.5,
+				2.0
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 2,
+			  "x_range": [
+				-2.0,
+				2.0
+			  ],
+			  "y_range": [
+				-1.0,
+				1.0
+			  ],
+			  "z_spread": 6.0,
+			  "size_range": [
+				2.0,
+				3.0
+			  ],
+			  "hp": -1
+			},
+			{
+			  "count": 4,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 12.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 2
+			}
+		  ]
+		}
+	  },
+	  {
+		"id": "asteroid_belt",
+		"name": "小行星带",
+		"environment": "res://scenes/environments/asteroid-field.tscn",
+		"curve_type": "canyon",
+		"waves": [
+		  {
+			"trigger_progress": 0.06,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 5,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.18,
+			"enemies": [
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.3,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.32,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.48,
+			"enemies": [
+			  {
+				"type": "obstacle_laser_wall",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 0,
+				"entry_z": -80.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.6,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 6,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 2.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.75,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_lateral_far",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.5,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.88,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.2,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  }
+		],
+		"asteroid": {
+		  "spawn_triggers": [
+			0.08,
+			0.2,
+			0.35,
+			0.5,
+			0.65,
+			0.8
+		  ],
+		  "patterns": [
+			{
+			  "count": 4,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 12.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 5,
+			  "x_range": [
+				-4.0,
+				4.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 10.0,
+			  "size_range": [
+				0.5,
+				2.0
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 3,
+			  "x_range": [
+				-3.0,
+				3.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 8.0,
+			  "size_range": [
+				1.0,
+				2.5
+			  ],
+			  "hp": 3
+			},
+			{
+			  "count": 2,
+			  "x_range": [
+				-2.0,
+				2.0
+			  ],
+			  "y_range": [
+				-1.0,
+				1.0
+			  ],
+			  "z_spread": 6.0,
+			  "size_range": [
+				2.0,
+				3.0
+			  ],
+			  "hp": -1
+			},
+			{
+			  "count": 6,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 15.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 2
+			},
+			{
+			  "count": 3,
+			  "x_range": [
+				-4.0,
+				4.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 10.0,
+			  "size_range": [
+				1.0,
+				2.5
+			  ],
+			  "hp": 3
+			}
+		  ]
+		}
+	  },
+	  {
+		"id": "fire_storm",
+		"name": "烈焰风暴",
+		"environment": "res://scenes/environments/highsky&cloud.tscn",
+		"curve_type": "canyon",
+		"waves": [
+		  {
+			"trigger_progress": 0.06,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 6,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.16,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.28,
+			"enemies": [
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_lateral",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.3,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.4,
+			"enemies": [
+			  {
+				"type": "obstacle_laser_wall",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 0,
+				"entry_z": -80.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.52,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_lateral_far",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.4,
+				"formation": "line",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.65,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 8,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 2.5,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.78,
+			"enemies": [
+			  {
+				"type": "obstacle_laser_wall",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 0,
+				"entry_z": -80.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.9,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  }
+		],
+		"asteroid": {
+		  "spawn_triggers": [
+			0.1,
+			0.25,
+			0.45,
+			0.6,
+			0.75
+		  ],
+		  "patterns": [
+			{
+			  "count": 4,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 12.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 3
+			},
+			{
+			  "count": 5,
+			  "x_range": [
+				-4.0,
+				4.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 10.0,
+			  "size_range": [
+				0.5,
+				2.0
+			  ],
+			  "hp": 3
+			},
+			{
+			  "count": 3,
+			  "x_range": [
+				-3.0,
+				3.0
+			  ],
+			  "y_range": [
+				-2.0,
+				2.0
+			  ],
+			  "z_spread": 8.0,
+			  "size_range": [
+				1.0,
+				2.5
+			  ],
+			  "hp": 3
+			},
+			{
+			  "count": 2,
+			  "x_range": [
+				-2.0,
+				2.0
+			  ],
+			  "y_range": [
+				-1.0,
+				1.0
+			  ],
+			  "z_spread": 6.0,
+			  "size_range": [
+				2.0,
+				3.0
+			  ],
+			  "hp": -1
+			},
+			{
+			  "count": 6,
+			  "x_range": [
+				-5.0,
+				5.0
+			  ],
+			  "y_range": [
+				-3.0,
+				3.0
+			  ],
+			  "z_spread": 15.0,
+			  "size_range": [
+				0.5,
+				1.5
+			  ],
+			  "hp": 3
+			}
+		  ]
+		}
+	  },
+	  {
+		"id": "boss_arena",
+		"name": "事件视界",
+		"is_boss": true,
+		"environment": "res://scenes/environments/highsky&cloud.tscn",
+		"curve_type": "boss_arena",
+		"waves": [
+		  {
+			"trigger_progress": 0.08,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 4,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.2,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.2,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.35,
+			"enemies": [
+			  {
+				"type": "enemy_boss_ship",
+				"region": "FrontSpawn",
+				"count": 1,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 2.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 1.0,
+				"formation": "scatter",
+				"spacing": 4.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.55,
+			"enemies": [
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.3,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  },
+		  {
+			"trigger_progress": 0.75,
+			"enemies": [
+			  {
+				"type": "enemy_medium",
+				"region": "FrontSpawn",
+				"count": 2,
+				"delay": 0.0,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  },
+			  {
+				"type": "enemy_small",
+				"region": "FrontSpawn",
+				"count": 3,
+				"delay": 0.2,
+				"formation": "scatter",
+				"spacing": 3.0,
+				"entry_z": -150.0
+			  }
+			]
+		  }
+		],
+		"asteroid": {
+		  "spawn_triggers": [],
+		  "patterns": []
+		}
+	  }
+	]
+  },
+  "upgrade_pool": [
+	{
+	  "id": "rapid_fire",
+	  "name": "速射",
+	  "desc": "射击间隔-25%",
+	  "icon": "res://assets/icons/upgrades/rapid_fire.png",
+	  "stat": "fire_cooldown",
+	  "op": "mult",
+	  "value": 0.75
+	},
+	{
+	  "id": "thick_hull",
+	  "name": "厚甲",
+	  "desc": "HP上限+30%",
+	  "icon": "res://assets/icons/upgrades/thick_hull.png",
+	  "stat": "hp_max",
+	  "op": "mult",
+	  "value": 1.3
+	},
+	{
+	  "id": "speed_boost",
+	  "name": "快速瞄准",
+	  "desc": "准星速度+30%",
+	  "icon": "res://assets/icons/upgrades/speed_boost.png",
+	  "stat": "crosshair_accel",
+	  "op": "mult",
+	  "value": 1.3
+	},
+	{
+	  "id": "vampirism",
+	  "name": "吸血",
+	  "desc": "击杀回复1%HP",
+	  "icon": "res://assets/icons/upgrades/vampirism.png",
+	  "stat": "",
+	  "op": "flag",
+	  "value": 0.0
+	},
+	{
+	  "id": "homing_missile",
+	  "name": "追踪导弹",
+	  "desc": "R键发射导弹，10秒冷却",
+	  "icon": "res://assets/icons/upgrades/homing_missile.png",
+	  "stat": "",
+	  "op": "flag",
+	  "value": 0.0
+	},
+	{
+	  "id": "auto_turret",
+	  "name": "自动炮塔",
+	  "desc": "每0.5秒自动攻击最近敌人",
+	  "icon": "res://assets/icons/upgrades/auto_turret.png",
+	  "stat": "",
+	  "op": "flag",
+	  "value": 0.0
+	},
+	{
+	  "id": "bullet_magnet",
+	  "name": "子弹追踪",
+	  "desc": "子弹自动追踪附近敌人",
+	  "icon": "res://assets/icons/upgrades/bullet_magnet.png",
+	  "stat": "bullet_magnet",
+	  "op": "mult",
+	  "value": 1.0
+	}
+  ],
+  "upgrade_exclusions": {},
   "crt": {
-    "brightness": 1.4,
-    "scanlines_opacity": 0.4,
-    "scanlines_width": 0.25,
-    "grille_opacity": 0.3,
-    "roll": true,
-    "roll_speed": 8.0,
-    "roll_size": 15.0,
-    "roll_variation": 1.8,
-    "distort_intensity": 0.05,
-    "aberration": 0.03,
-    "noise_opacity": 0.4,
-    "noise_speed": 5.0,
-    "static_noise_intensity": 0.06,
-    "pixelate": true,
-    "discolor": true,
-    "warp_amount": 1.0,
-    "clip_warp": false,
-    "vignette_intensity": 0.4,
-    "vignette_opacity": 0.5
+	"brightness": 1.4,
+	"scanlines_opacity": 0.4,
+	"scanlines_width": 0.25,
+	"grille_opacity": 0.3,
+	"roll": true,
+	"roll_speed": 8.0,
+	"roll_size": 15.0,
+	"roll_variation": 1.8,
+	"distort_intensity": 0.05,
+	"aberration": 0.03,
+	"noise_opacity": 0.4,
+	"noise_speed": 5.0,
+	"static_noise_intensity": 0.06,
+	"pixelate": true,
+	"discolor": true,
+	"warp_amount": 1.0,
+	"clip_warp": false,
+	"vignette_intensity": 0.4,
+	"vignette_opacity": 0.5
   }
 }

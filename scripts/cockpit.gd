@@ -7,8 +7,10 @@ extends Node3D
 @onready var main_screen: MeshInstance3D = $CockpitInterior/MainScreenSlot
 @onready var left_screen: MeshInstance3D = $CockpitInterior/LeftScreenSlot
 @onready var right_screen: MeshInstance3D = $CockpitInterior/RightScreenSlot
-@onready var left_screen_viewport: SubViewport = $LeftScreenViewport
-@onready var right_screen_viewport: SubViewport = $RightScreenViewport
+@onready var level4_left_vp: SubViewport = $Level4LeftViewport
+@onready var level4_right_vp: SubViewport = $Level4RightViewport
+@onready var level4_left_cam: Camera3D = $Level4LeftViewport/CamRig/LeftWingCam
+@onready var level4_right_cam: Camera3D = $Level4RightViewport/CamRig/RightWingCam
 
 @onready var forward_cam: Camera3D = $ForwardViewport/CamRig/ForwardCam
 @onready var rear_cam: Camera3D = $RearViewport/CamRig/RearCam
@@ -97,7 +99,18 @@ var _level4_game: Node3D = null
 var _level4_game_vp: SubViewport = null
 var _level4_system_vp: SubViewport = null
 var _level4_system_panel: Control = null
+var _level4_comm_vp: SubViewport = null
+var _level4_comm_panel: Control = null
 var _level4_update_timer: Timer = null
+var _wing_sync_logged: bool = false
+
+var _run_tree: Node = null
+var _run_upgrade: Node = null
+var _run_hp: float = -1.0
+var _run_score: int = 0
+var _overlay_panel: Control = null
+var _upgrade_select: Control = null
+var _progress_panel: Control = null
 
 func _ready() -> void:
 	_load_config()
@@ -218,6 +231,7 @@ func _setup_pause_menu() -> void:
 		return
 	_pause_menu = Control.new()
 	_pause_menu.name = "PauseMenu"
+	_pause_menu.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_pause_menu.set_script(script)
 	hud.add_child(_pause_menu)
 
@@ -481,6 +495,9 @@ func _process(delta: float) -> void:
 			ship_resources.consume_fuel(drain)
 
 	_update_slingshot(delta)
+
+	if level4_left_cam or level4_right_cam:
+		_sync_level4_wing_cameras()
 
 func _update_ship_controls() -> void:
 	if _ship_physics == null:
@@ -1363,6 +1380,7 @@ func _audio_alarm(type: String) -> void:
 		_audio_manager.call("play_alarm", type)
 
 func _setup_level2() -> void:
+	_setup_audio()
 	player_cam.current = true
 	_setup_level2_game_viewport()
 	_setup_level2_comm_viewport()
@@ -1428,7 +1446,7 @@ func _setup_level2_comm_viewport() -> void:
 	_bind_screen(comm_screen_slot, _level2_comm_vp)
 
 func _setup_level2_map_viewport() -> void:
-	_level2_map_vp = left_screen_viewport
+	_level2_map_vp = level4_left_vp
 	_level2_map_vp.size = Vector2i(210, 300)
 	_level2_map_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
 	_level2_map_vp.transparent_bg = false
@@ -1475,7 +1493,7 @@ func _setup_level2_input() -> void:
 	set_process_input(true)
 
 func _setup_level2_hint_viewport() -> void:
-	var hint_vp: SubViewport = right_screen_viewport
+	var hint_vp: SubViewport = level4_right_vp
 	hint_vp.size = Vector2i(210, 300)
 	hint_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	hint_vp.transparent_bg = false
@@ -1553,6 +1571,7 @@ func _on_level2_failed() -> void:
 		tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/title-screen.tscn")).set_delay(3.0)
 
 func _setup_level3() -> void:
+	_setup_audio()
 	player_cam.current = true
 	_setup_level3_game_viewport()
 	_setup_level3_comm_viewport()
@@ -1602,7 +1621,7 @@ func _setup_level3_comm_viewport() -> void:
 	_bind_screen(comm_screen_slot, _level3_comm_vp)
 
 func _setup_level3_map_viewport() -> void:
-	_level3_map_vp = left_screen_viewport
+	_level3_map_vp = level4_left_vp
 	_level3_map_vp.size = Vector2i(210, 300)
 	_level3_map_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
 	_level3_map_vp.transparent_bg = false
@@ -1684,10 +1703,28 @@ func _on_level3_sfx(_sfx_name: String) -> void:
 	pass
 
 func _setup_level4() -> void:
+	_setup_audio()
 	player_cam.current = true
+	_run_tree = Node.new()
+	_run_tree.name = "LevelTreeManager"
+	_run_tree.set_script(load("res://scripts/levels/level_tree_manager.gd"))
+	add_child(_run_tree)
+	var tree_cfg: Dictionary = config.get("level_tree", {})
+	_run_tree.load_tree(tree_cfg)
+	_run_upgrade = Node.new()
+	_run_upgrade.name = "UpgradeSystem"
+	_run_upgrade.set_script(load("res://scripts/levels/upgrade_system.gd"))
+	add_child(_run_upgrade)
+	var pool: Array = config.get("upgrade_pool", [])
+	var excl: Dictionary = config.get("upgrade_exclusions", {})
+	_run_upgrade.load_pool(pool, excl)
 	_setup_level4_game_viewport()
+	_setup_level4_wing_viewports()
 	_setup_level4_system_viewport()
+	_setup_level4_comm_viewport()
 	_setup_level4_update_timer()
+	_setup_level4_overlay()
+	_start_level4_node()
 
 func _setup_level4_game_viewport() -> void:
 	_level4_game_vp = SubViewport.new()
@@ -1703,6 +1740,8 @@ func _setup_level4_game_viewport() -> void:
 		push_error("Level 4 scene not found")
 		return
 	_level4_game = level4_scene.instantiate()
+	_level4_game.upgrade_system = _run_upgrade
+	_level4_game.run_hp = _run_hp
 	_level4_game_vp.add_child(_level4_game)
 
 	_bind_screen(main_screen, _level4_game_vp)
@@ -1710,6 +1749,30 @@ func _setup_level4_game_viewport() -> void:
 	_level4_game.level_completed.connect(_on_level4_completed)
 	_level4_game.level_failed.connect(_on_level4_failed)
 	_level4_game.sfx_requested.connect(_on_level4_sfx)
+	_level4_game.outro_started.connect(_on_level4_outro_started)
+
+func _setup_level4_wing_viewports() -> void:
+	if _level4_game_vp == null:
+		return
+	remove_child(level4_left_vp)
+	_level4_game_vp.add_child(level4_left_vp)
+	level4_left_vp.own_world_3d = false
+	level4_left_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	level4_left_vp.transparent_bg = false
+	level4_left_cam.current = true
+	level4_left_cam.fov = 45.0
+
+	remove_child(level4_right_vp)
+	_level4_game_vp.add_child(level4_right_vp)
+	level4_right_vp.own_world_3d = false
+	level4_right_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	level4_right_vp.transparent_bg = false
+	level4_right_cam.current = true
+	level4_right_cam.fov = 45.0
+
+	_bind_screen(left_screen, level4_left_vp)
+	_bind_screen(right_screen, level4_right_vp)
+	print("[Level4Wing] Reparented wing vps into game_vp. left_own=" + str(level4_left_vp.own_world_3d) + " right_own=" + str(level4_right_vp.own_world_3d))
 
 func _setup_level4_system_viewport() -> void:
 	_level4_system_vp = SubViewport.new()
@@ -1726,6 +1789,23 @@ func _setup_level4_system_viewport() -> void:
 
 	_bind_screen(system_panel_slot, _level4_system_vp)
 
+func _setup_level4_comm_viewport() -> void:
+	_level4_comm_vp = SubViewport.new()
+	_level4_comm_vp.name = "Level4CommViewport"
+	_level4_comm_vp.size = Vector2i(700, 400)
+	_level4_comm_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_level4_comm_vp.transparent_bg = false
+	add_child(_level4_comm_vp)
+
+	var comm_scene := load("res://scenes/panels/level4-comm-panel.tscn") as PackedScene
+	if comm_scene == null:
+		return
+	_level4_comm_panel = comm_scene.instantiate()
+	_level4_comm_vp.add_child(_level4_comm_panel)
+	_level4_comm_panel.setup(_level4_comm_vp.size)
+
+	_bind_screen(comm_screen_slot, _level4_comm_vp)
+
 func _setup_level4_update_timer() -> void:
 	var target_fps: int = 30
 	var starfox_cfg: Dictionary = config.get("starfox", {})
@@ -1741,20 +1821,168 @@ func _setup_level4_update_timer() -> void:
 func _on_level4_update_tick() -> void:
 	if _level4_game_vp:
 		_level4_game_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	if _level4_system_vp and _level4_system_panel and _level4_game:
+	if _level4_game:
 		var status: Dictionary = _level4_game.get_status_data()
-		_draw_level4_hud(status)
+		if _level4_system_vp and _level4_system_panel:
+			_draw_level4_hud(status)
+		if _level4_comm_panel and _level4_comm_panel.has_method("update_status"):
+			_level4_comm_panel.update_status(status)
+		if player_cam and player_cam.has_method("set_aim_offset"):
+			player_cam.set_aim_offset(float(status.get("aim_x", 0.0)), float(status.get("aim_y", 0.0)))
+
+func _sync_level4_wing_cameras() -> void:
+	if _level4_game == null:
+		return
+	var cam_rig := _level4_game.get_node_or_null("TrackPath/PathFollow3D/CameraRig") as Node3D
+	if cam_rig == null:
+		return
+	var shake := cam_rig.get_node_or_null("ShakeContainer") as Node3D
+	if shake == null:
+		return
+	var src_left := shake.get_node_or_null("LeftCamera") as Camera3D
+	var src_right := shake.get_node_or_null("RightCamera") as Camera3D
+	var rig_xform := cam_rig.global_transform
+	if src_left and level4_left_cam:
+		level4_left_cam.global_transform = rig_xform * Transform3D(Basis.from_euler(src_left.rotation), src_left.position)
+	if src_right and level4_right_cam:
+		level4_right_cam.global_transform = rig_xform * Transform3D(Basis.from_euler(src_right.rotation), src_right.position)
+	if not _wing_sync_logged:
+		_wing_sync_logged = true
+		print("[Level4Wing] sync OK (no-shake) - rig=" + str(cam_rig != null))
 
 func _draw_level4_hud(status: Dictionary) -> void:
 	_level4_system_panel.queue_redraw()
 
+func _setup_level4_overlay() -> void:
+	var hud: CanvasLayer = get_node_or_null("HUD")
+	if hud == null:
+		return
+	_overlay_panel = Control.new()
+	_overlay_panel.name = "Level4Overlay"
+	_overlay_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_overlay_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud.add_child(_overlay_panel)
+	var upgrade_scene := load("res://scenes/panels/upgrade-select.tscn") as PackedScene
+	if upgrade_scene:
+		_upgrade_select = upgrade_scene.instantiate()
+		_upgrade_select.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_overlay_panel.add_child(_upgrade_select)
+		_upgrade_select.upgrade_selected.connect(_on_upgrade_chosen)
+	var progress_scene := load("res://scenes/panels/ProgressPanel.tscn") as PackedScene
+	if progress_scene:
+		_progress_panel = progress_scene.instantiate()
+		_progress_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_overlay_panel.add_child(_progress_panel)
+		_progress_panel.continue_requested.connect(_on_progress_continue)
+
+func _start_level4_node() -> void:
+	if _run_tree == null:
+		return
+	if _run_tree.get_current_id().is_empty():
+		_run_tree.start_run()
+	var node_data: Dictionary = _run_tree.get_current_node()
+	if node_data.is_empty():
+		return
+	_run_hp = _run_hp if _run_hp >= 0.0 else float(config.get("starfox", {}).get("hp_max", 100.0))
+	if _level4_game:
+		_level4_game.queue_free()
+		_level4_game = null
+	var level4_scene := load("res://scenes/levels/level-4-starfox.tscn") as PackedScene
+	if level4_scene == null:
+		return
+	_level4_game = level4_scene.instantiate()
+	_level4_game.upgrade_system = _run_upgrade
+	_level4_game.run_hp = _run_hp
+	_level4_game.node_environment = node_data.get("environment", "")
+	_level4_game_vp.add_child(_level4_game)
+	_level4_game.level_completed.connect(_on_level4_completed)
+	_level4_game.level_failed.connect(_on_level4_failed)
+	_level4_game.sfx_requested.connect(_on_level4_sfx)
+	_level4_game.outro_started.connect(_on_level4_outro_started)
+	_level4_game.hit_received.connect(_on_level4_hit)
+	if player_cam and player_cam.has_method("set_flight_vibration"):
+		player_cam.set_flight_vibration(true)
+	_wing_sync_logged = false
+
+func _on_level4_outro_started() -> void:
+	if player_cam and player_cam.has_method("set_flight_vibration"):
+		player_cam.set_flight_vibration(false)
+
 func _on_level4_completed() -> void:
-	var tween := create_tween()
-	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/title-screen.tscn")).set_delay(3.0)
+	if _level4_game:
+		_run_hp = _level4_game.hp
+		_run_score = _level4_game.score
+	var heal_ratio: float = _run_tree.get_heal_ratio()
+	heal_ratio = _run_upgrade.get_stat(heal_ratio, "heal_ratio") if _run_upgrade else heal_ratio
+	var hp_max: float = float(config.get("starfox", {}).get("hp_max", 100.0))
+	hp_max = _run_upgrade.get_stat(hp_max, "hp_max") if _run_upgrade else hp_max
+	_run_hp = minf(_run_hp + hp_max * heal_ratio, hp_max)
+	if _run_tree and _run_tree.is_current_last():
+		if _progress_panel:
+			_progress_panel.show_progress(_run_tree.get_current_index(), _run_tree.get_total_nodes())
+			_progress_panel.continue_requested.disconnect(_on_progress_continue)
+			_progress_panel.continue_requested.connect(_on_run_complete)
+		return
+	if _upgrade_select and _run_upgrade:
+		var offers = _run_upgrade.get_random_offers(3)
+		if offers.size() > 0:
+			_upgrade_select.show_offers(offers)
+			return
+	_advance_to_next_level()
+
+func _on_upgrade_chosen(upgrade_id: String) -> void:
+	if _run_upgrade:
+		_run_upgrade.apply_upgrade(upgrade_id)
+	_show_progress_panel()
+
+func _show_progress_panel() -> void:
+	if _progress_panel and _run_tree:
+		_progress_panel.show_progress(_run_tree.get_current_index(), _run_tree.get_total_nodes())
+	else:
+		_advance_to_next_level()
+
+func _on_progress_continue() -> void:
+	_advance_to_next_level()
+
+func _on_run_complete() -> void:
+	if _run_upgrade:
+		_run_upgrade.reset()
+	if _progress_panel and _progress_panel.continue_requested.is_connected(_on_run_complete):
+		_progress_panel.continue_requested.disconnect(_on_run_complete)
+		_progress_panel.continue_requested.connect(_on_progress_continue)
+	get_tree().change_scene_to_file("res://scenes/title-screen.tscn")
+
+func _advance_to_next_level() -> void:
+	if _run_tree == null:
+		return
+	_run_tree.advance()
+	_start_level4_node()
 
 func _on_level4_failed() -> void:
+	if player_cam and player_cam.has_method("set_flight_vibration"):
+		player_cam.set_flight_vibration(false)
 	var tween := create_tween()
 	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/title-screen.tscn")).set_delay(3.0)
 
-func _on_level4_sfx(_sfx_name: String) -> void:
-	pass
+func _on_level4_sfx(sfx_name: String) -> void:
+	if _audio_manager == null:
+		return
+	match sfx_name:
+		"player_fire": _audio_manager.play_player_fire()
+		"enemy_fire": _audio_manager.play_enemy_fire()
+		"explosion": _audio_manager.play_explosion()
+		"explosion_boss": _audio_manager.play_explosion_boss()
+		"player_hit": _audio_manager.play_player_hit()
+		"player_death": _audio_manager.play_player_death()
+		"barrel_roll": _audio_manager.play_barrel_roll()
+		"missile_fire": _audio_manager.play_missile_fire()
+		"laser_hum": _audio_manager.play_laser_hum()
+		"laser_overheat": _audio_manager.play_laser_overheat()
+		"turret_fire": _audio_manager.play_turret_fire()
+		"level_complete": _audio_manager.play_level_complete()
+		"level_failed": _audio_manager.play_level_failed()
+		"upgrade_select": _audio_manager.play_upgrade_select()
+
+func _on_level4_hit(amount: float) -> void:
+	if player_cam and player_cam.has_method("shake"):
+		player_cam.shake(minf(amount * 0.01, 0.15), 0.3)

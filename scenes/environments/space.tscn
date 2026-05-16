@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://d04to1keh53eh"]
+
+[sub_resource type="Environment" id="Environment_space"]
+background_mode = 1
+tonemap_mode = 2
+
+[sub_resource type="ParticleProcessMaterial" id="FarStarProcess"]
+emission_shape = 3
+emission_box_extents = Vector3(200, 200, 400)
+direction = Vector3(0, 0, 0)
+spread = 0.0
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="StandardMaterial3D" id="FarStarMat"]
+shading_mode = 0
+
+[sub_resource type="QuadMesh" id="FarStarMesh"]
+material = SubResource("FarStarMat")
+size = Vector2(0.3, 0.3)
+
+[sub_resource type="ParticleProcessMaterial" id="NearStarProcess"]
+emission_shape = 3
+emission_box_extents = Vector3(30, 30, 50)
+direction = Vector3(0, 0, 1)
+spread = 5.0
+initial_velocity_min = 100.0
+initial_velocity_max = 150.0
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="StandardMaterial3D" id="NearStarMat"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.7, 0.85, 1, 0.6)
+
+[sub_resource type="QuadMesh" id="NearStarMesh"]
+material = SubResource("NearStarMat")
+size = Vector2(0.08, 0.3)
+
+[node name="SpaceEnvironment" type="Node3D" unique_id=1549826278]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1534616101]
+environment = SubResource("Environment_space")
+
+[node name="FarStars" type="GPUParticles3D" parent="." unique_id=71959256]
+amount = 500
+lifetime = 999.0
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("FarStarProcess")
+draw_pass_1 = SubResource("FarStarMesh")
+
+[node name="NearStars" type="GPUParticles3D" parent="." unique_id=1977733859]
+amount = 200
+lifetime = 2.0
+process_material = SubResource("NearStarProcess")
+draw_pass_1 = SubResource("NearStarMesh")
+
+[node name="StarLight" type="DirectionalLight3D" parent="." unique_id=474173509]
+transform = Transform3D(0.8658247, -0.35365817, 0.3539399, 0, 0.7073882, 0.7068252, -0.50034744, -0.6119867, 0.6124742, 0, 0, 0)
+light_color = Color(0.95, 0.95, 1, 1)

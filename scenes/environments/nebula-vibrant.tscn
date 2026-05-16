@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://68f8ufogr2hb"]
+
+[ext_resource type="Shader" uid="uid://bhv6vfesic8da" path="res://assets/shaders/skybox.gdshader" id="1_sky"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
+shader = ExtResource("1_sky")
+shader_parameter/color_top = Color(0.35, 0.05, 0.55, 1)
+shader_parameter/color_horizon = Color(0.85, 0.25, 0.65, 1)
+shader_parameter/color_bottom = Color(0.15, 0.08, 0.35, 1)
+shader_parameter/exponent_factor_top = 1.5
+shader_parameter/exponent_factor_bottom = 1.2
+shader_parameter/intensity_amp = 1.0
+
+[sub_resource type="Sky" id="Sky_nebula"]
+sky_material = SubResource("ShaderMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_nebula"]
+background_mode = 2
+sky = SubResource("Sky_nebula")
+tonemap_mode = 2
+tonemap_white = 1.0
+ambient_light_color = Color(0.3, 0.1, 0.4, 1)
+ambient_light_energy = 0.3
+
+[sub_resource type="ParticleProcessMaterial" id="DustProcess"]
+emission_shape = 3
+emission_box_extents = Vector3(80, 40, 200)
+direction = Vector3(0, 0, 0)
+spread = 0.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.0
+initial_velocity_max = 0.0
+
+[sub_resource type="StandardMaterial3D" id="DustMat"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.8, 0.4, 0.9, 0.15)
+
+[sub_resource type="SphereMesh" id="DustMesh"]
+material = SubResource("DustMat")
+radius = 0.5
+height = 1.0
+radial_segments = 4
+rings = 2
+
+[sub_resource type="ParticleProcessMaterial" id="DustFarProcess"]
+emission_shape = 3
+emission_box_extents = Vector3(150, 80, 300)
+direction = Vector3(0, 0, 0)
+spread = 0.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.0
+initial_velocity_max = 0.0
+
+[sub_resource type="StandardMaterial3D" id="DustFarMat"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.6, 0.3, 0.8, 0.08)
+
+[sub_resource type="SphereMesh" id="DustFarMesh"]
+material = SubResource("DustFarMat")
+radius = 1.5
+height = 3.0
+radial_segments = 4
+rings = 2
+
+[node name="NebulaVibrantEnvironment" type="Node3D" unique_id=823429200]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2118517748]
+environment = SubResource("Environment_nebula")
+
+[node name="StarLight" type="DirectionalLight3D" parent="." unique_id=2053182396]
+transform = Transform3D(0.8658247, -0.35365817, 0.3539399, 0, 0.7073882, 0.7068252, -0.50034744, -0.6119867, 0.6124742, 0, 0, 0)
+light_color = Color(0.9, 0.6, 1, 1)
+light_energy = 0.5
+
+[node name="NebulaDust" type="GPUParticles3D" parent="." unique_id=1334759446]
+amount = 300
+lifetime = 999.0
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("DustProcess")
+draw_pass_1 = SubResource("DustMesh")
+
+[node name="NebulaDustFar" type="GPUParticles3D" parent="." unique_id=1991962431]
+amount = 150
+lifetime = 999.0
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("DustFarProcess")
+draw_pass_1 = SubResource("DustFarMesh")

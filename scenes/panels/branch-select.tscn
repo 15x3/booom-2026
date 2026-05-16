@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dipib7fk18yw3"]
+
+[ext_resource type="Script" uid="uid://dja122rj36eil" path="res://scripts/panels/branch_select.gd" id="1_a2ht2"]
+
+[node name="BranchSelect" type="Control" unique_id=514444105]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_a2ht2")

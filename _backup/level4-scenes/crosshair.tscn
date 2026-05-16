@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://d0matkbkicfpo"]
+
+[ext_resource type="Material" path="res://assets/materials/level4/crosshair.tres" id="1_ug8e6"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_6in6j"]
+inner_radius = 0.3
+outer_radius = 0.4
+
+[sub_resource type="SphereMesh" id="SphereMesh_6in6j"]
+radius = 0.05
+height = 0.1
+
+[node name="Crosshair" type="Node3D" unique_id=1911737142]
+
+[node name="Ring" type="MeshInstance3D" parent="." unique_id=1805043662]
+material_override = ExtResource("1_ug8e6")
+mesh = SubResource("TorusMesh_6in6j")
+
+[node name="Dot" type="MeshInstance3D" parent="." unique_id=2054955861]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.01)
+material_override = ExtResource("1_ug8e6")
+mesh = SubResource("SphereMesh_6in6j")

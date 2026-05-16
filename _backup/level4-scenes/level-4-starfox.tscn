@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://pwy030sxsxa"]
+
+[ext_resource type="Script" uid="uid://cy734ikt4ou6a" path="res://scripts/levels/level_4_starfox.gd" id="1_k6o1s"]
+[ext_resource type="PackedScene" uid="uid://rxjb1p1kpkt7" path="res://scenes/level4/ship.tscn" id="2_ssdt5"]
+[ext_resource type="PackedScene" uid="uid://d0matkbkicfpo" path="res://scenes/level4/crosshair.tscn" id="3_s7wfk"]
+[ext_resource type="PackedScene" uid="uid://brmklsxs7sj0f" path="res://scenes/UI.tscn" id="4_dn2a1"]
+
+[sub_resource type="Curve3D" id="Curve3D_track"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, -60, 0, 0, 0, 0, 0, 60, 0, 0, -60, 0, 0, -200, 0, 0, 60, 5, 0, -30, -4.9163456, 0, -400, -5, 0, 30, 0, 0, -60, 1.3009148, 3, -600, 0, 0, 60, 0, 0, -40, -0.55792236, 0, -770, 0, 0, 40, 0, 0, -30, -0.43798828, 0, -940, 0, 0, 30, 0, 0, -50, 0.9697876, 0, -1100, 0, 0, 50, 0, 0, -60, -0.29196167, 0, -1260, 0, 0, 60, 0, 0, -40, 0, 0, -1420, 0, 0, 40, 0, 0, -40, -1.8456726, -8, -1580, 0, 0, 40, -10, 12, 40, 1.5276794, -8, -1720, 10, -12, -40, 0, 0, -60, 1.1157532, 5, -1870, 0, 0, 60, 0, 0, -50, 0, 10, -2020, 0, 0, 50, 0, 0, 0, -0.55789185, 5, -2170, 0, 0, 0, 20, 0, -30, 0, 0, -2320, -20, 0, 30, -20, 0, -30, 3.1073685, 0, -2440, 20, 0, 30, 0, 0, -60, -0.29193115, 0, -2520, 0, 0, 60, 0, 0, 0, 0, 0, -2700),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 18
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s7wfk"]
+size = Vector3(200, 150, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dn2a1"]
+size = Vector3(200, 5, 150)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_igxbe"]
+size = Vector3(200, 5, 150)
+
+[sub_resource type="Environment" id="Environment_s7wfk"]
+ambient_light_color = Color(1, 1, 1, 1)
+
+[node name="Level4StarFox" type="Node3D" unique_id=408253449]
+script = ExtResource("1_k6o1s")
+
+[node name="TrackPath" type="Path3D" parent="." unique_id=168643369]
+curve = SubResource("Curve3D_track")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="TrackPath" unique_id=866654508]
+
+[node name="ShipAnchor" type="Node3D" parent="TrackPath/PathFollow3D" unique_id=1429599664]
+
+[node name="Ship" parent="TrackPath/PathFollow3D/ShipAnchor" unique_id=77927397 instance=ExtResource("2_ssdt5")]
+
+[node name="Crosshair" parent="TrackPath/PathFollow3D" unique_id=1911737142 instance=ExtResource("3_s7wfk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+
+[node name="Starfield" type="Node3D" parent="TrackPath/PathFollow3D" unique_id=1908528033]
+
+[node name="Stars" type="GPUParticles3D" parent="TrackPath/PathFollow3D/Starfield" unique_id=1395639008]
+
+[node name="CameraRig" type="Node3D" parent="TrackPath/PathFollow3D" unique_id=1099206044]
+
+[node name="ShakeContainer" type="Node3D" parent="TrackPath/PathFollow3D/CameraRig" unique_id=1908004919]
+
+[node name="Camera3D" type="Camera3D" parent="TrackPath/PathFollow3D/CameraRig/ShakeContainer" unique_id=219525367]
+transform = Transform3D(1, 0, 0, 0, 0.9887711, 0.14943814, 0, -0.14943814, 0.9887711, 0, 2, 5)
+current = true
+fov = 70.0
+far = 250.0
+
+[node name="SpawnArea" type="Node3D" parent="TrackPath/PathFollow3D" unique_id=319563354]
+
+[node name="FrontSpawn" type="Area3D" parent="TrackPath/PathFollow3D/SpawnArea" unique_id=724455438]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -250)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/SpawnArea/FrontSpawn" unique_id=1311469148]
+shape = SubResource("BoxShape3D_s7wfk")
+
+[node name="DownSpawn" type="Area3D" parent="TrackPath/PathFollow3D/SpawnArea" unique_id=2035344526]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -125, -125)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/SpawnArea/DownSpawn" unique_id=337821055]
+shape = SubResource("BoxShape3D_dn2a1")
+
+[node name="TopSpawn" type="Area3D" parent="TrackPath/PathFollow3D/SpawnArea" unique_id=1075555095]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 125, -125)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/SpawnArea/TopSpawn" unique_id=823474084]
+shape = SubResource("BoxShape3D_igxbe")
+
+[node name="LeftSpawn" type="Area3D" parent="TrackPath/PathFollow3D/SpawnArea" unique_id=672120163]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -125, 0, -125)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/SpawnArea/LeftSpawn" unique_id=1002252546]
+shape = SubResource("BoxShape3D_s7wfk")
+
+[node name="RightSpawn" type="Area3D" parent="TrackPath/PathFollow3D/SpawnArea" unique_id=1368345719]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 125, 0, -125)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/SpawnArea/RightSpawn" unique_id=1911645068]
+shape = SubResource("BoxShape3D_s7wfk")
+
+[node name="Enemies" type="Node3D" parent="." unique_id=1336593660]
+
+[node name="Projectiles" type="Node3D" parent="." unique_id=333583597]
+
+[node name="Obstacles" type="Node3D" parent="." unique_id=1679290374]
+
+[node name="AsteroidFields" type="Node3D" parent="." unique_id=1291203838]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=174725171]
+environment = SubResource("Environment_s7wfk")
+
+[node name="Control" type="Control" parent="." unique_id=957138903]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="Ui" parent="Control" unique_id=8374273 instance=ExtResource("4_dn2a1")]
+layout_mode = 1

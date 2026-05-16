@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://d1o7hudj6232q"]
+
+[node name="RuinsEnvironment" type="Node3D" unique_id=307503415]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=952008667]
+
+[node name="StarLight" type="DirectionalLight3D" parent="." unique_id=753751997]
+transform = Transform3D(0.87758255, -0.1866971, 0.44158018, 0, 0.921061, 0.38941833, -0.47942555, -0.34174675, 0.80830705, 0, 0, 0)
+light_color = Color(0.8, 0.75, 0.7, 1)
+light_energy = 0.6

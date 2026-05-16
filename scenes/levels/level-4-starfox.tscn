@@ -3,13 +3,26 @@
 [ext_resource type="Script" uid="uid://cy734ikt4ou6a" path="res://scripts/levels/level_4_starfox.gd" id="1_k6o1s"]
 [ext_resource type="PackedScene" uid="uid://rxjb1p1kpkt7" path="res://scenes/level4/ship.tscn" id="2_ssdt5"]
 [ext_resource type="PackedScene" uid="uid://d0matkbkicfpo" path="res://scenes/level4/crosshair.tscn" id="3_s7wfk"]
+[ext_resource type="PackedScene" uid="uid://brmklsxs7sj0f" path="res://scenes/UI.tscn" id="4_dn2a1"]
 
 [sub_resource type="Curve3D" id="Curve3D_track"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
-"tilts": PackedFloat32Array(0)
+"points": PackedVector3Array(0, 0, 0, 0, 0, -60, 0, 0, 0, 0, 0, 60, 0, 0, -60, 0, 0, -200, 0, 0, 60, 5, 0, -30, -4.9163456, 0, -400, -5, 0, 30, 0, 0, -60, 1.3009148, 3, -600, 0, 0, 60, 0, 0, -40, -0.55792236, 0, -770, 0, 0, 40, 0, 0, -30, -0.43798828, 0, -940, 0, 0, 30, 0, 0, -50, 0.9697876, 0, -1100, 0, 0, 50, 0, 0, -60, -0.29196167, 0, -1260, 0, 0, 60, 0, 0, -40, 0, 0, -1420, 0, 0, 40, 0, 0, -40, -1.8456726, -8, -1580, 0, 0, 40, -10, 12, 40, 1.5276794, -8, -1720, 10, -12, -40, 0, 0, -60, 1.1157532, 5, -1870, 0, 0, 60, 0, 0, -50, 0, 10, -2020, 0, 0, 50, 0, 0, 0, -0.55789185, 5, -2170, 0, 0, 0, 20, 0, -30, 0, 0, -2320, -20, 0, 30, -20, 0, -30, 3.1073685, 0, -2440, 20, 0, 30, 0, 0, -60, -0.29193115, 0, -2520, 0, 0, 60, 0, 0, 0, 0, 0, -2700),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 }
-point_count = 1
+point_count = 18
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s7wfk"]
+size = Vector3(200, 150, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dn2a1"]
+size = Vector3(200, 5, 150)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_igxbe"]
+size = Vector3(200, 5, 150)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kcr5a"]
+size = Vector3(40, 11, 40)
 
 [sub_resource type="Environment" id="Environment_s7wfk"]
 ambient_light_color = Color(1, 1, 1, 1)
@@ -21,6 +34,7 @@ script = ExtResource("1_k6o1s")
 curve = SubResource("Curve3D_track")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="TrackPath" unique_id=866654508]
+rotation_mode = 2
 
 [node name="ShipAnchor" type="Node3D" parent="TrackPath/PathFollow3D" unique_id=1429599664]
 
@@ -40,7 +54,58 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 [node name="Camera3D" type="Camera3D" parent="TrackPath/PathFollow3D/CameraRig/ShakeContainer" unique_id=219525367]
 transform = Transform3D(1, 0, 0, 0, 0.9887711, 0.14943814, 0, -0.14943814, 0.9887711, 0, 2, 5)
 current = true
-fov = 70.0
+fov = 45.0
+far = 250.0
+
+[node name="LeftCamera" type="Camera3D" parent="TrackPath/PathFollow3D/CameraRig/ShakeContainer" unique_id=517380112]
+transform = Transform3D(0.17361218, 0, 0.9848141, 0, 1, 0, -0.9848141, 0, 0.17361218, -0.7516531, 1.6747811, 5.2252154)
+fov = 45.0
+far = 250.0
+
+[node name="RightCamera" type="Camera3D" parent="TrackPath/PathFollow3D/CameraRig/ShakeContainer" unique_id=713587835]
+transform = Transform3D(0.17361218, 0, -0.9848141, 0, 1, 0, 0.9848141, 0, 0.17361218, 0.8265793, 1.6740716, 5.2190657)
+fov = 45.0
+far = 250.0
+
+[node name="SpawnArea" type="Node3D" parent="TrackPath/PathFollow3D" unique_id=319563354]
+
+[node name="FrontSpawn" type="Area3D" parent="TrackPath/PathFollow3D/SpawnArea" unique_id=724455438]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -250)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/SpawnArea/FrontSpawn" unique_id=1311469148]
+shape = SubResource("BoxShape3D_s7wfk")
+
+[node name="DownSpawn" type="Area3D" parent="TrackPath/PathFollow3D/SpawnArea" unique_id=2035344526]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -125, -125)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/SpawnArea/DownSpawn" unique_id=337821055]
+shape = SubResource("BoxShape3D_dn2a1")
+
+[node name="TopSpawn" type="Area3D" parent="TrackPath/PathFollow3D/SpawnArea" unique_id=1075555095]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 125, -125)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/SpawnArea/TopSpawn" unique_id=823474084]
+shape = SubResource("BoxShape3D_igxbe")
+
+[node name="LeftSpawn" type="Area3D" parent="TrackPath/PathFollow3D/SpawnArea" unique_id=672120163]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -240, 0, -125)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/SpawnArea/LeftSpawn" unique_id=1002252546]
+shape = SubResource("BoxShape3D_s7wfk")
+
+[node name="RightSpawn" type="Area3D" parent="TrackPath/PathFollow3D/SpawnArea" unique_id=1368345719]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 240, 0, -125)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/SpawnArea/RightSpawn" unique_id=1911645068]
+shape = SubResource("BoxShape3D_s7wfk")
+
+[node name="CombatBounds" type="Area3D" parent="TrackPath/PathFollow3D" unique_id=1642145878]
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrackPath/PathFollow3D/CombatBounds" unique_id=1360343724]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -34)
+shape = SubResource("BoxShape3D_kcr5a")
 
 [node name="Enemies" type="Node3D" parent="." unique_id=1336593660]
 
@@ -48,161 +113,16 @@ fov = 70.0
 
 [node name="Obstacles" type="Node3D" parent="." unique_id=1679290374]
 
-[node name="SpawnMarkers" type="Node3D" parent="." unique_id=1226724882]
-
-[node name="Wave1" type="Node3D" parent="SpawnMarkers" unique_id=1687943885]
-
-[node name="S1" type="Marker3D" parent="SpawnMarkers/Wave1" unique_id=365634750]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -230)
-
-[node name="S2" type="Marker3D" parent="SpawnMarkers/Wave1" unique_id=450851605]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.5, -232)
-
-[node name="S3" type="Marker3D" parent="SpawnMarkers/Wave1" unique_id=101001001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -235)
-
-[node name="S4" type="Marker3D" parent="SpawnMarkers/Wave1" unique_id=101001002]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.5, -232)
-
-[node name="S5" type="Marker3D" parent="SpawnMarkers/Wave1" unique_id=101001003]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -230)
-
-[node name="Wave2" type="Node3D" parent="SpawnMarkers" unique_id=270135173]
-
-[node name="S1" type="Marker3D" parent="SpawnMarkers/Wave2" unique_id=881426138]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, -447)
-
-[node name="S2" type="Marker3D" parent="SpawnMarkers/Wave2" unique_id=636954124]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, -0.5, -449)
-
-[node name="S3" type="Marker3D" parent="SpawnMarkers/Wave2" unique_id=101002001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, -0.5, -449)
-
-[node name="S4" type="Marker3D" parent="SpawnMarkers/Wave2" unique_id=101002002]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, -447)
-
-[node name="M1" type="Marker3D" parent="SpawnMarkers/Wave2" unique_id=101002003]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2, -452)
-
-[node name="M2" type="Marker3D" parent="SpawnMarkers/Wave2" unique_id=101002004]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2, -452)
-
-[node name="Wave3" type="Node3D" parent="SpawnMarkers" unique_id=1447567472]
-
-[node name="S1" type="Marker3D" parent="SpawnMarkers/Wave3" unique_id=1515666941]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -879)
-
-[node name="S2" type="Marker3D" parent="SpawnMarkers/Wave3" unique_id=101003001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -1, -881)
-
-[node name="S3" type="Marker3D" parent="SpawnMarkers/Wave3" unique_id=101003002]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -1, -881)
-
-[node name="S4" type="Marker3D" parent="SpawnMarkers/Wave3" unique_id=101003003]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, -879)
-
-[node name="S5" type="Marker3D" parent="SpawnMarkers/Wave3" unique_id=101003004]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, -883)
-
-[node name="S6" type="Marker3D" parent="SpawnMarkers/Wave3" unique_id=101003005]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.5, -884)
-
-[node name="S7" type="Marker3D" parent="SpawnMarkers/Wave3" unique_id=101003006]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.5, -884)
-
-[node name="S8" type="Marker3D" parent="SpawnMarkers/Wave3" unique_id=101003007]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, -883)
-
-[node name="Wave4" type="Node3D" parent="SpawnMarkers" unique_id=101004000]
-
-[node name="S1" type="Marker3D" parent="SpawnMarkers/Wave4" unique_id=101004001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -1, -1311)
-
-[node name="S2" type="Marker3D" parent="SpawnMarkers/Wave4" unique_id=101004002]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1313)
-
-[node name="S3" type="Marker3D" parent="SpawnMarkers/Wave4" unique_id=101004003]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -1, -1311)
-
-[node name="S4" type="Marker3D" parent="SpawnMarkers/Wave4" unique_id=101004004]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -1315)
-
-[node name="S5" type="Marker3D" parent="SpawnMarkers/Wave4" unique_id=101004005]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -1315)
-
-[node name="S6" type="Marker3D" parent="SpawnMarkers/Wave4" unique_id=101004006]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, -1316)
-
-[node name="M1" type="Marker3D" parent="SpawnMarkers/Wave4" unique_id=101004007]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, -1318)
-
-[node name="M2" type="Marker3D" parent="SpawnMarkers/Wave4" unique_id=101004008]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, -1318)
-
-[node name="Wave5" type="Node3D" parent="SpawnMarkers" unique_id=101005000]
-
-[node name="S1" type="Marker3D" parent="SpawnMarkers/Wave5" unique_id=101005001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, -1635)
-
-[node name="S2" type="Marker3D" parent="SpawnMarkers/Wave5" unique_id=101005002]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2, -1637)
-
-[node name="S3" type="Marker3D" parent="SpawnMarkers/Wave5" unique_id=101005003]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2, -1637)
-
-[node name="S4" type="Marker3D" parent="SpawnMarkers/Wave5" unique_id=101005004]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3, -1635)
-
-[node name="M1" type="Marker3D" parent="SpawnMarkers/Wave5" unique_id=101005005]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 4, -1640)
-
-[node name="M2" type="Marker3D" parent="SpawnMarkers/Wave5" unique_id=101005006]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 4, -1640)
-
-[node name="Wave6" type="Node3D" parent="SpawnMarkers" unique_id=101006000]
-
-[node name="S1" type="Marker3D" parent="SpawnMarkers/Wave6" unique_id=101006001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -2013)
-
-[node name="S2" type="Marker3D" parent="SpawnMarkers/Wave6" unique_id=101006002]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, -2015)
-
-[node name="S3" type="Marker3D" parent="SpawnMarkers/Wave6" unique_id=101006003]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -2017)
-
-[node name="S4" type="Marker3D" parent="SpawnMarkers/Wave6" unique_id=101006004]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -2017)
-
-[node name="S5" type="Marker3D" parent="SpawnMarkers/Wave6" unique_id=101006005]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, -2015)
-
-[node name="S6" type="Marker3D" parent="SpawnMarkers/Wave6" unique_id=101006006]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -2013)
-
-[node name="M1" type="Marker3D" parent="SpawnMarkers/Wave6" unique_id=101006007]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, -2018)
-
-[node name="M2" type="Marker3D" parent="SpawnMarkers/Wave6" unique_id=101006008]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -2019)
-
-[node name="M3" type="Marker3D" parent="SpawnMarkers/Wave6" unique_id=101006009]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, -2018)
-
-[node name="Wave7" type="Node3D" parent="SpawnMarkers" unique_id=101007000]
-
-[node name="B1" type="Marker3D" parent="SpawnMarkers/Wave7" unique_id=101007001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2364)
-
-[node name="S1" type="Marker3D" parent="SpawnMarkers/Wave7" unique_id=101007002]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -2368)
-
-[node name="S2" type="Marker3D" parent="SpawnMarkers/Wave7" unique_id=101007003]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -1, -2368)
-
-[node name="S3" type="Marker3D" parent="SpawnMarkers/Wave7" unique_id=101007004]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -2370)
-
 [node name="AsteroidFields" type="Node3D" parent="." unique_id=1291203838]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=174725171]
 environment = SubResource("Environment_s7wfk")
+
+[node name="Control" type="Control" parent="." unique_id=957138903]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="Ui" parent="Control" unique_id=8374273 instance=ExtResource("4_dn2a1")]
+layout_mode = 1

@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://bqefgtof276a7"]
+
+[ext_resource type="Material" path="res://assets/materials/level4/asteroid.tres" id="1_56uc4"]
+[ext_resource type="Script" uid="uid://ceyrjd30uxqqp" path="res://scripts/levels/level4_asteroid.gd" id="1_cary8"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_bybuy"]
+radius = 1.0
+height = 2.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_56uc4"]
+radius = 1.1
+
+[node name="Asteroid" type="Node3D" unique_id=1394790691 groups=["obstacle"]]
+script = ExtResource("1_cary8")
+
+[node name="Rock" type="MeshInstance3D" parent="." unique_id=1882892466]
+material_override = ExtResource("1_56uc4")
+mesh = SubResource("SphereMesh_bybuy")
+
+[node name="Hitbox" type="Area3D" parent="." unique_id=330401674]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox" unique_id=683564984]
+shape = SubResource("SphereShape3D_56uc4")

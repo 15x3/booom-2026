@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://dyd48qb4jocki"]
+
+[ext_resource type="Script" uid="uid://cekpiex26bt8f" path="res://scripts/levels/level4_missile.gd" id="1_8s8x4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8s8x4"]
+albedo_color = Color(1, 0.6, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.6, 0.2, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_8s8x4"]
+radius = 0.15
+height = 0.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8s8x4"]
+radius = 0.3
+height = 1.0
+
+[node name="Missile" type="Node3D" unique_id=2069089130]
+script = ExtResource("1_8s8x4")
+
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=628086477]
+material_override = SubResource("StandardMaterial3D_8s8x4")
+mesh = SubResource("CapsuleMesh_8s8x4")
+
+[node name="Hitbox" type="Area3D" parent="." unique_id=1507378198]
+collision_layer = 4
+collision_mask = 10
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox" unique_id=837362415]
+shape = SubResource("CapsuleShape3D_8s8x4")
+
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

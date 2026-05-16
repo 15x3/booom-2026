@@ -1,0 +1,65 @@
+@tool
+extends MeshInstance3D
+
+@export var fov: float = 70.0
+@export var aspect: float = 1.6
+@export var near_dist: float = 2.0
+@export var far_dist: float = 30.0
+@export var show_crosshair_bounds: bool = true
+@export var crosshair_x: float = 7.5
+@export var crosshair_y: float = 5.5
+@export var crosshair_dist: float = 10.0
+
+func _ready() -> void:
+	_build()
+
+func _property_changed(_property: StringName) -> void:
+	_build()
+
+func _build() -> void:
+	var half_v = tan(deg_to_rad(fov * 0.5))
+	var hh_near = near_dist * half_v
+	var hw_near = hh_near * aspect
+	var hh_far = far_dist * half_v
+	var hw_far = hh_far * aspect
+
+	var n_tl := Vector3(-hw_near, hh_near, -near_dist)
+	var n_tr := Vector3(hw_near, hh_near, -near_dist)
+	var n_bl := Vector3(-hw_near, -hh_near, -near_dist)
+	var n_br := Vector3(hw_near, -hh_near, -near_dist)
+
+	var f_tl := Vector3(-hw_far, hh_far, -far_dist)
+	var f_tr := Vector3(hw_far, hh_far, -far_dist)
+	var f_bl := Vector3(-hw_far, -hh_far, -far_dist)
+	var f_br := Vector3(hw_far, -hh_far, -far_dist)
+
+	var lines := PackedVector3Array([
+		n_tl, n_tr, n_tr, n_br, n_br, n_bl, n_bl, n_tl,
+		f_tl, f_tr, f_tr, f_br, f_br, f_bl, f_bl, f_tl,
+		n_tl, f_tl, n_tr, f_tr, n_bl, f_bl, n_br, f_br,
+	])
+
+	if show_crosshair_bounds:
+		var d := crosshair_dist
+		var c_tl := Vector3(-crosshair_x, crosshair_y, -d)
+		var c_tr := Vector3(crosshair_x, crosshair_y, -d)
+		var c_bl := Vector3(-crosshair_x, -crosshair_y, -d)
+		var c_br := Vector3(crosshair_x, -crosshair_y, -d)
+		lines.append_array([c_tl, c_tr, c_tr, c_br, c_br, c_bl, c_bl, c_tl])
+
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = lines
+
+	var m := ArrayMesh.new()
+	m.clear_surfaces()
+	m.add_surface_from_arrays(Mesh.PRIMITIVE_LINES, arrays)
+	mesh = m
+
+	if material_override == null:
+		var mat := StandardMaterial3D.new()
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.albedo_color = Color(0.0, 1.0, 0.5, 0.7)
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		material_override = mat

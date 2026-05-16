@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://c3mex1x2mv2di"]
+
+[ext_resource type="Texture2D" uid="uid://cl53eydgfm3ow" path="res://scenes/panels/Logo1.png" id="1_sd77w"]
+[ext_resource type="Texture2D" uid="uid://d3cbhb1nx0v7f" path="res://scenes/panels/36a31bf06af716ad6abbe851a100e41e.jpg" id="2_twf2y"]
+
+[node name="Credits" type="Control" unique_id=498752379]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="." unique_id=2117213747]
+layout_mode = 0
+offset_left = 160.0
+offset_top = 32.0
+offset_right = 224.0
+offset_bottom = 55.0
+text = "关于作者"
+
+[node name="Label2" type="Label" parent="." unique_id=390248880]
+layout_mode = 0
+offset_left = 232.0
+offset_top = 104.0
+offset_right = 978.0
+offset_bottom = 192.0
+text = "十五，臭教书的，中/低级mod作者，游戏制作新手，本次Jam的策划/程序，在完成自己的“前十个垃圾游戏中”，这是第五个
+
+itch.io https://15x3.itch.io/"
+
+[node name="Logo1" type="Sprite2D" parent="." unique_id=1035779661]
+position = Vector2(160, 144)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_sd77w")
+
+[node name="Label3" type="Label" parent="." unique_id=2006621601]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -192.0
+offset_right = 554.0
+offset_bottom = -39.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "本次使用的公用素材：
+敌人模型：
+https://sketchfab.com/3d-models/space-ship-b1ab8c3f4a11451f8baadf8490868afe
+https://sketchfab.com/Buckybitboy
+声效素材来自https://www.joelsteudlermusic.com/
+Icon素材来自https://game-icons.net/"
+
+[node name="Label4" type="Label" parent="." unique_id=595397881]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 456.0
+offset_right = 376.0
+offset_bottom = 616.0
+text = "AI使用声明：
+只有代码涉及使用AI"
+
+[node name="Label5" type="Label" parent="." unique_id=1625517927]
+layout_mode = 0
+offset_left = 456.0
+offset_top = 232.0
+offset_right = 1330.0
+offset_bottom = 320.0
+text = "粮多看晨晓，业余建模，画画苦手，做事最大动力源是“兴趣”。"
+
+[node name="36a31Bf06Af716Ad6Abbe851a100e41e" type="Sprite2D" parent="." unique_id=1976829619]
+position = Vector2(984, 272)
+texture = ExtResource("2_twf2y")

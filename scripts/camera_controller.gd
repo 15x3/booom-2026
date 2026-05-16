@@ -48,6 +48,16 @@ var _blink_min_energy: float = 0.25
 var _blink_max_energy: float = 0.6
 var _hover_energy: float = 1.2
 
+var _aim_target_x: float = 0.0
+var _aim_target_y: float = 0.0
+var _aim_current_x: float = 0.0
+var _aim_current_y: float = 0.0
+var _aim_strength: float = 0.06
+var _aim_smooth: float = 8.0
+
+var _flight_vibration: bool = false
+var _shake_player: AnimationPlayer = null
+
 func _ready() -> void:
 	_base_fov = fov
 	_default_pos = global_position
@@ -55,6 +65,36 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	_setup_flashlight()
 	_setup_highlight()
+	_setup_flight_shake()
+
+func _setup_flight_shake() -> void:
+	_shake_player = get_node_or_null("ShakePlayer")
+	if _shake_player == null:
+		return
+	var anim := Animation.new()
+	anim.length = 2.4
+	anim.loop_mode = Animation.LOOP_LINEAR
+	var track_idx: int = anim.add_track(Animation.TYPE_VALUE)
+	anim.track_set_path(track_idx, ":h_offset")
+	anim.track_set_interpolation_type(track_idx, Animation.INTERPOLATION_LINEAR)
+	var keys_h := [0.0, 0.008, 0.3, -0.012, 0.6, 0.01, 0.9, -0.008, 1.2, 0.014, 1.5, -0.006, 1.8, 0.01, 2.1, -0.01, 2.4, 0.008]
+	for i in range(0, keys_h.size(), 2):
+		anim.track_insert_key(track_idx, keys_h[i], keys_h[i + 1])
+	var track_idx_v: int = anim.add_track(Animation.TYPE_VALUE)
+	anim.track_set_path(track_idx_v, ":v_offset")
+	anim.track_set_interpolation_type(track_idx_v, Animation.INTERPOLATION_LINEAR)
+	var keys_v := [0.0, -0.006, 0.2, 0.01, 0.5, -0.009, 0.8, 0.012, 1.0, -0.008, 1.3, 0.006, 1.6, -0.011, 1.9, 0.009, 2.2, -0.007, 2.4, -0.006]
+	for i in range(0, keys_v.size(), 2):
+		anim.track_insert_key(track_idx_v, keys_v[i], keys_v[i + 1])
+	var track_idx_rot: int = anim.add_track(Animation.TYPE_VALUE)
+	anim.track_set_path(track_idx_rot, ":rotation")
+	anim.track_set_interpolation_type(track_idx_rot, Animation.INTERPOLATION_LINEAR)
+	var keys_r := [0.0, Vector3(0.004, 0.002, -0.006), 0.3, Vector3(-0.003, -0.001, 0.008), 0.6, Vector3(0.005, 0.003, -0.004), 0.9, Vector3(-0.002, -0.003, 0.007), 1.2, Vector3(0.003, 0.001, -0.005), 1.5, Vector3(-0.004, 0.002, 0.006), 1.8, Vector3(0.002, -0.002, -0.003), 2.1, Vector3(-0.003, 0.003, 0.004), 2.4, Vector3(0.004, 0.002, -0.006)]
+	for i in range(0, keys_r.size(), 2):
+		anim.track_insert_key(track_idx_rot, keys_r[i], keys_r[i + 1])
+	var lib := AnimationLibrary.new()
+	lib.add_animation("flight_shake", anim)
+	_shake_player.add_animation_library("", lib)
 
 func _setup_flashlight() -> void:
 	_flashlight = SpotLight3D.new()
@@ -140,6 +180,17 @@ func _process(delta: float) -> void:
 		fov = lerpf(fov, target_fov, _zoom_speed * delta)
 	_update_hover()
 	_update_blink()
+	_aim_current_x = lerpf(_aim_current_x, _aim_target_x, _aim_smooth * delta)
+	_aim_current_y = lerpf(_aim_current_y, _aim_target_y, _aim_smooth * delta)
+	if _focus == FocusState.DEFAULT and (_focus_tween == null or not _focus_tween.is_valid()):
+		var offset := Vector3(
+			_aim_current_x * _aim_strength,
+			_aim_current_y * _aim_strength,
+			0.0
+		)
+		global_position = _default_pos + offset
+	if not _flight_vibration:
+		rotation = Vector3.ZERO
 
 func _handle_left_click() -> void:
 	if _focus != FocusState.DEFAULT:
@@ -377,3 +428,23 @@ func stop_shake() -> void:
 
 func set_shake_intensity(intensity: float) -> void:
 	_shake_intensity = intensity
+
+func set_aim_offset(x: float, y: float) -> void:
+	_aim_target_x = x
+	_aim_target_y = y
+
+func set_flight_vibration(enabled: bool) -> void:
+	_flight_vibration = enabled
+	if _shake_player == null:
+		return
+	if enabled:
+		_shake_player.play("flight_shake")
+	else:
+		_shake_player.stop()
+		h_offset = _base_h_offset
+		v_offset = _base_v_offset
+		rotation = Vector3.ZERO
+		_aim_target_x = 0.0
+		_aim_target_y = 0.0
+		if _focus == FocusState.DEFAULT and (_focus_tween == null or not _focus_tween.is_valid()):
+			global_position = _default_pos

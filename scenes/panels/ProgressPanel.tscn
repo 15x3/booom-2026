@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://6wng5mpcxp53"]
+
+[ext_resource type="Script" uid="uid://dj7kw7b4mpo02" path="res://scripts/panels/progress_panel.gd" id="1_6gin6"]
+[ext_resource type="FontFile" uid="uid://djkfq3xaa0iff" path="res://assets/fonts/FSEX302-alt.ttf" id="1_7puhw"]
+[ext_resource type="Texture2D" uid="uid://c78abrvqnk00v" path="res://assets/icons/数字1.png" id="2_63xkn"]
+[ext_resource type="Texture2D" uid="uid://dy2i3ra2sjvgo" path="res://assets/icons/death-skull.png" id="3_5jc2h"]
+[ext_resource type="Texture2D" uid="uid://m04nhiftquml" path="res://assets/icons/数字2.png" id="3_6gin6"]
+[ext_resource type="Texture2D" uid="uid://bngib7ako7t4o" path="res://assets/icons/数字3.png" id="4_2odi5"]
+[ext_resource type="Texture2D" uid="uid://bvuy53sire1lu" path="res://assets/icons/数字4.png" id="5_bcyym"]
+
+[node name="ProgressPanel" type="Control" unique_id=1797080946]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6gin6")
+
+[node name="Label" type="Label" parent="." unique_id=999195680]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 104.0
+offset_right = 880.0
+offset_bottom = 280.0
+theme_override_fonts/font = ExtResource("1_7puhw")
+theme_override_font_sizes/font_size = 96
+text = "PROGRESS"
+horizontal_alignment = 1
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1383959675]
+position = Vector2(136, 384)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_63xkn")
+
+[node name="Icon2" type="Sprite2D" parent="." unique_id=2128821960]
+position = Vector2(352, 384)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_6gin6")
+
+[node name="Icon3" type="Sprite2D" parent="." unique_id=1935419266]
+position = Vector2(576, 384)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_2odi5")
+
+[node name="Icon4" type="Sprite2D" parent="." unique_id=1499047786]
+position = Vector2(800, 384)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("5_bcyym")
+
+[node name="Icon5" type="Sprite2D" parent="." unique_id=1713232716]
+position = Vector2(1008, 384)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_5jc2h")

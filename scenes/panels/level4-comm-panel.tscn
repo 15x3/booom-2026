@@ -1,0 +1,179 @@
+[gd_scene format=3 uid="uid://d2w883ho87pox"]
+
+[ext_resource type="Script" uid="uid://bjfxfyyo78i5j" path="res://scripts/panels/level4_comm_panel.gd" id="1_p2uyo"]
+[ext_resource type="Shader" uid="uid://dorsse1lgolcb" path="res://assets/shaders/progres_bar.gdshader" id="2_kbl1y"]
+[ext_resource type="Texture2D" uid="uid://duual02ss7scu" path="res://assets/Gemini_Generated_Image_vatcbbvatcbbvatc-removebg-preview (1).png" id="3_25kph"]
+[ext_resource type="FontFile" uid="uid://djkfq3xaa0iff" path="res://assets/fonts/FSEX302-alt.ttf" id="4_by5dd"]
+[ext_resource type="Texture2D" uid="uid://nuypothjsd42" path="res://assets/起点.png" id="5_ecwhw"]
+[ext_resource type="Texture2D" uid="uid://br8saa8l7ivn0" path="res://assets/mti-到场 (1).png" id="6_bpdbc"]
+[ext_resource type="Texture2D" uid="uid://cse8tieiqiygn" path="res://assets/list_飞机 (1).png" id="7_mtbtp"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ecwhw"]
+shader = ExtResource("2_kbl1y")
+shader_parameter/progress = 0.6450000306375
+shader_parameter/color_good = Color(0.41568628, 1, 0.4862745, 1)
+shader_parameter/color_warning = Color(1, 0.65, 0, 1)
+shader_parameter/color_danger = Color(1, 0, 0, 1)
+shader_parameter/color_empty = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/warning_threshold = 0.6
+shader_parameter/danger_threshold = 0.3
+
+[node name="Level4CommPanel" type="Control" unique_id=802605321]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_p2uyo")
+
+[node name="Background" type="ColorRect" parent="." unique_id=675203212]
+layout_mode = 0
+offset_right = 700.0
+offset_bottom = 400.0
+color = Color(0.02, 0.04, 0.08, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=814370197]
+visible = false
+layout_mode = 0
+offset_right = 700.0
+offset_bottom = 400.0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer" unique_id=54807693]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TitleBar" type="HBoxContainer" parent="MarginContainer/VBox" unique_id=1512243541]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBox/TitleBar" unique_id=1212513808]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "MISSION BRIEFING"
+
+[node name="SectorLabel" type="Label" parent="MarginContainer/VBox/TitleBar" unique_id=1749466763]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.8, 0.5, 1)
+theme_override_font_sizes/font_size = 16
+text = "SECTOR 1/10"
+
+[node name="HSplit" type="HSeparator" parent="MarginContainer/VBox" unique_id=248968931]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+
+[node name="MissionText" type="RichTextLabel" parent="MarginContainer/VBox" unique_id=1128142500]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[color=gray]Awaiting mission data...[/color]"
+fit_content = true
+scroll_following = true
+
+[node name="HSplit2" type="HSeparator" parent="MarginContainer/VBox" unique_id=46721768]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+
+[node name="StatusGrid" type="GridContainer" parent="MarginContainer/VBox" unique_id=1621427438]
+visible = false
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 4
+columns = 4
+
+[node name="HullIcon" type="Label" parent="MarginContainer/VBox/StatusGrid" unique_id=1342352899]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "HULL"
+
+[node name="HullBar" type="ProgressBar" parent="MarginContainer/VBox/StatusGrid" unique_id=259402218]
+custom_minimum_size = Vector2(200, 16)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+
+[node name="HullValue" type="Label" parent="MarginContainer/VBox/StatusGrid" unique_id=1434835497]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 14
+text = "100%"
+
+[node name="Spacer1" type="Control" parent="MarginContainer/VBox/StatusGrid" unique_id=410400769]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+
+[node name="ScoreIcon" type="Label" parent="MarginContainer/VBox/StatusGrid" unique_id=2103444900]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "SCORE"
+
+[node name="ScoreValue" type="Label" parent="MarginContainer/VBox/StatusGrid" unique_id=1405916733]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.2, 1)
+theme_override_font_sizes/font_size = 16
+text = "0"
+
+[node name="ProgressIcon" type="Label" parent="MarginContainer/VBox/StatusGrid" unique_id=1758520031]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "PROG"
+
+[node name="ProgressValue" type="Label" parent="MarginContainer/VBox/StatusGrid" unique_id=110777090]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "0%"
+
+[node name="HullProgressBar" type="Sprite2D" parent="." unique_id=735020202]
+material = SubResource("ShaderMaterial_ecwhw")
+position = Vector2(448.00003, 160)
+scale = Vector2(0.6, 0.619)
+texture = ExtResource("3_25kph")
+
+[node name="Hull2" type="Label" parent="." unique_id=1346578581]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 112.0
+offset_right = 224.0
+offset_bottom = 208.0
+theme_override_fonts/font = ExtResource("4_by5dd")
+theme_override_font_sizes/font_size = 96
+text = "HULL"
+
+[node name="Label" type="Label" parent="." unique_id=1616435691]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 288.0
+offset_top = 224.0
+offset_right = 416.0
+offset_bottom = 288.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_by5dd")
+theme_override_font_sizes/font_size = 64
+text = "DIST"
+
+[node name="StartPoint" type="Sprite2D" parent="." unique_id=18650110]
+position = Vector2(64, 352)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("5_ecwhw")
+
+[node name="EndPoint" type="Sprite2D" parent="." unique_id=422280990]
+position = Vector2(640, 360)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("6_bpdbc")
+
+[node name="CurrentPosition" type="Sprite2D" parent="." unique_id=167973884]
+position = Vector2(128, 332.00003)
+rotation = 0.7853982
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("7_mtbtp")

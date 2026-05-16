@@ -1,9 +1,6 @@
 [gd_scene format=3 uid="uid://bkmsu1e1bls6c"]
 
 [ext_resource type="Script" uid="uid://bwrg65lbpdoou" path="res://scripts/cockpit.gd" id="1_ga5w8"]
-[ext_resource type="PackedScene" uid="uid://dkfqojysutnvh" path="res://assets/models/jiashicang.gltf" id="2_g7lyc"]
-[ext_resource type="PackedScene" uid="uid://j1c8abl4qlk2" path="res://assets/models/blockbench_export.tscn" id="3_3s2td"]
-[ext_resource type="PackedScene" uid="uid://ookukmwl1omb" path="res://scenes/controls/keyboard.tscn" id="4_41w8a"]
 [ext_resource type="Script" uid="uid://dbv48kmjphrip" path="res://scripts/camera_controller.gd" id="4_cam"]
 [ext_resource type="Shader" uid="uid://blvk0jjd8wbdl" path="res://assets/shaders/game_boy_pixelate.gdshader" id="4_dy0mh"]
 [ext_resource type="PackedScene" path="res://scenes/panels/mini-map-panel.tscn" id="4_edtdw"]
@@ -35,6 +32,21 @@
 [ext_resource type="AudioStream" uid="uid://b2bprr5qdodxb" path="res://assets/audio/SFX_OGG/SFX_-_negative_02.ogg" id="26_wmem8"]
 [ext_resource type="AudioStream" uid="uid://2l8ge124m332" path="res://assets/audio/SFX_OGG/SFX_-_negative_03.ogg" id="27_8wjcp"]
 [ext_resource type="AudioStream" uid="uid://qb48pub0f4xf" path="res://assets/audio/SFX_OGG/SFX_-_vehicle_01_engine_rev.ogg" id="28_fvxle"]
+[ext_resource type="AudioStream" uid="uid://105fx8wdbq0p" path="res://assets/audio/SFX_OGG/SFX_-_gun_shot_01.ogg" id="33_3gnyj"]
+[ext_resource type="PackedScene" uid="uid://bu63udqo33hl" path="res://assets/models/jiashicang_v1.gltf" id="33_3s2td"]
+[ext_resource type="PackedScene" uid="uid://bbeg0rh63m7rh" path="res://assets/models/jiashicang_v2.gltf" id="34_41w8a"]
+[ext_resource type="AudioStream" uid="uid://oig3svlxx7c7" path="res://assets/audio/SFX_OGG/SFX_-_gun_shot_02.ogg" id="34_kx7c1"]
+[ext_resource type="AudioStream" uid="uid://dqpn348sb14xg" path="res://assets/audio/SFX_OGG/SFX_-_explosion_01.ogg" id="35_mfw2t"]
+[ext_resource type="AudioStream" uid="uid://bq4qyw8ng1j5a" path="res://assets/audio/SFX_OGG/SFX_-_explosion_02.ogg" id="36_1s6d0"]
+[ext_resource type="AudioStream" uid="uid://cse252qqefuoc" path="res://assets/audio/SFX_OGG/SFX_-_gun_shot_04.ogg" id="36_u2kk6"]
+[ext_resource type="AudioStream" uid="uid://bqfn6up43usrx" path="res://assets/audio/SFX_OGG/SFX_-_swoosh_02.ogg" id="37_u2kk6"]
+[ext_resource type="AudioStream" uid="uid://deabjm3kyhjhw" path="res://assets/audio/SFX_OGG/SFX_-_explosion_03.ogg" id="38_8hcvv"]
+[ext_resource type="AudioStream" uid="uid://ws2e5dbay2na" path="res://assets/audio/SFX_OGG/SFX_-_swoosh_01.ogg" id="39_scd2r"]
+[ext_resource type="AudioStream" uid="uid://dnsv0pgjit6tg" path="res://assets/audio/SFX_OGG/SFX_-_explosion_06.ogg" id="40_8hcvv"]
+[ext_resource type="AudioStream" uid="uid://drmvfoocestm1" path="res://assets/audio/SFX_OGG/SFX_-_missile_01.ogg" id="40_hy30p"]
+[ext_resource type="AudioStream" uid="uid://uqafvyp5j17k" path="res://assets/audio/SFX_OGG/SFX_-_gun_shot_03.ogg" id="41_ndf3w"]
+[ext_resource type="AudioStream" uid="uid://b8xm4cl3d6vxm" path="res://assets/audio/SFX_OGG/SFX_-_positive_01.ogg" id="42_7eayu"]
+[ext_resource type="AudioStream" uid="uid://cpojeiekaxxwu" path="res://assets/audio/BGM_OGG/Action_-_Hyper_Fighter.ogg" id="45_kx7c1"]
 
 [sub_resource type="Environment" id="Environment_7nj66"]
 ambient_light_color = Color(0.05490196, 0.05490196, 0.20392157, 1)
@@ -70,7 +82,7 @@ emission_enabled = true
 resource_local_to_scene = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_main"]
-size = Vector2(1.6, 1)
+size = Vector2(1.785, 1.14)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_main"]
 size = Vector3(1.6, 0.1, 1)
@@ -79,7 +91,7 @@ size = Vector3(1.6, 0.1, 1)
 resource_local_to_scene = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_left"]
-size = Vector2(0.7, 1)
+size = Vector2(1.51, 1.32)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_left"]
 size = Vector3(0.7, 0.1, 0.5)
@@ -88,7 +100,7 @@ size = Vector3(0.7, 0.1, 0.5)
 resource_local_to_scene = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_right"]
-size = Vector2(0.7, 1)
+size = Vector2(1.535, 1.51)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_right"]
 size = Vector3(0.7, 0.1, 0.5)
@@ -100,13 +112,10 @@ size = Vector2(1.4, 0.3)
 size = Vector3(1.2, 0.4, 0.05)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_comm"]
-size = Vector2(1.6, 0.35)
+size = Vector2(1.6, 0.915)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_comm"]
 size = Vector3(1.6, 0.1, 0.35)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_rw3oe"]
-size = Vector3(0.8, 0.3, 0.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rw3oe"]
 shader = ExtResource("4_dy0mh")
@@ -123,22 +132,29 @@ script = ExtResource("1_ga5w8")
 environment = SubResource("Environment_7nj66")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="SpaceEnvironment/WorldEnvironment" unique_id=2013025891]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8494297, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8757538, 0.8494297, 0)
 
 [node name="BlackHolePlaceholder" type="MeshInstance3D" parent="SpaceEnvironment" unique_id=310802805]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -50)
+visible = false
 material_override = SubResource("StandardMaterial3D_bjct7")
 mesh = SubResource("SphereMesh_blackhole")
 
 [node name="AccretionDisk" type="MeshInstance3D" parent="SpaceEnvironment/BlackHolePlaceholder" unique_id=1726763577]
 transform = Transform3D(1, 0, 0, 0, 0.93969256, -0.34202027, 0, 0.34202027, 0.93969256, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_iw1fk")
 mesh = SubResource("CylinderMesh_bjct7")
 
 [node name="StarfieldPlaceholder" type="MeshInstance3D" parent="SpaceEnvironment" unique_id=2083302550]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 3, -20)
+visible = false
 material_override = SubResource("StandardMaterial3D_star")
 mesh = SubResource("SphereMesh_star")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="SpaceEnvironment" unique_id=2124776395]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1226504, 0.039556712, 0.8719673)
+omni_range = 160.0
 
 [node name="CockpitInterior" type="Node3D" parent="." unique_id=412901691 groups=["cockpit_interior"]]
 
@@ -149,7 +165,7 @@ size = Vector3(3, 2.5, 4)
 material = SubResource("StandardMaterial3D_25147")
 
 [node name="MainScreenSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=2089411613]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.5645551, -1.5825354)
+transform = Transform3D(1, 0, 0, 0, 0.052335974, -0.9986295, 0, 0.9986295, 0.052335974, -0.058621883, 0.6791218, -2.2816346)
 material_override = SubResource("StandardMaterial3D_main")
 mesh = SubResource("PlaneMesh_main")
 
@@ -159,7 +175,7 @@ mesh = SubResource("PlaneMesh_main")
 shape = SubResource("BoxShape3D_main")
 
 [node name="LeftScreenSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=175112462]
-transform = Transform3D(0.9715252, 0.2344139, -0.03448179, -0.0071907546, -0.1162941, -0.9931889, -0.23682737, 0.9651559, -0.1112971, -1.3224452, 0.30855548, -1.5536041)
+transform = Transform3D(0.76028395, 0.64789814, 0.046862736, 0.0051997914, 0.0660696, -0.9978016, -0.64957, 0.75885606, 0.046862736, -1.759774, 0.5614585, -1.75698)
 material_override = SubResource("StandardMaterial3D_left")
 mesh = SubResource("PlaneMesh_left")
 
@@ -169,7 +185,7 @@ mesh = SubResource("PlaneMesh_left")
 shape = SubResource("BoxShape3D_left")
 
 [node name="RightScreenSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=571581133]
-transform = Transform3D(0.92597795, -0.37332875, 0.05648529, 0.040214624, -0.05123522, -0.9978767, 0.37543023, 0.9262833, -0.03242943, 1.3480837, 0.2750162, -1.581398)
+transform = Transform3D(0.75308126, -0.65064615, -0.09761295, -0.056656133, 0.08368075, -0.9948808, 0.65548366, 0.75475633, 0.026155313, 1.6411114, 0.4757166, -1.8469871)
 material_override = SubResource("StandardMaterial3D_right")
 mesh = SubResource("PlaneMesh_right")
 
@@ -180,6 +196,7 @@ shape = SubResource("BoxShape3D_right")
 
 [node name="SystemPanelSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=393523722]
 transform = Transform3D(0.99999994, -3.3266911e-10, 7.6194e-09, 7.149628e-09, 0.38867384, -0.9213756, -2.6549456e-09, 0.9213755, 0.38867384, 0.031273484, -0.14620006, -1.4149191)
+visible = false
 mesh = SubResource("PlaneMesh_system")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/SystemPanelSlot" unique_id=1354935545]
@@ -188,7 +205,7 @@ mesh = SubResource("PlaneMesh_system")
 shape = SubResource("BoxShape3D_shtuo")
 
 [node name="CommScreenSlot" type="MeshInstance3D" parent="CockpitInterior" unique_id=1815251236]
-transform = Transform3D(1, 0, 0, 0, -0.08715576, -0.99619466, 0, 0.99619466, -0.08715576, 0, 1.1981549, -1.2999128)
+transform = Transform3D(1, 0, 0, 0, -0.46947154, -0.8829475, 0, 0.8829475, -0.46947154, -0.04507613, 1.9484494, -2.062642)
 mesh = SubResource("PlaneMesh_comm")
 
 [node name="ScreenBody" type="StaticBody3D" parent="CockpitInterior/CommScreenSlot" unique_id=125478379]
@@ -196,27 +213,9 @@ mesh = SubResource("PlaneMesh_comm")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/CommScreenSlot/ScreenBody" unique_id=1290437352]
 shape = SubResource("BoxShape3D_comm")
 
-[node name="blockbench_export" parent="CockpitInterior" unique_id=603848736 instance=ExtResource("2_g7lyc")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.0024003983, -0.9730672, 1.0368708)
-
-[node name="blockbench_export2" parent="CockpitInterior" unique_id=1982222536 instance=ExtResource("3_3s2td")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -1, 1)
-visible = false
-
-[node name="Sketchfab_Scene" parent="CockpitInterior" unique_id=793517670 instance=ExtResource("4_41w8a")]
-transform = Transform3D(0.8, 0, 0, 0, 0.3112992, -0.7369483, 0, 0.7369483, 0.3112992, -0.045548975, -0.1992351, -1.3748289)
-
-[node name="KeyboardArea" type="Node3D" parent="CockpitInterior/Sketchfab_Scene" unique_id=1816757948]
-
-[node name="KeyboardBody" type="StaticBody3D" parent="CockpitInterior/Sketchfab_Scene/KeyboardArea" unique_id=1259682113]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CockpitInterior/Sketchfab_Scene/KeyboardArea/KeyboardBody" unique_id=1153976045]
-shape = SubResource("BoxShape3D_rw3oe")
-
 [node name="PlayerCamera" type="Camera3D" parent="." unique_id=2126927117]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.06898409, 0.6492784, 0)
 current = true
-fov = 70.0
 script = ExtResource("4_cam")
 focus_offset_main = Vector3(0, 0, 2)
 focus_offset_left = Vector3(0.3, -0.1, 1.5)
@@ -233,6 +232,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="ShakePlayer" type="AnimationPlayer" parent="PlayerCamera" unique_id=409432411]
 
 [node name="NavigationSystem" type="Node" parent="." unique_id=1130041933]
 script = ExtResource("5_nav")
@@ -416,14 +417,60 @@ alarm_o2 = ExtResource("25_pid5c")
 alarm_temp = ExtResource("26_wmem8")
 alarm_storm = ExtResource("27_8wjcp")
 sfx_engine_loop = ExtResource("28_fvxle")
+sfx_player_fire_1 = ExtResource("33_3gnyj")
+sfx_player_fire_2 = ExtResource("34_kx7c1")
+sfx_player_fire_3 = ExtResource("41_ndf3w")
+sfx_player_fire_4 = ExtResource("36_u2kk6")
+sfx_explosion_1 = ExtResource("35_mfw2t")
+sfx_explosion_2 = ExtResource("36_1s6d0")
+sfx_explosion_3 = ExtResource("38_8hcvv")
+sfx_explosion_4 = ExtResource("40_8hcvv")
+sfx_enemy_fire = ExtResource("34_kx7c1")
+sfx_explosion_boss = ExtResource("36_1s6d0")
+sfx_player_hit = ExtResource("37_u2kk6")
+sfx_player_death = ExtResource("38_8hcvv")
+sfx_barrel_roll = ExtResource("39_scd2r")
+sfx_missile_fire = ExtResource("40_hy30p")
+sfx_turret_fire = ExtResource("41_ndf3w")
+sfx_level_complete = ExtResource("42_7eayu")
+sfx_level_failed = ExtResource("27_8wjcp")
 
-[node name="LeftScreenViewport" type="SubViewport" parent="." unique_id=577377087]
-size = Vector2i(210, 300)
-render_target_update_mode = 1
+[node name="blockbench_export" parent="." unique_id=2083324695 instance=ExtResource("33_3s2td")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, -0.06600416, -2.332672, 2.088022)
+visible = false
 
-[node name="RightScreenViewport" type="SubViewport" parent="." unique_id=137949080]
-size = Vector2i(210, 300)
-render_target_update_mode = 1
+[node name="Level4LeftViewport" type="SubViewport" parent="." unique_id=333858289]
+size = Vector2i(320, 240)
+
+[node name="CamRig" type="Node3D" parent="Level4LeftViewport" unique_id=158370202]
+
+[node name="LeftWingCam" type="Camera3D" parent="Level4LeftViewport/CamRig" unique_id=2009375438]
+visible = false
+current = true
+fov = 70.0
+
+[node name="Level4RightViewport" type="SubViewport" parent="." unique_id=1265632293]
+size = Vector2i(320, 240)
+
+[node name="CamRig" type="Node3D" parent="Level4RightViewport" unique_id=87621976]
+
+[node name="RightWingCam" type="Camera3D" parent="Level4RightViewport/CamRig" unique_id=135149841]
+visible = false
+current = true
+fov = 70.0
+
+[node name="blockbench_export2" parent="." unique_id=634685645 instance=ExtResource("34_41w8a")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, -0.06712979, -2.3285532, 1.8781049)
+
+[node name="ChooseScreen" type="Control" parent="." unique_id=699145433]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1621011247]
+stream = ExtResource("45_kx7c1")
+autoplay = true
 
 [connection signal="object_clicked" from="PlayerCamera" to="." method="_on_object_clicked"]
 [connection signal="screen_clicked" from="PlayerCamera" to="." method="_on_screen_clicked"]

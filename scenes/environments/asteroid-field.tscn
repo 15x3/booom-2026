@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://4volpd52thbq"]
+
+[ext_resource type="Shader" uid="uid://bhv6vfesic8da" path="res://assets/shaders/skybox.gdshader" id="1_sky"]
+[ext_resource type="Shader" uid="uid://dltjqa4i2whng" path="res://assets/shaders/cloud.gdshader" id="2_cloud"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
+shader = ExtResource("1_sky")
+shader_parameter/color_top = Color(0.02, 0.04, 0.12, 1)
+shader_parameter/color_horizon = Color(0.08, 0.15, 0.25, 1)
+shader_parameter/color_bottom = Color(0.04, 0.06, 0.1, 1)
+shader_parameter/exponent_factor_top = 1.0
+shader_parameter/exponent_factor_bottom = 0.8
+shader_parameter/intensity_amp = 0.8
+
+[sub_resource type="Sky" id="Sky_dark"]
+sky_material = SubResource("ShaderMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_dark"]
+background_mode = 2
+sky = SubResource("Sky_dark")
+tonemap_mode = 2
+tonemap_white = 1.0
+ambient_light_color = Color(0.05, 0.08, 0.15, 1)
+ambient_light_energy = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dust1"]
+shader = ExtResource("2_cloud")
+shader_parameter/use_custom_texture = 0.42
+shader_parameter/clouds_speed = 8.0
+shader_parameter/clouds_direction = 0.15
+shader_parameter/clouds_scale = 0.5
+shader_parameter/clouds_cutoff = 0.55
+shader_parameter/clouds_fuzziness = 0.3
+shader_parameter/clouds_color = Color(0.35, 0.3, 0.25, 1)
+shader_parameter/edge_fade = 0.12
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_dust1"]
+material = SubResource("ShaderMaterial_dust1")
+size = Vector2(300, 300)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dust2"]
+shader = ExtResource("2_cloud")
+shader_parameter/use_custom_texture = 0.42
+shader_parameter/clouds_speed = 5.0
+shader_parameter/clouds_direction = -0.1
+shader_parameter/clouds_scale = 0.8
+shader_parameter/clouds_cutoff = 0.6
+shader_parameter/clouds_fuzziness = 0.25
+shader_parameter/clouds_color = Color(0.2, 0.18, 0.22, 1)
+shader_parameter/edge_fade = 0.1
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_dust2"]
+material = SubResource("ShaderMaterial_dust2")
+size = Vector2(350, 350)
+
+[node name="AsteroidFieldEnvironment" type="Node3D" unique_id=868323274]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1696141068]
+environment = SubResource("Environment_dark")
+
+[node name="StarLight" type="DirectionalLight3D" parent="." unique_id=975249757]
+transform = Transform3D(0.9553365, -0.14167994, 0.2593434, 0, 0.87758255, 0.47942555, -0.29552022, -0.45801273, 0.83838665, 0, 0, 0)
+light_color = Color(0.6, 0.65, 0.75, 1)
+light_energy = 0.4
+
+[node name="DustLayer1" type="MeshInstance3D" parent="." unique_id=1448528300]
+transform = Transform3D(1, 0, 0, 0, -0.00020365318, -1, 0, 1, -0.00020365318, 0, 2, 0)
+mesh = SubResource("PlaneMesh_dust1")
+
+[node name="DustLayer2" type="MeshInstance3D" parent="." unique_id=984519165]
+transform = Transform3D(1, 0, 0, 0, -0.00020365318, -1, 0, 1, -0.00020365318, 0, -5, 0)
+mesh = SubResource("PlaneMesh_dust2")

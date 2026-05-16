@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://chcu12rcnilr0"]
+
+[ext_resource type="Script" uid="uid://uyuatamhaxyd" path="res://scripts/levels/level4_laser_wall.gd" id="1_xp4wi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ywq7"]
+transparency = 1
+albedo_color = Color(1, 0.1, 0.1, 0.8)
+emission_enabled = true
+emission = Color(2, 0.1, 0.2, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_8ywq7"]
+size = Vector2(14, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xp4wi"]
+albedo_color = Color(0.2, 1, 0.2, 1)
+emission_enabled = true
+emission = Color(0.2, 2, 0.2, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_8ywq7"]
+height = 8.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rpnac"]
+albedo_color = Color(0.2, 1, 0.2, 1)
+emission_enabled = true
+emission = Color(0.2, 2, 0.2, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_xp4wi"]
+height = 8.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8ywq7"]
+size = Vector3(14, 8, 0.5)
+
+[node name="LaserWall" type="Node3D" unique_id=2126346296]
+script = ExtResource("1_xp4wi")
+
+[node name="LaserVisual" type="MeshInstance3D" parent="." unique_id=660982226]
+material_override = SubResource("StandardMaterial3D_8ywq7")
+mesh = SubResource("PlaneMesh_8ywq7")
+
+[node name="LeftNav" type="MeshInstance3D" parent="." unique_id=240772109]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
+material_override = SubResource("StandardMaterial3D_xp4wi")
+mesh = SubResource("CylinderMesh_8ywq7")
+
+[node name="RightNav" type="MeshInstance3D" parent="." unique_id=2082901749]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+material_override = SubResource("StandardMaterial3D_rpnac")
+mesh = SubResource("CylinderMesh_xp4wi")
+
+[node name="KillZone" type="Area3D" parent="." unique_id=303390059]
+collision_layer = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KillZone" unique_id=682570073]
+shape = SubResource("BoxShape3D_8ywq7")

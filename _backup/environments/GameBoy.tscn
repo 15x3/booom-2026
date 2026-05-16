@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://c3vorsa8njxak"]
+
+[sub_resource type="Environment" id="Environment_gafed"]
+background_mode = 1
+tonemap_mode = 2
+
+[node name="Spasim" type="Node3D" unique_id=3357665]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1829832961]
+environment = SubResource("Environment_gafed")
